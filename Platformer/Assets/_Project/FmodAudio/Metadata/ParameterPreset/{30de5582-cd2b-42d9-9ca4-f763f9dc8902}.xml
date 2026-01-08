@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{30de5582-cd2b-42d9-9ca4-f763f9dc8902}">
+		<property name="name">
+			<value>MusciIntensity</value>
+		</property>
+		<relationship name="folder">
+			<destination>{95402ccc-a3d5-4462-be8f-61ee3352d334}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{a1c4dc09-be83-4032-8bc2-ef1837a5ef69}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{a1c4dc09-be83-4032-8bc2-ef1837a5ef69}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

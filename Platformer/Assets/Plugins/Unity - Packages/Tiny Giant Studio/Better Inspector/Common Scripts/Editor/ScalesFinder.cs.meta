@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: db962b4dcab436c4491e01d7d74df02d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 321364
+  packageName: Better Mesh - Mesh Preview & Full-insight at a glance
+  packageVersion: 2.1.0a
+  assetPath: Assets/Plugins/Tiny Giant Studio/Better Inspector/Common Scripts/Editor/ScalesFinder.cs
+  uploadId: 776066
