@@ -69,8 +69,8 @@ namespace Platformer
         [field: SerializeField] public float glideTime = 3;
         [field: SerializeField] GameObject defaultMesh;  
         [field: SerializeField] GameObject glidingMesh;
-        
-        [Header("Attack Settings")] 
+
+        [Header("Attack Settings")]
         [field: SerializeField] float attackCoolDown = 0.5f;
         [field: SerializeField] float attackDistance = 1f;
         [field: SerializeField] float spinAttackDistance = 5f;
@@ -120,14 +120,10 @@ namespace Platformer
         void Awake()
         {
             mainCam = Camera.main.transform;
-            
-            
-            
             rb.freezeRotation = true;
             glideStamina = GetComponent<GlideStamina>();
             SetupTimers();
             SetupStateMachine();
-         
         }
         void Start()
         {
