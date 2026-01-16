@@ -7,7 +7,7 @@ using Utilities;
 namespace Platformer {
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(PlayerDetector))]
-    [RequireComponent(typeof(EnemyHealth))]
+    [RequireComponent(typeof(Health))]
     public class Enemy : Entity 
     {
         #region Variables
@@ -15,7 +15,7 @@ namespace Platformer {
         [field: SerializeField, Self] public NavMeshAgent Agent { get; private set; }
         [field: SerializeField, Self] PlayerDetector playerDetector;
         [field: SerializeField, Child] Animator animator;
-        [field: SerializeField, Self] EnemyHealth enemyHealth;
+        [field: SerializeField, Self] Health enemyHealth;
         
         [field: Header("Movement Settings")]
         [SerializeField] float wanderRadius = 10f;
@@ -200,8 +200,11 @@ namespace Platformer {
             if (playerDetector.PlayerHealth != null && !playerDetector.PlayerHealth.IsInvulnerable) 
             { 
                 playerDetector.PlayerHealth.TakeDamage(damageAmount);
-            } 
-            
+            }
+        }
+
+        public void PlayAttackSfx()
+        {
             AudioManager.instance.PlayOneShot(FMODEvents.instance.enemyAttack, this.transform.position);
         }
         #endregion

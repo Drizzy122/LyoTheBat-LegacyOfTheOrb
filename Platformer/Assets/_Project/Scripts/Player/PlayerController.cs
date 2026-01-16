@@ -5,6 +5,7 @@ using UnityEngine;
 using Utilities;
 using UnityEngine.Rendering.Universal;
 using FMOD.Studio;
+using Platformer;
 using UnityEngine.UI;
 
 namespace Platformer
@@ -18,7 +19,7 @@ namespace Platformer
         [field: SerializeField, Self] GroundChecker groundChecker;
         [field: SerializeField, Self] Animator animator;
         [field: SerializeField, Self] private FootstepController footstepController;
-        [field: SerializeField, Self] PlayerHealth playerHealth;
+        [field: SerializeField, Self] Health playerHealth;
         [field: SerializeField, Self] GlideStamina glideStamina;
         
         [Header("Movement Settings")]
@@ -58,9 +59,6 @@ namespace Platformer
         [field: SerializeField] Image echoChargeUI;
         private bool isRegenerating = false;
         
-        
-        
-        
         [field: Header("Glide Settings")] 
         [field: SerializeField] public float glideBoost = 1;
         [field: SerializeField] float glideBoostDecayRate = 0.02f;
@@ -70,7 +68,7 @@ namespace Platformer
         [field: SerializeField] GameObject defaultMesh;  
         [field: SerializeField] GameObject glidingMesh;
 
-        [Header("Attack Settings")]
+        [field: Header("Attack Settings")]
         [field: SerializeField] float attackCoolDown = 0.5f;
         [field: SerializeField] float attackDistance = 1f;
         [field: SerializeField] float spinAttackDistance = 5f;
@@ -604,7 +602,10 @@ namespace Platformer
                 // Handle standard enemies
                 if (hit.CompareTag("Enemy"))
                 {
-                    hit.GetComponent<EnemyHealth>().TakeDamage(attackDamage, knockbackTime);
+                    if(hit.TryGetComponent<Health>(out Health enemyHealth))
+                    {
+                        enemyHealth.TakeDamage(attackDamage, knockbackTime);
+                    }
                 }
                 // Handle environmental objects with the "Destructible" tag
                 else if (hit.CompareTag("Destructable"))
@@ -635,7 +636,7 @@ namespace Platformer
             {
                 if (enemy.CompareTag("Enemy"))
                 {
-                    enemy.GetComponent<EnemyHealth>().TakeDamage(spinAttackDamage, knockbackTime);
+                    enemy.GetComponent<Health>().TakeDamage(spinAttackDamage, knockbackTime);
                 }
             }
         }

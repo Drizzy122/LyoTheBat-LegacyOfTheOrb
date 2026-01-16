@@ -4,8 +4,8 @@ namespace Platformer
 {
     public class DeathState : BaseState
     {
-        PlayerHealth playerHealth;
-        public DeathState(PlayerController player, Animator animator, PlayerHealth playerHealth) : base(player, animator)
+        Health playerHealth;
+        public DeathState(PlayerController player, Animator animator, Health playerHealth) : base(player, animator)
         {
             this.playerHealth = playerHealth;
         }

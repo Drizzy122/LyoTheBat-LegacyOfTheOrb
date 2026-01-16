@@ -12,7 +12,7 @@ namespace Platformer
         {
             if (collision.tag == "Player")
             {
-                collision.GetComponent<PlayerHealth>().AddHealth(healthValue);
+                collision.GetComponent<Health>().AddHealth(healthValue);
                 gameObject.SetActive(false);
             }
         }

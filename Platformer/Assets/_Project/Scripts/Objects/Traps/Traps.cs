@@ -9,7 +9,7 @@ namespace Platformer
         {
             if (other.CompareTag("Player"))
             {
-                other.GetComponent<PlayerHealth>().TakeDamage(damage);
+                other.GetComponent<Health>().TakeDamage(damage);
             }
         }
     }

@@ -4,8 +4,8 @@ namespace Platformer
 {
     public class FlyingEnemyDieState : FlyingEnemyBaseState
     {
-        private EnemyHealth enemyHealth;
-        public FlyingEnemyDieState(FlyingEnemy enemy, Animator animator, EnemyHealth enemyHealth) : base(enemy, animator)
+        private Health enemyHealth;
+        public FlyingEnemyDieState(FlyingEnemy enemy, Animator animator, Health enemyHealth) : base(enemy, animator)
         {
             this.enemyHealth = enemyHealth;
           

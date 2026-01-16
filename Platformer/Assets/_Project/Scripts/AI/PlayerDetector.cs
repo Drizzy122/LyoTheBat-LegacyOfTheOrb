@@ -10,7 +10,7 @@ namespace Platformer {
         [SerializeField] float attackRange = 2f; // Distance from enemy to player to attack
         
         public Transform Player { get; private set; }
-        public PlayerHealth PlayerHealth { get; set; }
+        public Health PlayerHealth { get; set; }
         
         CountdownTimer detectionTimer;
         
@@ -18,7 +18,7 @@ namespace Platformer {
 
         void Awake() {
             Player = GameObject.FindGameObjectWithTag("Player").transform; // Make sure to TAG the player!
-            PlayerHealth = Player.GetComponent<PlayerHealth>();
+            PlayerHealth = Player.GetComponent<Health>();
         }
 
         void Start() {

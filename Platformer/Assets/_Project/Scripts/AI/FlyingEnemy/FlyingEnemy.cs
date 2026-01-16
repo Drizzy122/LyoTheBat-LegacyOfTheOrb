@@ -8,14 +8,14 @@ using Random = UnityEngine.Random;
 namespace Platformer 
 { 
     [RequireComponent(typeof(PlayerDetector))] 
-    [RequireComponent(typeof(EnemyHealth))]
+    [RequireComponent(typeof(Health))]
     public class FlyingEnemy : Entity
     {
         #region Variables
         [field: Header("Component References")]
         [field: SerializeField, Self] PlayerDetector playerDetector;
         [field: SerializeField, Child] Animator animator;
-        [field: SerializeField, Self] EnemyHealth enemyHealth;
+        [field: SerializeField, Self] Health enemyHealth;
         
         [field: Header("Movement")]
         [field: SerializeField] float speed = 5f;
