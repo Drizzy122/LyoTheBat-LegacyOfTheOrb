@@ -24,6 +24,7 @@ namespace Platformer
         public event UnityAction<bool> submit = delegate { };
         public event UnityAction Paused = delegate { };
         
+        public bool IsJumpKeyPressed = false;
         public void OnMove(InputAction.CallbackContext context)
         {
             Move.Invoke(context.ReadValue<Vector2>());
@@ -52,9 +53,11 @@ namespace Platformer
             switch (context.phase)
             {
                 case InputActionPhase.Started:
+                    IsJumpKeyPressed = true; // 2. Set to TRUE when pressed
                     Jump.Invoke(true);
                     break;
                 case InputActionPhase.Canceled:
+                    IsJumpKeyPressed = false; // 3. Set to FALSE when released
                     Jump.Invoke(false);
                     break;
             }

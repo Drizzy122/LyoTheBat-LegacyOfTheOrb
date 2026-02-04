@@ -18,11 +18,7 @@ namespace Platformer
         protected static readonly int DieHash = Animator.StringToHash("Death");
         protected static readonly int EcholocationHash = Animator.StringToHash("Echolocation");        
         protected static readonly int TeleportationHash = Animator.StringToHash("Teleport");
-        
-        // new states for the player
-        protected static readonly int FallHash = Animator.StringToHash("Falling");
-        protected static readonly int LandHash = Animator.StringToHash("Land");
-        protected static readonly int DrowningHash = Animator.StringToHash("Drowning");
+        protected static readonly int SwimHash = Animator.StringToHash("Swim");
 
         protected const float crossFadeDuration = 0.1f;
 
@@ -46,10 +42,6 @@ namespace Platformer
         {
             // noop
         }
-
-        public virtual void OnExit()
-        {
-            // noop
-        }
+        public virtual void OnExit()  {  }
     }
 }

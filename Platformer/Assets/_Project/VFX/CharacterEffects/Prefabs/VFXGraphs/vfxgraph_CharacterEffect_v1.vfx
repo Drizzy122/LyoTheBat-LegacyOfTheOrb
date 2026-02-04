@@ -463,6 +463,22 @@ MonoBehaviour:
     max: Infinity
     enumValues: []
     descendantCount: 0
+  - name: ParticlesRate
+    path: ParticlesRate
+    tooltip: 
+    space: -1
+    spaceable: 0
+    sheetType: m_Float
+    realType: Single
+    defaultValue:
+      m_Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: 1000
+    min: -Infinity
+    max: Infinity
+    enumValues: []
+    descendantCount: 0
   - name: ParticlesColor
     path: ParticlesColor
     tooltip: 
@@ -475,6 +491,22 @@ MonoBehaviour:
         m_SerializableType: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       m_SerializableObject: '{"r":21.82880210876465,"g":6.300182819366455,"b":3.1944589614868166,"a":1.0}'
+    min: -Infinity
+    max: Infinity
+    enumValues: []
+    descendantCount: 0
+  - name: ParticlesSize
+    path: ParticlesSize
+    tooltip: 
+    space: -1
+    spaceable: 0
+    sheetType: m_Float
+    realType: Single
+    defaultValue:
+      m_Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: 0.03
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -495,38 +527,6 @@ MonoBehaviour:
     max: Infinity
     enumValues: []
     descendantCount: 0
-  - name: ParticlesRate
-    path: ParticlesRate
-    tooltip: 
-    space: -1
-    spaceable: 0
-    sheetType: m_Float
-    realType: Single
-    defaultValue:
-      m_Type:
-        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-          PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 1000
-    min: -Infinity
-    max: Infinity
-    enumValues: []
-    descendantCount: 0
-  - name: ParticlesVelocity
-    path: ParticlesVelocity
-    tooltip: 
-    space: -1
-    spaceable: 0
-    sheetType: m_Vector3f
-    realType: Vector3
-    defaultValue:
-      m_Type:
-        m_SerializableType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"x":0.0,"y":0.4000000059604645,"z":0.0}'
-    min: -Infinity
-    max: Infinity
-    enumValues: []
-    descendantCount: 0
   - name: ParticlesLifetime
     path: ParticlesLifetime
     tooltip: 
@@ -543,18 +543,18 @@ MonoBehaviour:
     max: Infinity
     enumValues: []
     descendantCount: 0
-  - name: ParticlesSize
-    path: ParticlesSize
+  - name: ParticlesVelocity
+    path: ParticlesVelocity
     tooltip: 
     space: -1
     spaceable: 0
-    sheetType: m_Float
-    realType: Single
+    sheetType: m_Vector3f
+    realType: Vector3
     defaultValue:
       m_Type:
-        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-          PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 0.03
+        m_SerializableType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      m_SerializableObject: '{"x":0.0,"y":0.4000000059604645,"z":0.0}'
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -622,22 +622,6 @@ MonoBehaviour:
     max: Infinity
     enumValues: []
     descendantCount: 0
-  - name: SparksLifetime
-    path: SparksLifetime
-    tooltip: 
-    space: -1
-    spaceable: 0
-    sheetType: m_Float
-    realType: Single
-    defaultValue:
-      m_Type:
-        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-          PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 0.5
-    min: -Infinity
-    max: Infinity
-    enumValues: []
-    descendantCount: 0
   - name: SparksVelocity
     path: SparksVelocity
     tooltip: 
@@ -666,6 +650,22 @@ MonoBehaviour:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
       m_SerializableObject: 2
+    min: -Infinity
+    max: Infinity
+    enumValues: []
+    descendantCount: 0
+  - name: SparksLifetime
+    path: SparksLifetime
+    tooltip: 
+    space: -1
+    spaceable: 0
+    sheetType: m_Float
+    realType: Single
+    defaultValue:
+      m_Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: 0.5
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -749,6 +749,22 @@ MonoBehaviour:
     max: Infinity
     enumValues: []
     descendantCount: 0
+  - name: SmokeRate
+    path: SmokeRate
+    tooltip: 
+    space: -1
+    spaceable: 0
+    sheetType: m_Float
+    realType: Single
+    defaultValue:
+      m_Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: 16
+    min: -Infinity
+    max: Infinity
+    enumValues: []
+    descendantCount: 0
   - name: FlipbookSizeSmoke
     path: FlipbookSizeSmoke
     tooltip: 
@@ -781,8 +797,8 @@ MonoBehaviour:
     max: Infinity
     enumValues: []
     descendantCount: 0
-  - name: SmokeRate
-    path: SmokeRate
+  - name: SmokeSize
+    path: SmokeSize
     tooltip: 
     space: -1
     spaceable: 0
@@ -792,7 +808,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 16
+      m_SerializableObject: 1.5
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -809,22 +825,6 @@ MonoBehaviour:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
       m_SerializableObject: 3
-    min: -Infinity
-    max: Infinity
-    enumValues: []
-    descendantCount: 0
-  - name: SmokeSize
-    path: SmokeSize
-    tooltip: 
-    space: -1
-    spaceable: 0
-    sheetType: m_Float
-    realType: Single
-    defaultValue:
-      m_Type:
-        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-          PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 1.5
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -957,7 +957,7 @@ MonoBehaviour:
     enumValues: []
     descendantCount: 0
   m_ImportDependencies: []
-  m_GraphVersion: 18
+  m_GraphVersion: 19
   m_ResourceVersion: 1
   m_SubgraphDependencies: []
   m_CategoryPath: 
@@ -973,10 +973,6 @@ VisualEffectResource:
     m_RendererSettings:
       motionVectorGenerationMode: 0
       shadowCastingMode: 0
-      rayTracingMode: 0
-      receiveShadows: 0
-      reflectionProbeUsage: 0
-      lightProbeUsage: 0
     m_CullingFlags: 3
     m_UpdateMode: 0
     m_PreWarmDeltaTime: 0.05
@@ -2000,6 +1996,7 @@ MonoBehaviour:
   m_SubOutputs:
   - {fileID: 8926484042661614590}
   - {fileID: 8926484042661615692}
+  useBaseColorMap: 3
   colorMapping: 0
   uvMode: 0
   flipbookLayout: 0
@@ -3285,7 +3282,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614635}
   m_ExposedName: Transform
   m_Exposed: 1
-  m_Order: 17
+  m_Order: 1
   m_Category: 
   m_Min:
     m_Type:
@@ -3825,7 +3822,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614654}
   m_ExposedName: ParticlesRate
   m_Exposed: 1
-  m_Order: 5
+  m_Order: 2
   m_Category: PARTICLES FLOATING
   m_Min:
     m_Type:
@@ -3906,7 +3903,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614656}
   m_ExposedName: ParticlesColor
   m_Exposed: 1
-  m_Order: 1
+  m_Order: 3
   m_Category: PARTICLES FLOATING
   m_Min:
     m_Type:
@@ -4180,7 +4177,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614669}
   m_ExposedName: ParticlesSize
   m_Exposed: 1
-  m_Order: 12
+  m_Order: 4
   m_Category: PARTICLES FLOATING
   m_Min:
     m_Type:
@@ -4470,7 +4467,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614677}
   m_ExposedName: ParticlesTexture
   m_Exposed: 1
-  m_Order: 3
+  m_Order: 5
   m_Category: PARTICLES FLOATING
   m_Min:
     m_Type:
@@ -4551,7 +4548,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614679}
   m_ExposedName: ParticlesLifetime
   m_Exposed: 1
-  m_Order: 10
+  m_Order: 6
   m_Category: PARTICLES FLOATING
   m_Min:
     m_Type:
@@ -6432,6 +6429,7 @@ MonoBehaviour:
   sortingPriority: 0
   m_SubOutputs:
   - {fileID: 8926484042661615708}
+  useBaseColorMap: 3
   colorMapping: 0
   uvMode: 1
   flipbookLayout: 0
@@ -7745,7 +7743,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615058}
   m_ExposedName: SmokeColor
   m_Exposed: 1
-  m_Order: 15
+  m_Order: 7
   m_Category: SMOKE
   m_Min:
     m_Type:
@@ -7962,7 +7960,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615066}
   m_ExposedName: SmokeFlipbookTexture
   m_Exposed: 1
-  m_Order: 20
+  m_Order: 8
   m_Category: SMOKE
   m_Min:
     m_Type:
@@ -8043,7 +8041,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615068}
   m_ExposedName: SmokeRate
   m_Exposed: 1
-  m_Order: 23
+  m_Order: 9
   m_Category: SMOKE
   m_Min:
     m_Type:
@@ -8124,7 +8122,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615072}
   m_ExposedName: FlipbookSizeSmoke
   m_Exposed: 1
-  m_Order: 21
+  m_Order: 10
   m_Category: SMOKE
   m_Min:
     m_Type:
@@ -8273,7 +8271,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615076}
   m_ExposedName: FlipbookCurveSmoke
   m_Exposed: 1
-  m_Order: 22
+  m_Order: 11
   m_Category: SMOKE
   m_Min:
     m_Type:
@@ -8388,7 +8386,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615079}
   m_ExposedName: SmokeSize
   m_Exposed: 1
-  m_Order: 25
+  m_Order: 12
   m_Category: SMOKE
   m_Min:
     m_Type:
@@ -8608,7 +8606,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615085}
   m_ExposedName: SmokeLifetime
   m_Exposed: 1
-  m_Order: 24
+  m_Order: 13
   m_Category: SMOKE
   m_Min:
     m_Type:
@@ -10089,6 +10087,7 @@ MonoBehaviour:
   sortingPriority: 0
   m_SubOutputs:
   - {fileID: 8926484042661615721}
+  useBaseColorMap: 3
   colorMapping: 0
   uvMode: 1
   flipbookLayout: 0
@@ -11535,7 +11534,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615257}
   m_ExposedName: FireColor
   m_Exposed: 1
-  m_Order: 7
+  m_Order: 14
   m_Category: FIRE
   m_Min:
     m_Type:
@@ -11752,7 +11751,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615263}
   m_ExposedName: FireFlipbookTexture
   m_Exposed: 1
-  m_Order: 13
+  m_Order: 15
   m_Category: FIRE
   m_Min:
     m_Type:
@@ -11982,7 +11981,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615269}
   m_ExposedName: FlipbookCurveFire
   m_Exposed: 1
-  m_Order: 18
+  m_Order: 17
   m_Category: FIRE
   m_Min:
     m_Type:
@@ -12063,7 +12062,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615271}
   m_ExposedName: FireRate
   m_Exposed: 1
-  m_Order: 19
+  m_Order: 18
   m_Category: FIRE
   m_Min:
     m_Type:
@@ -12144,7 +12143,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615273}
   m_ExposedName: FireLifetime
   m_Exposed: 1
-  m_Order: 26
+  m_Order: 19
   m_Category: FIRE
   m_Min:
     m_Type:
@@ -12364,7 +12363,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615279}
   m_ExposedName: FIreSize
   m_Exposed: 1
-  m_Order: 27
+  m_Order: 20
   m_Category: FIRE
   m_Min:
     m_Type:
@@ -12584,7 +12583,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615285}
   m_ExposedName: ParticlesVelocity
   m_Exposed: 1
-  m_Order: 8
+  m_Order: 21
   m_Category: PARTICLES FLOATING
   m_Min:
     m_Type:
@@ -13792,6 +13791,7 @@ MonoBehaviour:
   sortingPriority: 0
   m_SubOutputs:
   - {fileID: 8926484042661615735}
+  useBaseColorMap: 3
   colorMapping: 0
   uvMode: 0
   flipbookLayout: 0
@@ -15176,7 +15176,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615417}
   m_ExposedName: SparksColor
   m_Exposed: 1
-  m_Order: 2
+  m_Order: 22
   m_Category: SPARKS
   m_Min:
     m_Type:
@@ -15393,7 +15393,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615423}
   m_ExposedName: SparksTexture
   m_Exposed: 1
-  m_Order: 4
+  m_Order: 23
   m_Category: SPARKS
   m_Min:
     m_Type:
@@ -15779,7 +15779,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615438}
   m_ExposedName: SparksRate
   m_Exposed: 1
-  m_Order: 6
+  m_Order: 24
   m_Category: SPARKS
   m_Min:
     m_Type:
@@ -16350,7 +16350,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615466}
   m_ExposedName: SparksVelocity
   m_Exposed: 1
-  m_Order: 11
+  m_Order: 25
   m_Category: SPARKS
   m_Min:
     m_Type:
@@ -16570,7 +16570,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615480}
   m_ExposedName: SparksVelocityUp
   m_Exposed: 1
-  m_Order: 14
+  m_Order: 26
   m_Category: SPARKS
   m_Min:
     m_Type:
@@ -16651,7 +16651,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615482}
   m_ExposedName: SparksLifetime
   m_Exposed: 1
-  m_Order: 9
+  m_Order: 27
   m_Category: SPARKS
   m_Min:
     m_Type:

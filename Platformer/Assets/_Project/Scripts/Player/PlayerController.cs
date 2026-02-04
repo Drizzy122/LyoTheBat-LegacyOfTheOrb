@@ -184,6 +184,7 @@ namespace Platformer
             var echoLocationState = new EcholocationState(this, animator);
             var teleportState = new TeleportState(this, animator);
             var wallClimbState = new WallClimbState(this, animator);
+            var swimState = new SwimState(this, animator);
             
             // Define transitions for jump 
             At(locomotionState, jumpState, new FuncPredicate(() => jumpTimer.IsRunning));
@@ -227,6 +228,15 @@ namespace Platformer
             
             // Definne transition for teleportation
              At(teleportState, locomotionState, new FuncPredicate(() => !isTeleporting));
+            
+             At(locomotionState, swimState, new FuncPredicate(() => InWater));
+             At(jumpState, swimState, new FuncPredicate(() => InWater));
+             At(doubleJumpState, swimState, new FuncPredicate(() => InWater));
+             At(glideState, swimState, new FuncPredicate(() => InWater));
+
+// 2. Transition FROM Swim State
+// If we exit the water trigger, go back to Locomotion (or Jump if you implement jumping out of water)
+             At(swimState, locomotionState, new FuncPredicate(() => !InWater));
              
             // Set initial state
             Any(teleportState, new FuncPredicate(() => isTeleporting));
@@ -239,6 +249,7 @@ namespace Platformer
         bool ReturnToLocomotionState()
         {
             return groundChecker.IsGrounded
+                   && !InWater 
                    && !playerHealth.isDead
                    && !attackTimer.IsRunning
                    && !spinAttackTimer.IsRunning
@@ -750,6 +761,7 @@ namespace Platformer
             Gizmos.color = Color.cyan;
             Gizmos.DrawWireSphere(transform.position, spinAttackDistance);
      
+          
             if (Application.isPlaying)
             {
                 Gizmos.color = Color.grey;
@@ -777,7 +789,6 @@ namespace Platformer
                 Gizmos.color = Color.magenta;
                 if(wallClimbNormal != Vector3.zero) Gizmos.DrawRay(wallClimbTargetPos, wallClimbNormal);
                 
-   
             }
         }
         
@@ -795,17 +806,88 @@ namespace Platformer
             input.interact += OnInteract;
             
         }
+
         void OnDisable()
         {
             input.Jump -= OnJump;
-           // input.Dash -= OnDash;
+            // input.Dash -= OnDash;
             input.Echo -= OnEcho;
             input.Wallclimb -= OnWallClimb;
             input.Glide -= OnGlide;
             input.Attack -= OnAttack;
             input.SpinAttack -= OnSpinAttack;
             input.interact -= OnInteract;
-            
+
+        }
+        
+        [Header("Swim Settings")]
+        [SerializeField] float swimSpeed = 4f;
+        [SerializeField] float swimLevelOffset = 1.2f; // How deep the player sits in the water
+        [SerializeField] float waterSurfaceY; // Stores the height of the water
+        [SerializeField] GameObject objectActiveInWater;
+        public bool InWater { get; private set; }
+        
+        private void OnTriggerEnter(Collider other)
+        {
+            // Detect entering water
+            if (other.CompareTag("Water"))
+            {
+                InWater = true;
+                // Assume the top of the collider is the water surface
+                waterSurfaceY = other.bounds.max.y;
+                
+                if (objectActiveInWater != null) 
+                    objectActiveInWater.SetActive(true);
+                // ----------------
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            // Detect leaving water
+            if (other.CompareTag("Water"))
+            {
+                InWater = false;
+                
+                // --- ADD THIS ---
+                if (objectActiveInWater != null) 
+                    objectActiveInWater.SetActive(false);
+            }
+        }
+
+        public void HandleSwimming()
+        {
+            // 1. Determine Movement Direction (Same as normal movement)
+            var adjustedDirection = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * movement;
+    
+            // 2. Apply Swim Speed
+            if (adjustedDirection.magnitude > 0f)
+            {
+                HandleRotation(adjustedDirection);
+                // Move horizontally using swimSpeed instead of moveSpeed
+                Vector3 velocity = adjustedDirection * (swimSpeed * Time.fixedDeltaTime);
+                rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
+                SmoothSpeed(adjustedDirection.magnitude);
+            }
+            else
+            {
+                SmoothSpeed(0f);
+                rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+            }
+
+            // 3. Handle Floating (Buoyancy)
+            // Smoothly move the player's Y position to the water surface minus the offset
+            float targetY = waterSurfaceY - swimLevelOffset;
+            Vector3 currentPos = transform.position;
+    
+            // Lerp specifically on the Y axis to create a floating effect
+            float newY = Mathf.Lerp(currentPos.y, targetY, Time.fixedDeltaTime * 5f);
+            transform.position = new Vector3(currentPos.x, newY, currentPos.z);
+    
+            // Kill vertical velocity so gravity doesn't pull us down
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+
+            UpdateSound(); // Optional: You might want a different sound for swimming later
         }
     }
 }

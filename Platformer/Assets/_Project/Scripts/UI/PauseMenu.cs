@@ -10,6 +10,7 @@ namespace Platformer
         [field: Header("Configs")] 
         [field: SerializeField, Anywhere] InputReader input;
         [field: SerializeField] GameObject pauseUI;
+        [field: SerializeField, Anywhere] PlayerController playerController;
         public Button primaryButton;
         [field: SerializeField] bool isPaused = false;
         [field: SerializeField] string musicName;
@@ -53,7 +54,8 @@ namespace Platformer
             pauseUI.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            
+            // Disable the PlayerController script
+            if (playerController != null) playerController.enabled = false;
             AudioManager.instance.SetMusicParameter(musicName, pausedValue);
             AudioManager.instance.SetAmbienceParameter(musicName, pausedValue);
             AudioManager.instance.PlayOneShot(FMODEvents.instance.uiopen, this.transform.position);
@@ -66,7 +68,8 @@ namespace Platformer
             isPaused = false;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            
+            // Re-enable the PlayerController script
+            if (playerController != null) playerController.enabled = true;
             AudioManager.instance.SetMusicParameter(musicName, musicValue);
             AudioManager.instance.SetAmbienceParameter(musicName, musicValue);
             AudioManager.instance.PlayOneShot(FMODEvents.instance.uiclose, this.transform.position);

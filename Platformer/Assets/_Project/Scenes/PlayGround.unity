@@ -43178,6 +43178,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5208682326085068492}
+  - component: {fileID: 5208682326085068493}
   m_Layer: 0
   m_Name: Abilities
   m_TagString: Untagged
@@ -57531,6 +57532,19 @@ Transform:
   - {fileID: 7371680429116541060}
   m_Father: {fileID: 640413783214269159}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5208682326085068493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10387884682189763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 517644a075fa4cfda8d542daba6f619d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PowerUpEffects
+  lightningVfx: {fileID: 7371680429116541061}
 --- !u!222 &5214852484158327628
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -59507,6 +59521,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: {fileID: 11400000, guid: 450606947cbffb14f9c2359efba88355, type: 2}
   pauseUI: {fileID: 991890433089156917}
+  playerController: {fileID: 6925275199827812126}
   primaryButton: {fileID: 302811500}
   isPaused: 0
   musicName: MusciIntensity
