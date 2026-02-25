@@ -13,7 +13,7 @@ namespace Platformer
         {
            // Debug.Log("Player is Attacking");
             animator.CrossFade(SpinAttackHash, crossFadeDuration);
-            player.SpinAttack();
+            player.combat.HeavyAttack();
         }
         public override void FixedUpdate()
         {

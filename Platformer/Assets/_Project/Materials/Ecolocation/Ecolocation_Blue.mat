@@ -55,7 +55,7 @@ Material:
     - _Cull: 0
     - _DstBlend: 1
     - _DstBlendAlpha: 1
-    - _IntersectionDepth: 2
+    - _IntersectionDepth: 2.03
     - _IntersectionNoiseScale: 20
     - _IntersectionNoiseStrength: 1
     - _QueueControl: 0

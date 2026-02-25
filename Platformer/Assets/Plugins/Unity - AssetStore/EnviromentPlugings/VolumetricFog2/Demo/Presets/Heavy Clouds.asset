@@ -22,7 +22,7 @@ MonoBehaviour:
   constantDensity: 0
   noiseTexture: {fileID: 2800000, guid: 9c79340e1a1054275ba04070a27de306, type: 3}
   noiseTextureOptimizedSize: 256
-  noiseStrength: 1.81
+  noiseStrength: 1.93
   noiseScale: 40
   noiseFinalMultiplier: 1.5
   useDetailNoise: 1
@@ -49,7 +49,7 @@ MonoBehaviour:
   terrainFogHeight: 25
   terrainFogMinAltitude: 0
   terrainFogMaxAltitude: 150
-  albedo: {r: 0.9098039, g: 0.9098039, b: 0.9098039, a: 1}
+  albedo: {r: 1, g: 1, b: 1, a: 1}
   enableDepthGradient: 0
   depthGradient:
     serializedVersion: 2
@@ -131,12 +131,12 @@ MonoBehaviour:
   lightDiffusionPower: 32
   lightDiffusionIntensity: 0.2
   lightDiffusionNearDepthAtten: 0
-  receiveShadows: 0
+  receiveShadows: 1
   shadowIntensity: 0.5
   shadowCancellation: 0
   shadowMaxDistance: 250
   cookie: 0
-  distantFog: 0
+  distantFog: 1
   distantFogStartDistance: 50
   distantFogDistanceDensity: 0.01
   distantFogMaxHeight: 150

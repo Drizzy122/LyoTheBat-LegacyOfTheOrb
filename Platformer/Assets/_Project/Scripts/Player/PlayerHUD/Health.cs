@@ -13,7 +13,6 @@ namespace Platformer
         Player,
         Enemy
     }
-
     public class Health : ValidatedMonoBehaviour, IDamageable
     {
         [field: Header("Configuration")]
@@ -26,7 +25,7 @@ namespace Platformer
         [field: Header("Player Settings")]
         [field: SerializeField, Anywhere] CinemachineOrbitalFollow freeLookCam;
         [field: SerializeField, Anywhere] Renderer playerMeshRenderer;
-        [field: SerializeField] float iFramesDuration = 2f;
+        [field: SerializeField] public float iFramesDuration { get; private set; } = 2f;
         [field: SerializeField] int numberOfFlashes = 10;
         
         [field: Header("Enemy Settings")]
@@ -94,6 +93,7 @@ namespace Platformer
             switch (entityHealth)
             {
                 case EntityHealth.Player:
+                    OnHit?.Invoke(knockBackTime);
                     AudioManager.instance.PlayOneShot(FMODEvents.instance.playerHurt, transform.position);
                     StartCoroutine(Invunerability());
                     break;
@@ -164,7 +164,5 @@ namespace Platformer
                 }
             }
         }
-
-       
     }
 }

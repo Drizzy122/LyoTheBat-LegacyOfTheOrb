@@ -1,0 +1,7 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=7c57e3cdb92d613499390464cd9fa843&amp;type=3#MainMenuStyle"/>
+    <ui:VisualElement name="Container" style="flex-grow: 1;">
+        <ui:Label text="Main Menu" class="header"/>
+        <ui:Button text="New Game" class="button" style="justify-content: flex-start; align-self: auto; align-content: auto; align-items: auto; translate: 7px 487px;"/>
+    </ui:VisualElement>
+</ui:UXML>

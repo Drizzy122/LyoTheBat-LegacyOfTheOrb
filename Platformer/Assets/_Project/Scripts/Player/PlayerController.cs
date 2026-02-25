@@ -5,7 +5,7 @@ using UnityEngine;
 using Utilities;
 using UnityEngine.Rendering.Universal;
 using FMOD.Studio;
-using Platformer;
+using DG.Tweening;
 using UnityEngine.UI;
 
 namespace Platformer
@@ -20,85 +20,76 @@ namespace Platformer
         [field: SerializeField, Self] Animator animator;
         [field: SerializeField, Self] private FootstepController footstepController;
         [field: SerializeField, Self] Health playerHealth;
+        [field: SerializeField, Self]  public PlayerCombat combat;
+        [field: SerializeField, Self] PlayerAbilities abilities;
         [field: SerializeField, Self] GlideStamina glideStamina;
         
         [Header("Movement Settings")]
-        [field: SerializeField] float moveSpeed = 6f;
-        [field: SerializeField] float rotationSpeed = 15f;
+        [field: SerializeField] [Range(0,2000)] float moveSpeed = 6f;
+        [field: SerializeField] [Range(0,2000)] float rotationSpeed = 15f;
         [field: SerializeField] float smoothTime = 0.2f;
         
         [field: Header("Jump Settings")] 
         [field: SerializeField] float jumpForce = 10f;
         [field: SerializeField] float jumpDuration = 0.5f;
-        [field: SerializeField] float jumpCooldown = 0f;
+        [field: HideInInspector] int jumpCount = 2;
+        [field: HideInInspector] int remainingJumps = 2;
         [field: SerializeField] float gravityMultiplier = 3f;
-        [field: SerializeField] private int jumpCount = 2;
-        [field: SerializeField] private int remainingJumps = 2;
-        [field: SerializeField] private int maxFallSpeed = 10;
+        [field: SerializeField] int maxFallSpeed = 10;
 
         [field: Header("Dash Settings")] 
         [field: SerializeField] float dashForce = 10f;
         [field: SerializeField] float dashDuration = 1f;
-        [field: SerializeField] float dashCooldown = 2f;
-        
-        
-        
-        
-        
-        [field: Header("Echolocation Settings")] 
-        [field: SerializeField] float echoCooldown = 0.5f;
-        [field: SerializeField] float detectionRadius = 5f; 
-        public LayerMask detectionLayer;
-        [field: SerializeField] ParticleSystem detectionParticle;
-        public ScriptableRendererFeature echoRendererFeature;
-        private ScriptableRendererData rendererData;
-        [field: SerializeField] private float echoDuration = 5f;
-        [field: SerializeField] private int maxEchoCharges = 3;
-        [field: SerializeField] private float chargeRegenerationTime = 15f; 
-        private int currentEchoCharges;
-        [field: SerializeField] Image echoChargeUI;
-        private bool isRegenerating = false;
         
         [field: Header("Glide Settings")] 
+        [field: SerializeField] float glideMoveSpeed = 2;
+        [field: SerializeField] float glideFallSpeed = 0.1f;
+        
         [field: SerializeField] public float glideBoost = 1;
         [field: SerializeField] float glideBoostDecayRate = 0.02f;
-        [field: SerializeField] float glideFallSpeed = 0.1f;
-        [field: SerializeField] float glideMoveSpeed = 2;
-        [field: SerializeField] public float glideTime = 3;
+        
         [field: SerializeField] GameObject defaultMesh;  
         [field: SerializeField] GameObject glidingMesh;
 
-        [field: Header("Attack Settings")]
-        [field: SerializeField] float attackCoolDown = 0.5f;
-        [field: SerializeField] float attackDistance = 1f;
-        [field: SerializeField] float spinAttackDistance = 5f;
-        [field: SerializeField] int attackDamage = 10;
-        [field: SerializeField] int spinAttackDamage = 20;
-        [field: SerializeField] float knockbackTime = 0.5f;
-        
-        [Header("Interact")] 
+        [Header("Teleport Settings")] 
+        public bool isTeleporting;
         [field: SerializeField] float interactDistance = 5;
         
         [field: Header("Wall Climb Settings")] 
         [field: SerializeField] float wallCheckDist = 1f;
         [field: SerializeField] float wallClimbMoveSpeed = 5f;
         [field: SerializeField] LayerMask wallClimbLayer;
-
-        [field: Header("More variables")]
-        public bool wallClimbimg;
-        bool[] wallClimbChecks;
+        [HideInInspector] public bool wallClimbimg;
+        [HideInInspector] bool[] wallClimbChecks;
+        [HideInInspector] public Vector3 wallClimbPos;
         Vector3 wallClimbNormal;
         Vector3 wallClimbTargetPos;
-        public Vector3 wallClimbPos;
-        const float ZeroF = 0f;
        
+        
+        [Header("Swim Settings")]
+        [SerializeField] float swimSpeed = 4f;
+        [SerializeField] float swimLevelOffset = 1.2f; 
+        [SerializeField] float waterSurfaceY;
+        [SerializeField] GameObject objectActiveInWater;
+        public bool InWater { get; private set; }
+
+        [field: Header("More variables")]
+  
+        const float ZeroF = 0f;
         float currentSpeed;
         float velocity;
         float jumpVelocity;
         float dashVelocity = 1f;
-        public bool isTeleporting;
         Vector3 movement;
         Transform mainCam;
+
+        [field: Header("Animation Cooldown Settings")] 
+        [field: SerializeField] float hurtDuration = 0.4f;
+        [field: SerializeField] float jumpCooldown = 0f;
+        [field: SerializeField] public float glideCoolDown = 0.5f;
+        [field: SerializeField] float sonarPulseCooldown = 0.5f;
+        [field: SerializeField] float dashCooldown = 0.5f;
+        [field: SerializeField] float attackCoolDown = 0.5f;
         
         [field: Header("Timers")] 
         List<Timer> timers;
@@ -108,12 +99,15 @@ namespace Platformer
         CountdownTimer dashCooldownTimer;
         CountdownTimer attackTimer;
         CountdownTimer spinAttackTimer;
-        CountdownTimer echoTimer;
+        CountdownTimer pulseTimer;
         CountdownTimer glideTimer;
+        CountdownTimer hurtTimer;
+      
 
         StateMachine stateMachine;
-        private EventInstance playerFootsteps;
+        
         static readonly int Speed = Animator.StringToHash("Speed");
+        
         #endregion
         void Awake()
         {
@@ -123,13 +117,8 @@ namespace Platformer
             SetupTimers();
             SetupStateMachine();
         }
-        void Start()
-        {
-            playerFootsteps = AudioManager.instance.CreateEventInstance(FMODEvents.instance.playerFootsteps);
-            input.EnablePlayerActions();
-            currentEchoCharges = maxEchoCharges;
-            UpdateEchoChargeUI();
-        }
+        void Start() => input.EnablePlayerActions();
+
         void Update()
         {
             movement = new Vector3(input.Direction.x, 0f, input.Direction.y);
@@ -138,6 +127,12 @@ namespace Platformer
             HandleTimers();
             TriggerFootstepEvents();
             UpdateAnimator();
+            
+            if (combat.enemyDetection != null)
+            {
+                combat.enemyDetection.ScanForEnemies(GetAdjustedMovementDirection());
+            }
+           
         }
         void FixedUpdate()
         {
@@ -145,26 +140,7 @@ namespace Platformer
             WallClimbCheck();
         }
         void UpdateAnimator() => animator.SetFloat(Speed, currentSpeed);
-        void UpdateSound()
-        {
-            if (rb.linearVelocity.x != 0 && groundChecker.IsGrounded)
-            {
-                PLAYBACK_STATE playbackState;
-                playerFootsteps.getPlaybackState(out playbackState);
-
-                if (playbackState.Equals(PLAYBACK_STATE.STOPPED))
-                {
-                    playerFootsteps.start();
-                }
-
-                // Adjust the sound properties based on movement speed
-                playerFootsteps.setParameterByName("moveSpeed", moveSpeed);
-            }
-            else
-            {
-                playerFootsteps.stop(STOP_MODE.ALLOWFADEOUT);
-            }
-        }
+       
 
         #region StateMachine
         private void SetupStateMachine()
@@ -181,17 +157,21 @@ namespace Platformer
             var attackState = new AttackState(this, animator);
             var spinAttackState = new SpinAttackState(this, animator);
             var deathState = new DeathState(this, animator, playerHealth);
-            var echoLocationState = new EcholocationState(this, animator);
             var teleportState = new TeleportState(this, animator);
             var wallClimbState = new WallClimbState(this, animator);
             var swimState = new SwimState(this, animator);
+    
+            var hurtState = new HurtState(this, animator);
+
+            Any(hurtState, new FuncPredicate(() => hurtTimer.IsRunning && !playerHealth.isDead));
+      
             
             // Define transitions for jump 
             At(locomotionState, jumpState, new FuncPredicate(() => jumpTimer.IsRunning));
             At(locomotionState, jumpState, new FuncPredicate(() => !groundChecker.IsGrounded));
 
             // Define transitions for double jump
-            At(doubleJumpState, glideState, new FuncPredicate(() => glideTimer.IsRunning));
+            At(doubleJumpState, glideState, new FuncPredicate(() => glideTimer.IsRunning && !InWater));;
             At(jumpState, doubleJumpState, new FuncPredicate(() => jumpTimer.IsRunning && remainingJumps <= jumpCount - 2));
             At(doubleJumpState, dashState, new FuncPredicate(() => dashTimer.IsRunning));
 
@@ -203,7 +183,7 @@ namespace Platformer
             
             // Define transitions for attack
             At(locomotionState, attackState, new FuncPredicate(() => attackTimer.IsRunning));
-            At(attackState, locomotionState, new FuncPredicate(() => !attackTimer.IsRunning));
+            At(attackState, locomotionState, new FuncPredicate(() => !attackTimer.IsRunning));;
             
             At(locomotionState, spinAttackState, new FuncPredicate(() => spinAttackTimer.IsRunning));
             At(spinAttackState, locomotionState, new FuncPredicate(() => !spinAttackTimer.IsRunning));
@@ -211,13 +191,9 @@ namespace Platformer
             // Enable Spin Attack while jumping
             At(jumpState, spinAttackState, new FuncPredicate(() => spinAttackTimer.IsRunning));
             At(spinAttackState, jumpState, new FuncPredicate(() => !spinAttackTimer.IsRunning || jumpTimer.IsRunning));
-
-            // Define transitions to echo state
-            At(locomotionState, echoLocationState, new FuncPredicate(() => echoTimer.IsRunning));
-            At(echoLocationState, locomotionState, new FuncPredicate(() => !echoTimer.IsRunning));
-
+            
             // Define transitions for glide
-            At(jumpState, glideState, new FuncPredicate(() => glideTimer.IsRunning));
+            At(jumpState, glideState, new FuncPredicate(() => glideTimer.IsRunning && !InWater));
             At(dashState, glideState, new FuncPredicate(() => glideTimer.IsRunning));
             At(glideState, jumpState, new FuncPredicate(() => !glideTimer.IsRunning));
             
@@ -230,18 +206,22 @@ namespace Platformer
              At(teleportState, locomotionState, new FuncPredicate(() => !isTeleporting));
             
              At(locomotionState, swimState, new FuncPredicate(() => InWater));
+             At(swimState, locomotionState, new FuncPredicate(() => !InWater));
+             
+            
              At(jumpState, swimState, new FuncPredicate(() => InWater));
              At(doubleJumpState, swimState, new FuncPredicate(() => InWater));
              At(glideState, swimState, new FuncPredicate(() => InWater));
-
-// 2. Transition FROM Swim State
-// If we exit the water trigger, go back to Locomotion (or Jump if you implement jumping out of water)
-             At(swimState, locomotionState, new FuncPredicate(() => !InWater));
              
-            // Set initial state
+             // Jump out: If we press jump while swimming (uses the logic we set up in OnJump)
+             At(swimState, jumpState, new FuncPredicate(() => jumpTimer.IsRunning));
+             
+            
+             // Set initial state
             Any(teleportState, new FuncPredicate(() => isTeleporting));
             Any(deathState, new FuncPredicate(() => playerHealth.isDead));
             Any(locomotionState, new FuncPredicate(ReturnToLocomotionState));
+            
             
             stateMachine.SetState(locomotionState);
         }
@@ -256,8 +236,8 @@ namespace Platformer
                    && !jumpTimer.IsRunning
                    && !dashTimer.IsRunning
                    && !glideTimer.IsRunning
-                   && !echoTimer.IsRunning
-                   && !isTeleporting;
+                   && !isTeleporting
+                   && !hurtTimer.IsRunning;
 
         }
         void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);
@@ -277,13 +257,16 @@ namespace Platformer
             // Setup timers
             jumpTimer = new CountdownTimer(jumpDuration);
             jumpCooldownTimer = new CountdownTimer(jumpCooldown);
-
-            jumpTimer.OnTimerStart += () => jumpVelocity = jumpForce;
-            jumpTimer.OnTimerStop += () => jumpCooldownTimer.Start();
-
+            pulseTimer = new CountdownTimer(sonarPulseCooldown);
+            glideTimer = new CountdownTimer(glideCoolDown);
+            attackTimer = new CountdownTimer(attackCoolDown);
+            spinAttackTimer = new CountdownTimer(attackCoolDown);
             dashTimer = new CountdownTimer(dashDuration);
             dashCooldownTimer = new CountdownTimer(dashCooldown);
-
+            
+            jumpTimer.OnTimerStart += () => jumpVelocity = jumpForce;
+            jumpTimer.OnTimerStop += () => jumpCooldownTimer.Start();
+            hurtTimer = new CountdownTimer(0f);
             dashTimer.OnTimerStart += () => dashVelocity = dashForce;
             dashTimer.OnTimerStop += () =>
             {
@@ -291,13 +274,10 @@ namespace Platformer
                 dashCooldownTimer.Start();
             };
 
-            echoTimer = new CountdownTimer(echoCooldown);
-            glideTimer = new CountdownTimer(glideTime);
-            attackTimer = new CountdownTimer(attackCoolDown);
-            spinAttackTimer = new CountdownTimer(attackCoolDown);
+           
 
-            timers = new List<Timer>(8)
-                { jumpTimer, jumpCooldownTimer, dashTimer, dashCooldownTimer, attackTimer,spinAttackTimer, echoTimer, glideTimer };
+            timers = new List<Timer>(9)
+                { jumpTimer, jumpCooldownTimer, dashTimer, dashCooldownTimer, attackTimer,spinAttackTimer, pulseTimer, glideTimer, hurtTimer };
         }
         #endregion
 
@@ -321,7 +301,7 @@ namespace Platformer
                 // Reset horizontal velocity for a snappy stop
                 rb.linearVelocity = new Vector3(ZeroF, rb.linearVelocity.y, ZeroF);
             }
-            UpdateSound();
+            
         }
         void HandleHorizontalMovement(Vector3 adjustedDirection)
         {
@@ -340,7 +320,54 @@ namespace Platformer
         {
             currentSpeed = Mathf.SmoothDamp(currentSpeed, value, ref velocity, smoothTime);
         }
-        void TriggerFootstepEvents()
+        // NEW: Gets the exact direction the player is trying to move relative to the camera
+        public Vector3 GetAdjustedMovementDirection()
+        {
+            var adjustedDirection = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * movement;
+            return adjustedDirection.normalized;
+        }
+        
+        public void StopMovement()
+        {
+            rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+            // You'll need to use reflection or just set currentSpeed to 0 if it's accessible!
+            // Since currentSpeed is private in PlayerController, we can just set it here:
+            currentSpeed = 0f; 
+        }
+        
+        public void HandleSwimming()
+        {
+            // 1. Determine Movement Direction (Same as normal movement)
+            var adjustedDirection = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * movement;
+    
+            // 2. Apply Swim Speed
+            if (adjustedDirection.magnitude > 0f)
+            {
+                HandleRotation(adjustedDirection);
+                // Move horizontally using swimSpeed instead of moveSpeed
+                Vector3 velocity = adjustedDirection * (swimSpeed * Time.fixedDeltaTime);
+                rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
+                SmoothSpeed(adjustedDirection.magnitude);
+            }
+            else
+            {
+                SmoothSpeed(0f);
+                rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+            }
+
+            // 3. Handle Floating (Buoyancy)
+            // Smoothly move the player's Y position to the water surface minus the offset
+            float targetY = waterSurfaceY - swimLevelOffset;
+            Vector3 currentPos = transform.position;
+    
+            // Lerp specifically on the Y axis to create a floating effect
+            float newY = Mathf.Lerp(currentPos.y, targetY, Time.fixedDeltaTime * 5f);
+            transform.position = new Vector3(currentPos.x, newY, currentPos.z);
+    
+            // Kill vertical velocity so gravity doesn't pull us down
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        }
+        public void TriggerFootstepEvents()
         {
             if (groundChecker.IsGrounded && currentSpeed > 0.1f)
             {
@@ -352,6 +379,20 @@ namespace Platformer
                     else
                         footstepController.RightFootDown();
                 }
+            }
+        }
+        
+        void HandlePlayerHurt(float knockbackTime)
+        {
+            if (!playerHealth.isDead)
+            {
+                // Use knockbackTime if the enemy provided one, otherwise use our new short hurtDuration!
+                float stunDuration = knockbackTime > 0 ? knockbackTime : hurtDuration;
+                hurtTimer.Reset(stunDuration);
+                hurtTimer.Start();
+        
+                attackTimer.Stop();
+                spinAttackTimer.Stop();
             }
         }
         #endregion
@@ -385,8 +426,6 @@ namespace Platformer
         }
         public void HandleWallClimb()
         {
-            //movement = new Vector3(input.Direction.x, 0f, input.Direction.y);
-
             rb.linearVelocity = Vector3.zero;
             transform.position = wallClimbPos;
 
@@ -448,10 +487,7 @@ namespace Platformer
 
             wallClimbChecks[1] = Physics.Raycast(transform.position + transform.up * 2, transform.forward, 1, wallClimbLayer);
             wallClimbChecks[2] = Physics.Raycast(transform.position - transform.up * 0.6f, transform.forward, 1, wallClimbLayer);
-    
-            //wallClimbChecks[3] = Physics.Raycast(transform.position + transform.right * 1 + transform.up * 0.5f, transform.forward, 1, wallClimbLayer);
-            //wallClimbChecks[4] = Physics.Raycast(transform.position - transform.right * 1 + transform.up * 0.5f, transform.forward, 1, wallClimbLayer);
-
+            
             if (wallClimbChecks[0])
             {
                 RaycastHit hit;
@@ -460,38 +496,39 @@ namespace Platformer
                     wallClimbChecks[5] = true;
                     wallClimbTargetPos = hit.point;
                     wallClimbNormal = hit.normal;
+                    
+                    
+                    float dot = Vector3.Dot(transform.forward, -wallClimbNormal);
+                    if (!wallClimbimg && movement.magnitude > 0 && !jumpTimer.IsRunning && dot > 0.5f)
+                    {
+                        wallClimbimg = true;
+                        wallClimbPos = hit.point + (hit.normal * 0.2f);
+                    }
                 }
-       
             }
             else
             {
                 wallClimbNormal = Vector3.zero;
                 wallClimbTargetPos = Vector3.zero;
+                if (wallClimbimg) wallClimbimg = false;
             }
         }
         #endregion
 
         #region Dash
-        /*
+        
         void OnDash(bool performed)
         {
-            if (performed && !dashTimer.IsRunning && !dashCooldownTimer.IsRunning && !glideTimer.IsRunning)
+            if (performed && !dashTimer.IsRunning && !dashCooldownTimer.IsRunning)
             {
                 dashTimer.Start();
-                glideStamina.StartGlide();
+                
             }
             else if (!performed && dashTimer.IsRunning)
             {
                 dashTimer.Stop();
-                glideStamina?.StopGlide();
             }
-            else
-            {
-                playerFootsteps.stop(STOP_MODE.ALLOWFADEOUT);
-            }
-            
         }
-        */
         #endregion
 
         #region Jump
@@ -503,7 +540,7 @@ namespace Platformer
                 return;
             }
             
-            if (performed && groundChecker.IsGrounded)
+            if (performed && groundChecker.IsGrounded || InWater)
             {
                 remainingJumps = jumpCount;
             }
@@ -545,20 +582,23 @@ namespace Platformer
         #region Glide
         public void OnGlide(bool performed)
         {
+            if (InWater) 
+            {
+                glideTimer.Stop();
+                return; 
+            }
             if (performed)
             {
                 if (!glideTimer.IsRunning && !groundChecker.IsGrounded)
                 {
-                        glideTimer.Start();
-                        glideBoost = 0;
-                        jumpTimer.Stop();
-                        glideStamina.StartGlide();
-                        // Enable the gliding mesh and disable the default mesh
-                        glidingMesh.SetActive(true);
-                        defaultMesh.SetActive(false);
-                        
+                    glideTimer.Start();
+                    glideBoost = 0;
+                    jumpTimer.Stop();
+                    glideStamina.StartGlide();
+                    // Enable the gliding mesh and disable the default mesh
+                    glidingMesh.SetActive(true);
+                    defaultMesh.SetActive(false);
                 }
-                
             }
             else if (!performed && glideTimer.IsRunning)
             {
@@ -567,7 +607,6 @@ namespace Platformer
                 // Revert back to the default mesh
                 glidingMesh.SetActive(false);
                 defaultMesh.SetActive(true);
-
             }
         }
         public void HandleGlide()
@@ -592,146 +631,32 @@ namespace Platformer
         }
         #endregion
         
-        #region Attack
-        void OnAttack()
+        #region PlayerAbilities
+        void OnLightAttack()
         {
             if (!attackTimer.IsRunning)
             {
-               
                 attackTimer.Start();
-            }
-            
+            }            
         }
-
-        public void Attack()
-        {
-            Vector3 attackPos = transform.position + transform.forward * attackDistance;
-            Collider[] hitEnemies = Physics.OverlapSphere(attackPos, attackDistance);
-            AudioManager.instance.PlayOneShot(FMODEvents.instance.playerAttack, this.transform.position);
-            foreach (var hit in hitEnemies)
-            {
-                // Handle standard enemies
-                if (hit.CompareTag("Enemy"))
-                {
-                    if(hit.TryGetComponent<Health>(out Health enemyHealth))
-                    {
-                        enemyHealth.TakeDamage(attackDamage, knockbackTime);
-                    }
-                }
-                // Handle environmental objects with the "Destructible" tag
-                else if (hit.CompareTag("Destructable"))
-                {
-                    if (hit.TryGetComponent<FractureObject>(out FractureObject fractureObject))
-                    {
-                        // 1. Trigger the explosion
-                        fractureObject.Explode();
-                    }
-                }
-            }
-        }
-
-        void OnSpinAttack()
+        void OnHeavyAttack()
         {
             if (!spinAttackTimer.IsRunning)
             {
                 spinAttackTimer.Start();
             }
         }
-
-        public void SpinAttack()
+        
+        void OnSonarPulse(bool performed)
         {
-            Vector3 attackPos = transform.position;
-            Collider[] hitEnemies = Physics.OverlapSphere(attackPos, spinAttackDistance);
-            AudioManager.instance.PlayOneShot(FMODEvents.instance.playerAttack, this.transform.position);
-            foreach (var enemy in hitEnemies)
+            if (performed && !pulseTimer.IsRunning && abilities.CurrentPulseCharges > 0)
             {
-                if (enemy.CompareTag("Enemy"))
-                {
-                    enemy.GetComponent<Health>().TakeDamage(spinAttackDamage, knockbackTime);
-                }
-            }
-        }
-        #endregion
-
-        #region Echolocation
-        void OnEcho(bool performed)
-        {
-            if (!echoTimer.IsRunning && currentEchoCharges > 0)
-            {
-                currentEchoCharges--;
-                echoTimer.Start();
+                abilities.ExecuteSonarPulse(); 
+                pulseTimer.Start();
                 AudioManager.instance.PlayOneShot(FMODEvents.instance.playerEcolocation, this.transform.position);
-                UpdateEchoChargeUI();
-
-                // Start regeneration when we use our first charge
-                if (!isRegenerating && currentEchoCharges < maxEchoCharges)
-                {
-                    StartCoroutine(RegenerateCharge());
-                }
-                
             }
         }
-        public void HandleEcho()
-        {
-            if (echoCooldown > 0 && echoTimer.IsRunning && currentEchoCharges >= 0)
-            {
-                detectionParticle.Play();
-                Collider[] detectedObjects = Physics.OverlapSphere(transform.position, detectionRadius, detectionLayer);
-                foreach (Collider collider in detectedObjects)
-                {
-                    if (collider.CompareTag("Enemy"))
-                    {
-                        EnableEchoEffect(true);
-                    }
-                    else if (collider.CompareTag("Collectible"))
-                    {
-                        EnableEchoEffect(true);
-                    }
-                }
-                Invoke(nameof(DisableEchoEffect), echoDuration);
-            }
-        }
-
-     
-        private void EnableEchoEffect(bool state)
-        {
-            if (echoRendererFeature != null)
-            {
-                echoRendererFeature.SetActive(state);
-            }
-        }
-        private void DisableEchoEffect()
-        {
-            EnableEchoEffect(false);
-        }
-        
-        private IEnumerator RegenerateCharge()
-        {
-            isRegenerating = true;
-            float timer = 0;
-
-            while (currentEchoCharges < maxEchoCharges)
-            {
-                timer += Time.deltaTime;
-                echoChargeUI.fillAmount = (float)currentEchoCharges / maxEchoCharges + (timer / chargeRegenerationTime) * (1f / maxEchoCharges);
-
-                if (timer >= chargeRegenerationTime)
-                {
-                    currentEchoCharges++;
-                    timer = 0;
-                    UpdateEchoChargeUI();
-                }
-                yield return null;
-            }
-
-            isRegenerating = false;
-        }
-
-        
-        void UpdateEchoChargeUI()
-        {
-            echoChargeUI.fillAmount = (float)currentEchoCharges / maxEchoCharges;
-        }
+       
         #endregion
 
         #region Interact
@@ -752,16 +677,6 @@ namespace Platformer
         #endregion
         private void OnDrawGizmosSelected()
         {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, detectionRadius);
-            
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position + transform.forward * attackDistance, attackDistance);
-            
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawWireSphere(transform.position, spinAttackDistance);
-     
-          
             if (Application.isPlaying)
             {
                 Gizmos.color = Color.grey;
@@ -771,7 +686,8 @@ namespace Platformer
                 Gizmos.color = Color.yellow;
                 if(wallClimbChecks[1]) Gizmos.color = Color.green;
                 Gizmos.DrawRay(transform.position + transform.up * 2, transform.forward * 1);
-         
+                
+               
                 /*
                 Gizmos.color = Color.yellow;
                 if(wallClimbChecks[2]) Gizmos.color = Color.green;
@@ -792,102 +708,69 @@ namespace Platformer
             }
         }
         
-        public void LoadData(GameData data) => this.transform.position = data.playerPosition;
-        public void SaveData(GameData data) => data.playerPosition = this.transform.position;
-        void OnEnable()
-        {
-            input.Jump += OnJump;
-            //input.Dash += OnDash;
-            input.Echo += OnEcho;
-            input.Wallclimb += OnWallClimb;
-            input.Glide += OnGlide;
-            input.Attack += OnAttack;
-            input.SpinAttack += OnSpinAttack;
-            input.interact += OnInteract;
-            
-        }
-
-        void OnDisable()
-        {
-            input.Jump -= OnJump;
-            // input.Dash -= OnDash;
-            input.Echo -= OnEcho;
-            input.Wallclimb -= OnWallClimb;
-            input.Glide -= OnGlide;
-            input.Attack -= OnAttack;
-            input.SpinAttack -= OnSpinAttack;
-            input.interact -= OnInteract;
-
-        }
-        
-        [Header("Swim Settings")]
-        [SerializeField] float swimSpeed = 4f;
-        [SerializeField] float swimLevelOffset = 1.2f; // How deep the player sits in the water
-        [SerializeField] float waterSurfaceY; // Stores the height of the water
-        [SerializeField] GameObject objectActiveInWater;
-        public bool InWater { get; private set; }
-        
         private void OnTriggerEnter(Collider other)
         {
-            // Detect entering water
             if (other.CompareTag("Water"))
             {
                 InWater = true;
-                // Assume the top of the collider is the water surface
                 waterSurfaceY = other.bounds.max.y;
                 
                 if (objectActiveInWater != null) 
                     objectActiveInWater.SetActive(true);
-                // ----------------
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            // Detect leaving water
             if (other.CompareTag("Water"))
             {
                 InWater = false;
-                
-                // --- ADD THIS ---
                 if (objectActiveInWater != null) 
                     objectActiveInWater.SetActive(false);
             }
         }
-
-        public void HandleSwimming()
+        
+        public void LoadData(GameData data) => this.transform.position = data.playerPosition;
+        public void SaveData(GameData data) => data.playerPosition = this.transform.position;
+        
+        /*
+       private void OnCounter()
+       {
+           if (!playerHealth.isDead && !hurtTimer.IsRunning)
+           {
+               animator.CrossFade("Counter", 0.1f);
+               combat.CounterCheck();
+           }
+       }*/
+        void OnEnable()
         {
-            // 1. Determine Movement Direction (Same as normal movement)
-            var adjustedDirection = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * movement;
-    
-            // 2. Apply Swim Speed
-            if (adjustedDirection.magnitude > 0f)
-            {
-                HandleRotation(adjustedDirection);
-                // Move horizontally using swimSpeed instead of moveSpeed
-                Vector3 velocity = adjustedDirection * (swimSpeed * Time.fixedDeltaTime);
-                rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
-                SmoothSpeed(adjustedDirection.magnitude);
-            }
-            else
-            {
-                SmoothSpeed(0f);
-                rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
-            }
+            input.Jump += OnJump;
+            input.Dash += OnDash;
+            input.SonarPulse += OnSonarPulse;
+            input.Wallclimb += OnWallClimb;
+            input.Glide += OnGlide;
+            input.LightAttack += OnLightAttack;
+            input.HeavyAttack += OnHeavyAttack;
+            input.interact += OnInteract;
+            playerHealth.OnHit += HandlePlayerHurt;
+            //input.Counter += OnCounter;
 
-            // 3. Handle Floating (Buoyancy)
-            // Smoothly move the player's Y position to the water surface minus the offset
-            float targetY = waterSurfaceY - swimLevelOffset;
-            Vector3 currentPos = transform.position;
-    
-            // Lerp specifically on the Y axis to create a floating effect
-            float newY = Mathf.Lerp(currentPos.y, targetY, Time.fixedDeltaTime * 5f);
-            transform.position = new Vector3(currentPos.x, newY, currentPos.z);
-    
-            // Kill vertical velocity so gravity doesn't pull us down
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        }
 
-            UpdateSound(); // Optional: You might want a different sound for swimming later
+       
+
+        void OnDisable()
+        {
+            input.Jump -= OnJump;
+            input.Dash -= OnDash;
+            input.SonarPulse -= OnSonarPulse;
+            input.Wallclimb -= OnWallClimb;
+            input.Glide -= OnGlide;
+            input.LightAttack -= OnLightAttack;
+            input.HeavyAttack -= OnHeavyAttack;
+            input.interact -= OnInteract;
+            playerHealth.OnHit -= HandlePlayerHurt;
+            // input.Counter -= OnCounter;
         }
     }
 }

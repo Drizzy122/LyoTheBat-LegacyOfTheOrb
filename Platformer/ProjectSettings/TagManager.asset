@@ -13,6 +13,7 @@ TagManager:
   - Stone
   - Water
   - Destructable
+  - Wood
   layers:
   - Default
   - TransparentFX

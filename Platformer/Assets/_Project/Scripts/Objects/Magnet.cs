@@ -5,13 +5,18 @@ namespace Platformer
 {
     public class Magnet : MonoBehaviour
     {
+        // We will hide this from inspector so it doesn't clutter the view, 
+        // but keep it public if other scripts need it.
+        [HideInInspector] 
         public List<GameObject> collectables = new List<GameObject>();
-        public float magnetForce;
-        public float speed;
 
+        [Header("Settings")]
+        public float magnetRadius = 5f; // Renamed from magnetForce to avoid confusion
+        public float pullSpeed = 10f;   // How fast they fly to you
 
         void Start()
         {
+            // Find all objects with the tag "Collectible" at the start
             foreach (var collectable in GameObject.FindGameObjectsWithTag("Collectible"))
             {
                 collectables.Add(collectable);
@@ -20,31 +25,39 @@ namespace Platformer
 
         void Update()
         {
-            foreach (var collectable in collectables)
+            // We use a for-loop backwards so we can remove items 
+            // from the list safely if they have been destroyed.
+            for (int i = collectables.Count - 1; i >= 0; i--)
             {
-                float distance = Vector3.Distance(transform.position, collectable.transform.position);
-                if (distance < magnetForce)
+                // 1. Check if the item still exists (wasn't collected yet)
+                if (collectables[i] == null)
                 {
-                    collectable.transform.position = Vector3.Lerp(collectable.transform.position, transform.position, speed);
+                    collectables.RemoveAt(i);
+                    continue;
+                }
+
+                GameObject coin = collectables[i];
+                float distance = Vector3.Distance(transform.position, coin.transform.position);
+
+                // 2. Check if inside the Magnet Radius
+                if (distance < magnetRadius)
+                {
+                    // 3. PULL towards player
+                    // MoveTowards creates a constant speed (snappy feel), unlike Lerp.
+                    coin.transform.position = Vector3.MoveTowards(
+                        coin.transform.position, 
+                        transform.position, 
+                        pullSpeed * Time.deltaTime
+                    );
                 }
             }
         }
         
         void OnDrawGizmos()
         {
-            // Set the color of the Gizmos
-            Gizmos.color = Color.yellow;
-            
-            // Draw a sphere to represent the magnet's radius
-            Gizmos.DrawWireSphere(transform.position, magnetForce);
+            Gizmos.color = Color.darkBlue;
+            // Use the correct variable name here
+            Gizmos.DrawWireSphere(transform.position, magnetRadius);
         }
-
     }
-}
-
-public class CollectableAnim : MonoBehaviour
-{
-    
-    [Min(1)]
-    public int collectableIndex;
 }

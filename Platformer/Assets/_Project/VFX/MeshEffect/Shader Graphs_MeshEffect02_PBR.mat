@@ -54,13 +54,13 @@ Material:
     m_Floats:
     - Vector1_36AE6BD3: 2
     - Vector1_460A08CE: 15
-    - Vector1_63552A71: 2.69
-    - Vector1_80704D48: 2.69
+    - Vector1_63552A71: 4.86
+    - Vector1_80704D48: 1
     - Vector1_B1BD7CBA: 10
-    - Vector1_D1C5E151: 0
-    - Vector1_D362A57C: 0
+    - Vector1_D1C5E151: 0.103
+    - Vector1_D362A57C: 1
     - Vector1_D7B502F0: 10
-    - Vector1_E6782A57: 0.498
+    - Vector1_E6782A57: 0.338
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
@@ -68,8 +68,8 @@ Material:
     - Color_6B9A0C58: {r: 1, g: 1, b: 1, a: 1}
     - Color_750FFCCB: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 0}
     - Color_7FBEC34D: {r: 1.605559, g: 0.3194306, b: 1.403813, a: 1}
-    - Vector2_1162408B: {r: 0, g: -0.5, b: 0, a: 0}
-    - Vector2_40266A0F: {r: 0, g: -0.3, b: 0, a: 0}
+    - Vector2_1162408B: {r: 0, g: 1, b: 0, a: 0}
+    - Vector2_40266A0F: {r: 0, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &670321439664820104

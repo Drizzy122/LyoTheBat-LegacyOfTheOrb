@@ -5,14 +5,14 @@ namespace Platformer {
     {
         public EnemyWanderState(Enemy enemy, Animator animator) : base(enemy, animator) { }
         
-        public override void OnEnter() 
-        {
-            animator.CrossFade(WalkHash, crossFadeDuration);
+        public override void OnEnter() {
+            animator.CrossFade(LocomotionHash, crossFadeDuration);
+            if (EnemyManager.instance != null) EnemyManager.instance.UnregisterEnemy(enemy);
         }
 
-        public override void Update() 
-        {
-            enemy.HandleWander();
+        public override void Update() {
+            enemy.DoWander();
+            enemy.UpdateAnimation();
         }
     }
 }

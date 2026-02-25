@@ -25,7 +25,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Attack",
+                    "name": "LightAttack",
                     "type": "Button",
                     "id": "afec675b-cb90-4f16-b4c1-8fa359a80ac8",
                     "expectedControlType": "",
@@ -34,7 +34,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SpinAttack",
+                    "name": "HeavyAttack",
                     "type": "Button",
                     "id": "6f9cd33a-5135-4689-bbc9-b0d4567326f1",
                     "expectedControlType": "",
@@ -61,7 +61,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Echo",
+                    "name": "SonarPulse",
                     "type": "Button",
                     "id": "b99ee9e2-de73-44a9-ae1e-2d5f909e5b6d",
                     "expectedControlType": "",
@@ -100,6 +100,15 @@
                     "name": "Submit",
                     "type": "Button",
                     "id": "e9bb024e-ac34-440d-b50f-67dc1af372ca",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Counter",
+                    "type": "Button",
+                    "id": "cd705d3a-c534-46eb-8c34-61f8ee377085",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -213,7 +222,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Attack",
+                    "action": "LightAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -224,7 +233,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Attack",
+                    "action": "LightAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -290,7 +299,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "SpinAttack",
+                    "action": "HeavyAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -301,29 +310,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "SpinAttack",
+                    "action": "HeavyAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "47cf6307-bdcf-4608-b0d4-1134055f1642",
-                    "path": "<Gamepad>/rightTrigger",
+                    "path": "<Gamepad>/rightStickPress",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Echo",
+                    "action": "SonarPulse",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "6661de5e-7e37-4df9-8ab3-51989f218349",
+                    "id": "ecec0e65-31b5-495f-945b-4ac49fa3ac6a",
                     "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Echo",
+                    "action": "SonarPulse",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -401,6 +410,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5603bd6a-3631-447a-b716-3b3e28f7df0b",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Counter",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

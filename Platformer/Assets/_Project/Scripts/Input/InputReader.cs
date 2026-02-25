@@ -11,20 +11,33 @@ namespace Platformer
         [field: Header("Player Actions Events")]
         PlayerInputActions inputActions;
         public Vector3 Direction => inputActions.Player.Move.ReadValue<Vector2>();
+        public bool CounterPressed { get; set; }
+
         public event UnityAction<Vector2> Move = delegate { };
         public event UnityAction<Vector2> Look = delegate { };
         public event UnityAction<bool> Jump = delegate { };
         public event UnityAction<bool> Dash = delegate { };
-        public event UnityAction<bool> Echo = delegate { };
+        public event UnityAction<bool> SonarPulse = delegate { };
         public event UnityAction<bool> Wallclimb = delegate { };
         public event UnityAction<bool> Glide = delegate { };
-        public event UnityAction Attack = delegate { };
-        public event UnityAction SpinAttack = delegate { };
+        public event UnityAction LightAttack = delegate { };
+        public event UnityAction HeavyAttack = delegate { };
         public event UnityAction<bool> interact = delegate { };
         public event UnityAction<bool> submit = delegate { };
         public event UnityAction Paused = delegate { };
         
         public bool IsJumpKeyPressed = false;
+        
+        public event UnityAction Counter = delegate { }; 
+
+        public void OnCounter(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Started)
+            {
+                Counter.Invoke();
+                CounterPressed = true;
+            }
+        }
         public void OnMove(InputAction.CallbackContext context)
         {
             Move.Invoke(context.ReadValue<Vector2>());
@@ -34,18 +47,20 @@ namespace Platformer
         {
            Look.Invoke(context.ReadValue<Vector2>());
         }
-        public void OnAttack(InputAction.CallbackContext context)
+
+        public void OnLightAttack(InputAction.CallbackContext context)
         {
             if (context.phase == InputActionPhase.Started)
             {
-                Attack.Invoke();
+                LightAttack.Invoke();
             }
         }
-        public void OnSpinAttack(InputAction.CallbackContext context)
+
+        public void OnHeavyAttack(InputAction.CallbackContext context)
         {
             if (context.phase == InputActionPhase.Started)
             {
-                SpinAttack.Invoke();
+                HeavyAttack.Invoke();
             }
         }
         public void OnJump(InputAction.CallbackContext context)
@@ -74,15 +89,16 @@ namespace Platformer
                     break;
             }
         }
-        public void OnEcho(InputAction.CallbackContext context)
+
+        public void OnSonarPulse(InputAction.CallbackContext context)
         {
             switch (context.phase)
             {
                 case InputActionPhase.Started:
-                    Echo.Invoke(true);
+                    SonarPulse.Invoke(true);
                     break;
                 case InputActionPhase.Canceled:
-                    Echo.Invoke(false);
+                    SonarPulse.Invoke(false);
                     break;
             }
         }

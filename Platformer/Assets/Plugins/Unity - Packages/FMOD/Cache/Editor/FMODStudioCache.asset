@@ -149,10 +149,10 @@ MonoBehaviour:
   Path: Assets/_Project/FmodAudio/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639023611323343400
+  lastModified: 639071475021198261
   FileSizes:
   - Name: Desktop
-    Value: 2012
+    Value: 2146
   Exists: 1
 --- !u!114 &-7189775898630453360
 MonoBehaviour:
@@ -770,6 +770,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 600
+--- !u!114 &-2964566586333109632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/PlayerFootSteps/WalkRun
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorParamRef
+  Name: WalkRun
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 701136738
+    data2: 3612619431
+  Type: 1
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-2722761845999929328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1188,13 +1212,14 @@ MonoBehaviour:
   - {fileID: -1588288109709153272}
   - {fileID: 4751263729031518566}
   - {fileID: 506848363360780124}
+  - {fileID: 2782293227603305421}
   EditorParameters: []
   MasterBanks:
   - {fileID: 7316301745362389456}
   StringsBanks:
   - {fileID: -7848047765112382451}
   cacheVersion: 131857
-  cacheTime: 639023611326023254
+  cacheTime: 639071499495662009
   SerializableEventsDict:
   - key: event:/Music/MainMenuMusic
     index: 0
@@ -1234,6 +1259,8 @@ MonoBehaviour:
     index: 17
   - key: event:/SFX/Collectables/DestructableObj
     index: 18
+  - key: event:/SFX/Player/PlayerFootSteps
+    index: 19
 --- !u!114 &506848363360780124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1529,6 +1556,35 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1356
+--- !u!114 &2782293227603305421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/PlayerFootSteps
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/SFX/Player/PlayerFootSteps
+  Guid:
+    Data1: 927541997
+    Data2: 1247025599
+    Data3: -1113134966
+    Data4: -535722932
+  Banks:
+  - {fileID: 3473845767722166073}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -2964566586333109632}
+  - {fileID: 5753777280304996480}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &3080223518214220950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1618,10 +1674,10 @@ MonoBehaviour:
   Path: Assets/_Project/FmodAudio/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 639023611326023254
+  lastModified: 639071499495662009
   FileSizes:
   - Name: Desktop
-    Value: 248800
+    Value: 269056
   Exists: 1
 --- !u!114 &4163019588064303454
 MonoBehaviour:
@@ -1914,6 +1970,30 @@ MonoBehaviour:
   - GrayArea
   - BlueArea
   Exists: 1
+--- !u!114 &5753777280304996480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/PlayerFootSteps/Terrain
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorParamRef
+  Name: Terrain
+  StudioPath: 
+  Min: 0
+  Max: 6
+  Default: 0
+  ID:
+    data1: 1269346104
+    data2: 722801715
+  Type: 1
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &5943677788410304087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2085,7 +2165,7 @@ MonoBehaviour:
   Path: Assets/_Project/FmodAudio/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639023611323321370
+  lastModified: 639071475021173087
   FileSizes:
   - Name: Desktop
     Value: 1524

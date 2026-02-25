@@ -4,7 +4,11 @@ namespace Platformer
 {
     public class GlideStamina : MonoBehaviour
     {
+        [Header("Settings")]
         [SerializeField] private float staminaRegenRate = 1f;
+        
+        [Header("Events")]
+        [SerializeField] private FloatEventChannel staminaEventChannel; // Reference your StaminaEventChannel asset
 
         private float currentStamina;
         private bool isGliding;
@@ -15,18 +19,31 @@ namespace Platformer
             playerController = GetComponent<PlayerController>();
 
             if (playerController != null)
-                currentStamina = playerController.glideTime;
+                currentStamina = playerController.glideCoolDown;
         }
 
         private void Update()
         {
             if (isGliding)
             {
-                DrainStamina(); // Drain stamina when gliding
+                DrainStamina();
             }
             else
             {
-                RegenerateStamina(); // Regenerate stamina when not gliding
+                RegenerateStamina();
+            }
+
+            // Broadcast the current state to the Event Bus every frame it changes
+            PublishStamina();
+        }
+
+        private void PublishStamina()
+        {
+            if (staminaEventChannel != null && playerController != null)
+            {
+                // Calculate and send the 0-1 percentage
+                float fraction = currentStamina / playerController.glideCoolDown;
+                staminaEventChannel.Invoke(fraction);
             }
         }
 
@@ -40,17 +57,16 @@ namespace Platformer
 
         public void StopGlide()
         {
-            isGliding = false; // Stop draining stamina
+            isGliding = false;
         }
 
         private void DrainStamina()
         {
             if (currentStamina > 0f && playerController != null)
             {
-                currentStamina -= Time.deltaTime; // Drain stamina over time
-                currentStamina = Mathf.Clamp(currentStamina, 0f, playerController.glideTime);
+                currentStamina -= Time.deltaTime;
+                currentStamina = Mathf.Clamp(currentStamina, 0f, playerController.glideCoolDown);
 
-                // Automatically stop glide if stamina is less then 0
                 if (currentStamina <= 0f)
                 {
                     StopGlideExternally();
@@ -60,28 +76,20 @@ namespace Platformer
 
         private void RegenerateStamina()
         {
-            if (currentStamina < playerController.glideTime) // Use controller's `glideTime` as max value
+            if (playerController != null && currentStamina < playerController.glideCoolDown)
             {
-                currentStamina += staminaRegenRate * Time.deltaTime; // Gradually restore stamina
-                currentStamina = Mathf.Clamp(currentStamina, 0f, playerController.glideTime);
+                currentStamina += staminaRegenRate * Time.deltaTime;
+                currentStamina = Mathf.Clamp(currentStamina, 0f, playerController.glideCoolDown);
             }
         }
 
-        // Stops glide externally, ensuring both stamina and timer synchronization
         private void StopGlideExternally()
         {
             StopGlide();
-
-            // Notify the PlayerController to stop the glide (if needed)
             if (playerController != null)
             {
-                playerController.OnGlide(false); // Stops the glide from PlayerController
+                playerController.OnGlide(false);
             }
-        }
-
-        public float GetStaminaFraction()
-        {
-            return currentStamina / (playerController != null ? playerController.glideTime : 1f);
         }
     }
 }

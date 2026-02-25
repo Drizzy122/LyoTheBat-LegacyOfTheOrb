@@ -7,10 +7,13 @@ namespace Platformer {
         
         public override void OnEnter() {
             animator.CrossFade(AttackHash, crossFadeDuration);
+            
+            // Trigger the lunge once!
+            enemy.LungeAtPlayer(); 
         }
         
         public override void Update() {
-            enemy.HandleAttack();
+            // We leave this empty now, because DOTween is handling the movement over time!
         }
     }
 }
