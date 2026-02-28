@@ -127,6 +127,11 @@ namespace Platformer
                 DealDamageInFront();
                 TriggerCameraShake(lungeDistance); 
             });
+            
+            // Only trigger Cinematic Camera if they are the last enemy or have low HP!
+            
+            
+            
         }
         
        
@@ -145,6 +150,11 @@ namespace Platformer
                     if(hit.TryGetComponent<Health>(out Health enemyHealth))
                     {
                         enemyHealth.TakeDamage(lightAttackDamage, knockbackTime);
+                        // THE NEW SPOT FOR THE FINAL BLOW CAMERA
+                        if (EnemyManager.instance != null && EnemyManager.instance.AliveEnemyCount() <= 1)
+                        {
+                            TriggerFinalBlowCamera(hit.transform);
+                        }
                     }
                 }
                 else if (hit.CompareTag("Destructable"))
@@ -242,11 +252,7 @@ namespace Platformer
                     bestCounterTarget.enemyHealth.TakeDamage(lightAttackDamage * 2, knockbackTime); 
                     TriggerCameraShake(10f);
                     
-                    // Only trigger Cinematic Camera if they are the last enemy or have low HP!
-                    if (EnemyManager.instance.AliveEnemyCount() <= 1)
-                    {
-                        TriggerFinalBlowCamera(bestCounterTarget.transform);
-                    }
+                    
                 }
             }
         }

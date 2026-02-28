@@ -166,9 +166,9 @@
 			<destination>{20ee3e0f-4ba5-40d8-b12e-215e187f90e8}</destination>
 		</relationship>
 		<relationship name="sounds">
-			<destination>{71f600a2-edc6-4ff7-a2e1-8bc993b31a4a}</destination>
-			<destination>{e54875e4-c56b-4baa-bf92-34f207310e14}</destination>
-			<destination>{e43f09c5-e921-40c6-bc29-251e1daff9c3}</destination>
+			<destination>{85c3286c-e4e0-4720-8896-11fa2c316ce1}</destination>
+			<destination>{e7fb7494-41bf-4563-b987-7b56b3dae4ec}</destination>
+			<destination>{cd70af31-a634-468d-937c-15286342529a}</destination>
 		</relationship>
 	</object>
 	<object class="MultiSound" id="{4f759e44-a06d-4dca-992f-869ee7c31624}" />
@@ -237,9 +237,9 @@
 			<destination>{5a9fd810-a64d-440c-aabc-cababba2ac67}</destination>
 		</relationship>
 		<relationship name="sounds">
-			<destination>{1e461ee1-ff58-4d24-a8ae-8cbd96cee224}</destination>
-			<destination>{261cf4d8-ceb7-464c-b437-ad5accc950fa}</destination>
-			<destination>{a09d02f9-88af-48dc-804e-12856debb7d5}</destination>
+			<destination>{be0e790c-c462-4234-afab-35ca4f4bb2fe}</destination>
+			<destination>{7c27d44b-0977-493c-83d9-f5ddaa99a154}</destination>
+			<destination>{18cc03da-038e-4ef6-b570-491854907a26}</destination>
 		</relationship>
 	</object>
 	<object class="MultiSound" id="{1b16a71c-e229-472b-8809-ee44f692db5e}" />
@@ -312,19 +312,19 @@
 			<value>volume</value>
 		</property>
 	</object>
-	<object class="SingleSound" id="{71f600a2-edc6-4ff7-a2e1-8bc993b31a4a}">
+	<object class="SingleSound" id="{85c3286c-e4e0-4720-8896-11fa2c316ce1}">
 		<relationship name="audioFile">
-			<destination>{8cb31838-f921-4356-9670-38026efda29d}</destination>
+			<destination>{b66aa8a9-545b-4589-a924-e21f4b7d9c02}</destination>
 		</relationship>
 	</object>
-	<object class="SingleSound" id="{e54875e4-c56b-4baa-bf92-34f207310e14}">
+	<object class="SingleSound" id="{e7fb7494-41bf-4563-b987-7b56b3dae4ec}">
 		<relationship name="audioFile">
-			<destination>{328f274d-a34b-4a6b-a548-999650447605}</destination>
+			<destination>{7335767d-cc58-4339-a966-4b985fd35792}</destination>
 		</relationship>
 	</object>
-	<object class="SingleSound" id="{e43f09c5-e921-40c6-bc29-251e1daff9c3}">
+	<object class="SingleSound" id="{cd70af31-a634-468d-937c-15286342529a}">
 		<relationship name="audioFile">
-			<destination>{4d34eb34-39e6-46da-b6f9-c1662b89cd8c}</destination>
+			<destination>{d2f01861-a20c-455e-ad14-b15b0fd9ea05}</destination>
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{7a27e923-a0e3-45e7-9a66-c70733ce3174}">
@@ -374,19 +374,19 @@
 			<value>volume</value>
 		</property>
 	</object>
-	<object class="SingleSound" id="{1e461ee1-ff58-4d24-a8ae-8cbd96cee224}">
+	<object class="SingleSound" id="{be0e790c-c462-4234-afab-35ca4f4bb2fe}">
 		<relationship name="audioFile">
-			<destination>{8cb31838-f921-4356-9670-38026efda29d}</destination>
+			<destination>{b66aa8a9-545b-4589-a924-e21f4b7d9c02}</destination>
 		</relationship>
 	</object>
-	<object class="SingleSound" id="{261cf4d8-ceb7-464c-b437-ad5accc950fa}">
+	<object class="SingleSound" id="{7c27d44b-0977-493c-83d9-f5ddaa99a154}">
 		<relationship name="audioFile">
-			<destination>{328f274d-a34b-4a6b-a548-999650447605}</destination>
+			<destination>{7335767d-cc58-4339-a966-4b985fd35792}</destination>
 		</relationship>
 	</object>
-	<object class="SingleSound" id="{a09d02f9-88af-48dc-804e-12856debb7d5}">
+	<object class="SingleSound" id="{18cc03da-038e-4ef6-b570-491854907a26}">
 		<relationship name="audioFile">
-			<destination>{4d34eb34-39e6-46da-b6f9-c1662b89cd8c}</destination>
+			<destination>{d2f01861-a20c-455e-ad14-b15b0fd9ea05}</destination>
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{e6cb171b-aeea-4d27-ae44-31c755d057c5}">
@@ -450,7 +450,7 @@
 			<value>0</value>
 		</property>
 		<property name="value">
-			<value>3.81469727e-06</value>
+			<value>-25.5</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{77c524ff-83bb-44d5-928c-2b1b6612b1e4}">
@@ -474,7 +474,7 @@
 			<value>1</value>
 		</property>
 		<property name="value">
-			<value>3.81469727e-06</value>
+			<value>-22.5</value>
 		</property>
 	</object>
 </objects>
