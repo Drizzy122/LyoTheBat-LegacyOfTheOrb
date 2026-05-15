@@ -4846,7 +4846,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4353652568026005473}
-  - component: {fileID: 2654267991772482869}
+  - component: {fileID: 4724623989996105910}
+  - component: {fileID: 8050176261647138849}
   m_Layer: 0
   m_Name: Sword
   m_TagString: Untagged
@@ -4864,7 +4865,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.7526512, y: 1.7526513, z: 1.7526519}
+  m_LocalScale: {x: 2.0392902, y: 2.0392902, z: 2.0392911}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4393988627433316905}
@@ -4873,7 +4874,21 @@ Transform:
   - {fileID: 8082542197938007056}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &2654267991772482869
+--- !u!114 &4724623989996105910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3200333243213644461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c034684f0fa22f478dac85b1a8c8c29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RotateObject
+  floatHeight: 0.5
+  cycleDuration: 1.5
+--- !u!65 &8050176261647138849
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4890,10 +4905,10 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.11240942, y: 1.427699, z: 0.23716226}
-  m_Center: {x: 0.000000034008284, y: 0.2736354, z: -0.0023816966}
+  m_Size: {x: 1, y: 2.18, z: 1}
+  m_Center: {x: 0, y: 0.86, z: 0}
 --- !u!1 &5355461700772959495
 GameObject:
   m_ObjectHideFlags: 0

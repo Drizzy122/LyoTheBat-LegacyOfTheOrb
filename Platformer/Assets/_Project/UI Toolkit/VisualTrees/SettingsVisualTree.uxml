@@ -1,0 +1,29 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="AudioSettingsVisualTree" src="project://database/Assets/_Project/UI%20Toolkit/VisualTrees/AudioSettingsVisualTree.uxml?fileID=9197481963319205126&amp;guid=bc1508cc7ea04c64693a259c79b6e2c1&amp;type=3#AudioSettingsVisualTree"/>
+    <ui:Template name="ControllerVisualTree" src="project://database/Assets/_Project/UI%20Toolkit/VisualTrees/ControllerVisualTree.uxml?fileID=9197481963319205126&amp;guid=da415f83be99d42449ba74f07950c01f&amp;type=3#ControllerVisualTree"/>
+    <ui:Template name="InputSettingsVisualTree" src="project://database/Assets/_Project/UI%20Toolkit/VisualTrees/InputSettingsVisualTree.uxml?fileID=9197481963319205126&amp;guid=bf6d6575a4305ce43be39becf3570bfc&amp;type=3#InputSettingsVisualTree"/>
+    <ui:Template name="VideoSettingsVisualTree" src="project://database/Assets/_Project/UI%20Toolkit/VisualTrees/VideoSettingsVisualTree.uxml?fileID=9197481963319205126&amp;guid=af07c988c2432024e8509393ae4ac803&amp;type=3#VideoSettingsVisualTree"/>
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=1e607d4d39bbf3c4aa48749712dc3062&amp;type=3#MainMenuStyle"/>
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/TabViewStyle.uss?fileID=7433441132597879392&amp;guid=27fa83c6f936c03468a82829f3f3de7d&amp;type=3#TabViewStyle"/>
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/Sliders.uss?fileID=7433441132597879392&amp;guid=75107247cfbf21d45bd25fc08921f8d5&amp;type=3#Sliders"/>
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/Toggles.uss?fileID=7433441132597879392&amp;guid=556ece4fc6adc734d95e8d4ea03bd7ae&amp;type=3#Toggles"/>
+    <ui:VisualElement name="SettingsContainer" style="flex-grow: 1; background-color: rgb(0, 0, 0); display: none;">
+        <ui:TabView style="display: flex; border-left-width: 0; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 0; border-right-width: 0; border-bottom-width: 0;">
+            <ui:Tab label="Audio" name="AudioTab">
+                <ui:Instance template="AudioSettingsVisualTree" style="top: auto;"/>
+            </ui:Tab>
+            <ui:Tab label="Video" name="VideoTab">
+                <ui:Instance template="VideoSettingsVisualTree"/>
+            </ui:Tab>
+            <ui:Tab label="Input" name="InputSettingsTab">
+                <ui:Instance template="InputSettingsVisualTree"/>
+            </ui:Tab>
+            <ui:Tab label="CONTROLLER" name="ControllerTab">
+                <ui:Instance template="ControllerVisualTree"/>
+            </ui:Tab>
+        </ui:TabView>
+        <ui:Label text="Settings" name="SettingsHeader" class="Text" style="color: rgb(255, 255, 255); font-size: 73px; width: 224px; left: 85px; top: 110px; position: absolute;"/>
+        <ui:Button text="Back" name="BackButton" class="button" style="-unity-text-align: middle-center; width: 122px; height: auto;"/>
+        <ui:VisualElement name="Border" style="flex-grow: 1; position: absolute; background-color: rgba(255, 255, 255, 0.35); width: 9px; height: 1079px; left: 482px;"/>
+    </ui:VisualElement>
+</ui:UXML>

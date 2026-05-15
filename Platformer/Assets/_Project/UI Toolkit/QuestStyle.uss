@@ -1,0 +1,37 @@
+:root {
+}
+
+.dialogue-choice-button {
+    background-color: rgba(0, 0, 0, 0.47);
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    color: rgb(255, 255, 255);
+    font-size: 14px;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+}
+
+.dialogue-choice-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-left-color: rgb(200, 255, 200);
+    border-right-color: rgb(200, 255, 200);
+    border-top-color: rgb(200, 255, 200);
+    border-bottom-color: rgb(200, 255, 200);
+}
+
+.dialogue-choice-button:focus {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-left-color: rgb(255, 215, 0);
+    border-right-color: rgb(255, 215, 0);
+    border-top-color: rgb(255, 215, 0);
+    border-bottom-color: rgb(255, 215, 0);
+}
+
+.dialogue-choice-button:active {
+    background-color: rgba(255, 255, 255, 0.4);
+}

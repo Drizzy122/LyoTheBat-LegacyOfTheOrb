@@ -17,14 +17,14 @@ namespace VolumetricFogAndMist2.Demos {
             float disp = Time.deltaTime * moveSpeed;
 
             // moves capsule with arrow keys
-            if (Input.GetKey(KeyCode.LeftArrow)) {
+            if (InputProxy.GetKey(KeyCode.LeftArrow)) {
                 transform.Translate(-disp, 0, 0);
-            } else if (Input.GetKey(KeyCode.RightArrow)) {
+            } else if (InputProxy.GetKey(KeyCode.RightArrow)) {
                 transform.Translate(disp, 0, 0);
             }
-            if (Input.GetKey(KeyCode.UpArrow)) {
+            if (InputProxy.GetKey(KeyCode.UpArrow)) {
                 transform.Translate(0, 0, disp);
-            } else if (Input.GetKey(KeyCode.DownArrow)) {
+            } else if (InputProxy.GetKey(KeyCode.DownArrow)) {
                 transform.Translate(0, 0, -disp);
             }
 

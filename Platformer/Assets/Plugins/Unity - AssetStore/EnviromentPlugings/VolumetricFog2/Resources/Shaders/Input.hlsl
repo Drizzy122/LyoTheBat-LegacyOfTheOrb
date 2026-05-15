@@ -1,14 +1,15 @@
-﻿#ifndef VOLUMETRIC_FOG_2_INPUT
+#ifndef VOLUMETRIC_FOG_2_INPUT
 #define VOLUMETRIC_FOG_2_INPUT
 
 #ifndef VOLUMETRIC_FOG_2_SHADERGRAPH_SUPPORT
 CBUFFER_START(UnityPerMaterial)
 #endif
 
-half4 _Color;
-
 half4 _LightColor;
-half _NativeLightsMultiplier;
+half3 _NativeLightsData;
+#define NATIVE_LIGHTS_MULTIPLIER _NativeLightsData.x
+#define NATIVE_LIGHT_FALLOFF _NativeLightsData.y
+#define ONE_MINUS_NATIVE_LIGHT_FALLOFF _NativeLightsData.z
 
 float _NoiseScale;
 half4 _DetailColor;
@@ -48,6 +49,8 @@ float4 _RayMarchSettings;
 #define JITTERING _RayMarchSettings.z
 #define MIN_STEPPING _RayMarchSettings.w
 
+float _NearStepping;
+
 half3 _ShadowData;
 #define SHADOW_INTENSITY _ShadowData.x
 #define SHADOW_CANCELLATION _ShadowData.y
@@ -74,10 +77,6 @@ CBUFFER_END
 
 sampler2D _NoiseTex;
 sampler3D _DetailTex;
-
-float jitter;
-float loop_t;
-float loop_shadowMaxDistance;
 
 TEXTURE2D(_BlueNoise);
 SAMPLER(sampler_BlueNoise_PointRepeat);

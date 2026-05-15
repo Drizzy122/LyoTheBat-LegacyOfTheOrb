@@ -14,6 +14,7 @@ TagManager:
   - Water
   - Destructable
   - Wood
+  - TrackingObject
   layers:
   - Default
   - TransparentFX
@@ -26,9 +27,9 @@ TagManager:
   - Collectables
   - Wall
   - Flying Enemy
-  - IgnoreLayer
+  - rock
   - LightBean
-  - Npc
+  - Ignore
   - 
   - 
   - 
@@ -60,3 +61,4 @@ TagManager:
   - Light Layer 5
   - Light Layer 6
   - Light Layer 7
+  m_MigratedRenderPipelines: []

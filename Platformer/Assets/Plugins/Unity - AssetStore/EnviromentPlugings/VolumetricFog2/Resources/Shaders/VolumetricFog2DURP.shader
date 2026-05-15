@@ -37,8 +37,9 @@ Shader "VolumetricFog2/VolumetricFog2DURP"
 		[HideInInspector] _FogOfWar("FoW Texture", 2D) = "white" {}
 		[HideInInspector] _BlueNoise("_Blue Noise Texture", 2D) = "white" {}
 		[HideInInspector] _MaxDistanceData("Max Lengh Data", Vector) = (100000, 0.00001, 0)
-		[HideInInspector] _NativeLightsMultiplier("Native Lights Multiplier", Float) = 1
+		[HideInInspector] _NativeLightsData("Native Lights Data", Vector) = (1, 1, 0, 0)
 		[HideInInspector] _APVIntensityMultiplier("APV Intensity Multiplier", Float) = 1
+		[HideInInspector] _NearStepping("Near Stepping", Float) = 8
 	}
 		SubShader
 		{
@@ -85,7 +86,10 @@ Shader "VolumetricFog2/VolumetricFog2DURP"
 				#define UNITY_FOVEATED_RENDERING_INCLUDED
 				#define _SURFACE_TYPE_TRANSPARENT
 
-				#if UNITY_VERSION >= 202200
+				#if UNITY_VERSION >= 60010000
+					#pragma multi_compile_fragment _ _CLUSTER_LIGHT_LOOP
+					#define USE_FORWARD_PLUS USE_CLUSTER_LIGHT_LOOP
+				#elif UNITY_VERSION >= 202200
 					#pragma multi_compile_fragment _ _FORWARD_PLUS
 				#endif
 

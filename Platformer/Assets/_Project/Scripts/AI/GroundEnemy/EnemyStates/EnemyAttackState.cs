@@ -7,9 +7,9 @@ namespace Platformer {
         
         public override void OnEnter() {
             animator.CrossFade(AttackHash, crossFadeDuration);
-            
+
             // Trigger the lunge once!
-            enemy.LungeAtPlayer(); 
+            enemy.LungeAtPlayer();
         }
         
         public override void Update() {

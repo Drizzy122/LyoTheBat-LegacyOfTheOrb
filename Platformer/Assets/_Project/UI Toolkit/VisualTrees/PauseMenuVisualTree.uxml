@@ -1,0 +1,12 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=1e607d4d39bbf3c4aa48749712dc3062&amp;type=3#MainMenuStyle"/>
+    <ui:VisualElement name="PaueMenuContent" style="flex-grow: 1; background-image: none; background-color: rgba(0, 0, 0, 0.67); display: none; overflow: visible; visibility: visible;">
+        <ui:Label text="GAME PAUSED" name="Header" class="header Text" style="-unity-text-align: middle-center; font-size: 70px; bottom: -122px; color: rgb(148, 0, 255); -unity-text-outline-width: 2px; text-shadow: -3.8px 3.4px 0 rgb(0, 0, 0); -unity-font-style: normal; -unity-text-generator: standard; -unity-text-auto-size: none;"/>
+        <ui:VisualElement name="ButtonContent" style="flex-grow: 1; width: 579px; right: auto; height: auto; align-items: stretch; justify-content: flex-start; align-self: flex-start; flex-direction: column; color: rgb(0, 0, 0); background-color: rgba(0, 0, 0, 0); margin-top: -98px;">
+            <ui:Button text="CONTINUE GAME" name="ContinueGameButton" class="button" style="top: 670px; right: -157px; height: 56px; width: 334px; font-size: 33px;"/>
+            <ui:Button text="LOAD GAME" name="LoadGameButton" class="button" style="top: 670px; right: -157px; height: 56px; width: 334px; font-size: 33px;"/>
+            <ui:Button text="SETTINGS" name="SettingsButton" class="button" style="top: 670px; right: -157px; height: 56px; width: 334px; font-size: 33px;"/>
+            <ui:Button text="QUIT GAME" name="QuitButton" class="button" style="top: 670px; right: -157px; height: 56px; width: 334px; font-size: 33px;"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

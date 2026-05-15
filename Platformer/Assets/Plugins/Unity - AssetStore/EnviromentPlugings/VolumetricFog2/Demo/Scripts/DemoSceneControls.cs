@@ -16,13 +16,13 @@ namespace VolumetricFogAndMist2.Demos {
         }
 
         void Update() {
-            if (Input.GetKeyDown(KeyCode.F)) {
+            if (InputProxy.GetKeyDown(KeyCode.F)) {
                 index++;
                 if (index >= profiles.Length) index = 0;
                 SetProfile(index);
             }
 
-            if (Input.GetKeyDown(KeyCode.T)) {
+            if (InputProxy.GetKeyDown(KeyCode.T)) {
                 fogVolume.gameObject.SetActive(!fogVolume.gameObject.activeSelf);
             }
         }

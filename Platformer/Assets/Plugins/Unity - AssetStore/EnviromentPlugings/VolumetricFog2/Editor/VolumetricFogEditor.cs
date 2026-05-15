@@ -1,3 +1,5 @@
+﻿//#define FOG_NATIVE_LIGHT_FALLOFF
+
 using UnityEngine;
 using UnityEditor;
 using System.IO;
@@ -14,11 +16,11 @@ namespace VolumetricFogAndMist2 {
         Editor cachedProfileEditor;
         SerializedProperty profile;
         SerializedProperty maskEditorEnabled, maskBrushMode, maskBrushColor, maskBrushWidth, maskBrushFuzziness, maskBrushOpacity;
-        SerializedProperty enablePointLights, enableNativeLights, nativeLightsMultiplier, enableAPV, apvIntensityMultiplier;
+        SerializedProperty enablePointLights, enableNativeLights, nativeLightsMultiplier, nativeLightFallOff, enableAPV, apvIntensityMultiplier;
         SerializedProperty enableVoids;
         SerializedProperty enableFogOfWar, fogOfWarCenter, fogOfWarIsLocal, fogOfWarSize, fogOfWarShowCoverage, fogOfWarTextureWidth, fogOfWarTextureHeight, fogOfWarRestoreDelay, fogOfWarRestoreDuration, fogOfWarSmoothness, fogOfWarBlur;
         SerializedProperty enableFollow, followTarget, followMode, followOffset, followIncludeDistantFog;
-        SerializedProperty enableFade, fadeDistance, fadeOut, fadeController, enableSubVolumes, subVolumes;
+        SerializedProperty enableFade, fadeIncludeDistantFog, fadeDistance, fadeOut, fadeController, enableSubVolumes, subVolumes;
         SerializedProperty enableUpdateModeOptions, updateMode, updateModeCamera, updateModeBounds;
         SerializedProperty showBoundary;
 
@@ -27,53 +29,65 @@ namespace VolumetricFogAndMist2 {
         public static VolumetricFog lastEditingFog;
 
         void OnEnable () {
-            profile = serializedObject.FindProperty("profile");
 
-            enablePointLights = serializedObject.FindProperty("enablePointLights");
-            enableNativeLights = serializedObject.FindProperty("enableNativeLights");
-            nativeLightsMultiplier = serializedObject.FindProperty("nativeLightsMultiplier");
-            enableAPV = serializedObject.FindProperty("enableAPV");
-            apvIntensityMultiplier = serializedObject.FindProperty("apvIntensityMultiplier");
-            enableVoids = serializedObject.FindProperty("enableVoids");
-            enableFogOfWar = serializedObject.FindProperty("enableFogOfWar");
-            fogOfWarCenter = serializedObject.FindProperty("fogOfWarCenter");
-            fogOfWarIsLocal = serializedObject.FindProperty("fogOfWarIsLocal");
-            fogOfWarSize = serializedObject.FindProperty("fogOfWarSize");
-            fogOfWarShowCoverage = serializedObject.FindProperty("fogOfWarShowCoverage");
-            fogOfWarTextureWidth = serializedObject.FindProperty("fogOfWarTextureWidth");
-            fogOfWarTextureHeight = serializedObject.FindProperty("fogOfWarTextureHeight");
-            fogOfWarRestoreDelay = serializedObject.FindProperty("fogOfWarRestoreDelay");
-            fogOfWarRestoreDuration = serializedObject.FindProperty("fogOfWarRestoreDuration");
-            fogOfWarSmoothness = serializedObject.FindProperty("fogOfWarSmoothness");
-            fogOfWarBlur = serializedObject.FindProperty("fogOfWarBlur");
+            try {
+                profile = serializedObject.FindProperty("profile");
 
-            maskEditorEnabled = serializedObject.FindProperty("maskEditorEnabled");
-            maskBrushColor = serializedObject.FindProperty("maskBrushColor");
-            maskBrushMode = serializedObject.FindProperty("maskBrushMode");
-            maskBrushWidth = serializedObject.FindProperty("maskBrushWidth");
-            maskBrushFuzziness = serializedObject.FindProperty("maskBrushFuzziness");
-            maskBrushOpacity = serializedObject.FindProperty("maskBrushOpacity");
+                enablePointLights = serializedObject.FindProperty("enablePointLights");
+                enableNativeLights = serializedObject.FindProperty("enableNativeLights");
+                nativeLightsMultiplier = serializedObject.FindProperty("nativeLightsMultiplier");
+                nativeLightFallOff = serializedObject.FindProperty("nativeLightFallOff");
+                enableAPV = serializedObject.FindProperty("enableAPV");
+                apvIntensityMultiplier = serializedObject.FindProperty("apvIntensityMultiplier");
+                enableVoids = serializedObject.FindProperty("enableVoids");
+                enableFogOfWar = serializedObject.FindProperty("enableFogOfWar");
+                fogOfWarCenter = serializedObject.FindProperty("fogOfWarCenter");
+                fogOfWarIsLocal = serializedObject.FindProperty("fogOfWarIsLocal");
+                fogOfWarSize = serializedObject.FindProperty("fogOfWarSize");
+                fogOfWarShowCoverage = serializedObject.FindProperty("fogOfWarShowCoverage");
+                fogOfWarTextureWidth = serializedObject.FindProperty("fogOfWarTextureWidth");
+                fogOfWarTextureHeight = serializedObject.FindProperty("fogOfWarTextureHeight");
+                fogOfWarRestoreDelay = serializedObject.FindProperty("fogOfWarRestoreDelay");
+                fogOfWarRestoreDuration = serializedObject.FindProperty("fogOfWarRestoreDuration");
+                fogOfWarSmoothness = serializedObject.FindProperty("fogOfWarSmoothness");
+                fogOfWarBlur = serializedObject.FindProperty("fogOfWarBlur");
 
-            enableFollow = serializedObject.FindProperty("enableFollow");
-            followTarget = serializedObject.FindProperty("followTarget");
-            followMode = serializedObject.FindProperty("followMode");
-            followOffset = serializedObject.FindProperty("followOffset");
-            followIncludeDistantFog = serializedObject.FindProperty("followIncludeDistantFog");
+                maskEditorEnabled = serializedObject.FindProperty("maskEditorEnabled");
+                maskBrushColor = serializedObject.FindProperty("maskBrushColor");
+                maskBrushMode = serializedObject.FindProperty("maskBrushMode");
+                maskBrushWidth = serializedObject.FindProperty("maskBrushWidth");
+                maskBrushFuzziness = serializedObject.FindProperty("maskBrushFuzziness");
+                maskBrushOpacity = serializedObject.FindProperty("maskBrushOpacity");
 
-            enableFade = serializedObject.FindProperty("enableFade");
-            fadeDistance = serializedObject.FindProperty("fadeDistance");
-            fadeOut = serializedObject.FindProperty("fadeOut");
-            fadeController = serializedObject.FindProperty("fadeController");
-            enableSubVolumes = serializedObject.FindProperty("enableSubVolumes");
-            subVolumes = serializedObject.FindProperty("subVolumes");
-            enableUpdateModeOptions = serializedObject.FindProperty("enableUpdateModeOptions");
-            updateMode = serializedObject.FindProperty("updateMode");
-            updateModeCamera = serializedObject.FindProperty("updateModeCamera");
-            updateModeBounds = serializedObject.FindProperty("updateModeBounds");
-            showBoundary = serializedObject.FindProperty("showBoundary");
+                enableFollow = serializedObject.FindProperty("enableFollow");
+                followTarget = serializedObject.FindProperty("followTarget");
+                followMode = serializedObject.FindProperty("followMode");
+                followOffset = serializedObject.FindProperty("followOffset");
+                followIncludeDistantFog = serializedObject.FindProperty("followIncludeDistantFog");
 
-            fog = (VolumetricFog)target;
-            lastEditingFog = fog;
+                enableFade = serializedObject.FindProperty("enableFade");
+                fadeIncludeDistantFog = serializedObject.FindProperty("fadeIncludeDistantFog");
+                fadeDistance = serializedObject.FindProperty("fadeDistance");
+                fadeOut = serializedObject.FindProperty("fadeOut");
+                fadeController = serializedObject.FindProperty("fadeController");
+                enableSubVolumes = serializedObject.FindProperty("enableSubVolumes");
+                subVolumes = serializedObject.FindProperty("subVolumes");
+                enableUpdateModeOptions = serializedObject.FindProperty("enableUpdateModeOptions");
+                updateMode = serializedObject.FindProperty("updateMode");
+                updateModeCamera = serializedObject.FindProperty("updateModeCamera");
+                updateModeBounds = serializedObject.FindProperty("updateModeBounds");
+                showBoundary = serializedObject.FindProperty("showBoundary");
+
+                fog = (VolumetricFog)target;
+                lastEditingFog = fog;
+
+                SceneView.duringSceneGui += OnScene;
+            }
+            catch { }
+        }
+
+        void OnDisable () {
+            SceneView.duringSceneGui -= OnScene;
         }
 
 
@@ -115,12 +129,12 @@ namespace VolumetricFogAndMist2 {
 
             if (boxStyle == null) {
                 boxStyle = new GUIStyle(GUI.skin.box);
-                boxStyle.padding = new RectOffset(15, 10, 5, 5);
+                boxStyle.padding = new RectOffset(5, 5, 5, 5);
             }
 
             serializedObject.Update();
 
-			EditorGUI.BeginChangeCheck();
+            EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(profile);
 
             if (profile.objectReferenceValue != null) {
@@ -148,11 +162,23 @@ namespace VolumetricFogAndMist2 {
                 }
             }
 
+            var leftGreyMini = new GUIStyle(EditorStyles.centeredGreyMiniLabel) {
+                alignment = TextAnchor.MiddleLeft
+            };
+            EditorGUILayout.LabelField(new GUIContent("FOG VOLUME FEATURES", "Features available in this fog volume"), leftGreyMini);
+
             EditorGUIUtility.labelWidth = 170;
             EditorGUILayout.PropertyField(enableNativeLights);
             if (enableNativeLights.boolValue) {
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(nativeLightsMultiplier, new GUIContent("Intensity Multiplier"));
+                #if FOG_NATIVE_LIGHT_FALLOFF
+                    EditorGUILayout.PropertyField(nativeLightFallOff, new GUIContent("Distance Falloff"));
+                #else
+                    GUI.enabled = false;
+                    EditorGUILayout.LabelField("Distance Falloff", "(Disabled in Volumetric Fog Manager)");
+                    GUI.enabled = true;
+                #endif
                 EditorGUI.indentLevel--;
             }
             EditorGUILayout.PropertyField(enableAPV, new GUIContent("Enable APV (Probe Volumes)"));
@@ -199,6 +225,7 @@ namespace VolumetricFogAndMist2 {
                 EditorGUILayout.PropertyField(fadeDistance);
                 EditorGUILayout.PropertyField(fadeOut);
                 EditorGUILayout.PropertyField(fadeController);
+                EditorGUILayout.PropertyField(fadeIncludeDistantFog, new GUIContent("Include Distant Fog", "Also fades distant fog along with this volume."));
                 EditorGUI.indentLevel--;
             }
             EditorGUILayout.PropertyField(enableSubVolumes);
@@ -327,7 +354,7 @@ namespace VolumetricFogAndMist2 {
             }
 
             serializedObject.ApplyModifiedProperties();
-            
+
             if (requiresFogOfWarTextureReload) {
                 fog.ReloadFogOfWarTexture();
             }
@@ -371,7 +398,7 @@ namespace VolumetricFogAndMist2 {
         }
 
 
-        void OnSceneGUI () {
+        void OnScene (SceneView sceneView) {
             OnSceneGUI_FogOfWar();
             OnSceneGUI_TransformHandle();
         }

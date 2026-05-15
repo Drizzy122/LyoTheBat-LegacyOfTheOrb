@@ -1,8 +1,9 @@
-using System;
+using ImprovedTimers;
 using UnityEngine;
 using KBCore.Refs;
 using System.Collections.Generic;
-using Utilities;
+using  UnityUtils.StateMachine;
+
 using Random = UnityEngine.Random;
 
 namespace Platformer 
@@ -33,7 +34,6 @@ namespace Platformer
         [SerializeField] float damageAmount = 10f;
         
         [field: Header("Timers & StateMachine")]
-        List<Timer> timers;
         CountdownTimer attackTimer;
         CountdownTimer knockbackTimer;
         
@@ -64,8 +64,6 @@ namespace Platformer
         void Update() 
         {
             stateMachine.Update();
-            HandleTimers();
-          
         }
         
         void FixedUpdate() => stateMachine.FixedUpdate();
@@ -77,24 +75,12 @@ namespace Platformer
         
         #region Timers
         
-        void HandleTimers()
-        {
-            foreach (var timer in timers)
-            {
-                timer.Tick(Time.deltaTime);
-            }
-        }
 
         void SetupTimers()
         {
             attackTimer = new CountdownTimer(timeBetweenAttacks);
             knockbackTimer = new CountdownTimer(0.5f); 
             
-            attackTimer.Tick(Time.deltaTime);
-            knockbackTimer.Tick(Time.deltaTime);
-            
-            timers = new List<Timer>(2)
-                { attackTimer, knockbackTimer };
         }
 
         #endregion
@@ -127,8 +113,8 @@ namespace Platformer
             stateMachine.SetState(wanderState);
         }
         
-        void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);
-        void Any(IState to, IPredicate condition) => stateMachine.AddAnyTransition(to, condition);
+        void At(IState from, IState to, FuncPredicate condition) => stateMachine.AddTransition(from, to, condition);
+        void Any(IState to, FuncPredicate condition) => stateMachine.AddAnyTransition(to, condition);
         #endregion
         
         #region Wander Behaviour

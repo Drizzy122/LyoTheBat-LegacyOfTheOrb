@@ -1,7 +1,7 @@
 using UnityEngine;
 using KBCore.Refs;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
+using Cursor = UnityEngine.Cursor; // Changed from UnityEngine.UI
 
 namespace Platformer
 {
@@ -9,30 +9,52 @@ namespace Platformer
     {
         [field: Header("Configs")] 
         [field: SerializeField, Anywhere] InputReader input;
-        [field: SerializeField] GameObject pauseUI;
+        
+        // Swapped GameObject for UIDocument
+        [field: SerializeField] UIDocument pauseDocument; 
+        [field: SerializeField] private SaveSlotsMenu saveSlotsMenu;
+        
         [field: SerializeField, Anywhere] PlayerController playerController;
-        public Button primaryButton;
+        
         [field: SerializeField] bool isPaused = false;
         [field: SerializeField] string musicName;
         [field: SerializeField] float musicValue = 1f; 
         private float pausedValue = 0f;
+
+        // UI Toolkit Elements
+        private VisualElement rootContainer;
+        private Button continueButton;
+        private Button loadButton;
+        private Button settingsButton;
+        private Button quitButton;
+
+        private void Awake()
+        {
+            // Note: Using "PaueMenuContent" exactly as it is spelled in your UI Builder screenshot!
+            rootContainer = pauseDocument.rootVisualElement.Q<VisualElement>("PaueMenuContent");
+
+            continueButton = rootContainer.Q<Button>("ContinueGameButton");
+            loadButton = rootContainer.Q<Button>("LoadGameButton");
+            settingsButton = rootContainer.Q<Button>("SettingsButton");
+            quitButton = rootContainer.Q<Button>("QuitButton");
+
+            // Bind the buttons to their actions
+            continueButton.clicked += DeactivateMenu;
+            quitButton.clicked += QuitGame;
+            loadButton.clicked += OnLoadClicked;
+            settingsButton.clicked += OnSettingsClicked;
+        }
+
         void Start()
         {
             if (!isPaused)
             {
                 Time.timeScale = 1;
-                pauseUI.SetActive(false);
+                // Hide the menu using UI Toolkit display style
+                rootContainer.style.display = DisplayStyle.None; 
                 isPaused = false;
                 AudioManager.instance.SetMusicParameter(musicName, musicValue);
                 AudioManager.instance.SetAmbienceParameter(musicName, musicValue);
-            }
-            SelectButton();
-        }
-        private void SelectButton()
-        {
-            if (primaryButton != null)
-            {
-                EventSystem.current.SetSelectedGameObject(primaryButton.gameObject);
             }
         }
 
@@ -48,33 +70,72 @@ namespace Platformer
                 DeactivateMenu();
             }
         }
+        
+        private void OnSettingsClicked()
+        {
+            // Hide the pause menu visually
+            rootContainer.style.display = DisplayStyle.None; 
+    
+            // Open the Settings menu, and tell it to show the Pause Menu again when "Back" is clicked
+            SettingsManager.instance.ActivateMenu(() => rootContainer.style.display = DisplayStyle.Flex);
+        }
+
         void ActivateMenu()
         {
             Time.timeScale = 0;
-            pauseUI.SetActive(true);
+            // Show the menu
+            rootContainer.style.display = DisplayStyle.Flex; 
+            
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            
             // Disable the PlayerController script
             if (playerController != null) playerController.enabled = false;
+            
             AudioManager.instance.SetMusicParameter(musicName, pausedValue);
             AudioManager.instance.SetAmbienceParameter(musicName, pausedValue);
             AudioManager.instance.PlayOneShot(FMODEvents.instance.uiopen, this.transform.position);
 
+            // Replaces the old EventSystem.SetSelectedGameObject
+            continueButton.Focus(); 
         }
+
         public void DeactivateMenu()
         {
             Time.timeScale = 1;
-            pauseUI.SetActive(false);
-            isPaused = false;
+            // Hide the menu
+            rootContainer.style.display = DisplayStyle.None; 
+            
+            // THE FIX: Tell the Save Slots menu to hide itself too!
+            if (saveSlotsMenu != null)
+            {
+                saveSlotsMenu.DeactivateMenu();
+            }
+            // Ensure state matches if the player clicked the 'Continue' button instead of pressing the pause key
+            isPaused = false; 
+            
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            
+            // ADD THIS LINE: Instantly shuts down the Settings Menu
+            SettingsManager.instance.DeactivateMenu();
+            
             // Re-enable the PlayerController script
             if (playerController != null) playerController.enabled = true;
+            
             AudioManager.instance.SetMusicParameter(musicName, musicValue);
             AudioManager.instance.SetAmbienceParameter(musicName, musicValue);
             AudioManager.instance.PlayOneShot(FMODEvents.instance.uiclose, this.transform.position);
         }
         
+        private void OnLoadClicked()
+        {
+            // Hide the pause menu visually
+            rootContainer.style.display = DisplayStyle.None; 
+    
+            // Open the Save menu, and tell it to show the Pause Menu again when "Back" is clicked
+            saveSlotsMenu.ActivateMenu(true, () => rootContainer.style.display = DisplayStyle.Flex);
+        }
         public void QuitGame()
         {
             Debug.Log("Quitting Game");
@@ -86,7 +147,8 @@ namespace Platformer
             Application.Quit();
             #endif
         }
-        private void OnEnable() => input.Paused += OnPause ;
+
+        private void OnEnable() => input.Paused += OnPause;
         private void OnDisable() => input.Paused -= OnPause;
     }
 }

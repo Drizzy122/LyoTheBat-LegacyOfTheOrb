@@ -34,7 +34,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "HeavyAttack",
+                    "name": "BlastAttack",
                     "type": "Button",
                     "id": "6f9cd33a-5135-4689-bbc9-b0d4567326f1",
                     "expectedControlType": "",
@@ -299,7 +299,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "HeavyAttack",
+                    "action": "BlastAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -310,7 +310,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "HeavyAttack",
+                    "action": "BlastAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

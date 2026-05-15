@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Utilities;
+using ImprovedTimers;
 
 namespace Platformer {
     public class PlayerDetector : MonoBehaviour {
@@ -19,16 +19,19 @@ namespace Platformer {
         IDetectionStrategy detectionStrategy;
 
         void Awake() {
-            Player = GameObject.FindGameObjectWithTag("Player").transform; // Make sure to TAG the player!
-            PlayerHealth = Player.GetComponent<Health>();
-        }
-
-        void Start() {
             detectionTimer = new CountdownTimer(detectionCooldown);
             detectionStrategy = new ConeDetectionStrategy(detectionAngle, detectionRadius, innerDetectionRadius);
         }
+
+        void Start() {
+            Player = GameObject.FindGameObjectWithTag("Player").transform; // Make sure to TAG the player!
+            PlayerHealth = Player.GetComponent<Health>() ?? Player.GetComponentInParent<Health>();
+        }
         
-        void Update() => detectionTimer.Tick(Time.deltaTime);
+        void Update()
+        {
+            detectionTimer.Tick();
+        }
 
         public bool CanDetectPlayer() {
             return detectionTimer.IsRunning || detectionStrategy.Execute(Player, transform, detectionTimer);

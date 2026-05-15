@@ -90,7 +90,7 @@ LODGroup:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7017169203769084162}
-  serializedVersion: 2
+  serializedVersion: 3
   m_LocalReferencePoint: {x: 0.022411168, y: 0.033813298, z: -0.010082483}
   m_Size: 1.6470946
   m_FadeMode: 0
@@ -110,6 +110,7 @@ LODGroup:
     renderers:
     - renderer: {fileID: 8818332046680664279}
   m_Enabled: 1
+  m_GlobalIlluminationLOD: 0
 --- !u!23 &8818332046680664279 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: a993f75ef4211ea4b953992bed7b1fc5,

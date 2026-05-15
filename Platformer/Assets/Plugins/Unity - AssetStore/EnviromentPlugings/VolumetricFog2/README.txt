@@ -43,6 +43,45 @@ Of course, all updates of Volumetric Fog & Mist will be eventually available on 
 Version history
 ---------------
 
+v31.1
+- [Fix] Fog of war: fixed off-by-one boundary bug where pixels at X=0, Y=0 (and last row/column) of the fog texture could never be set by SetFogOfWarAlpha and ResetFogOfWarAlpha methods
+- API: added batched SetFogOfWarAlpha overloads that accept a mesh shape and arrays of positions/alphas, for efficient tile-based fog of war (hex grids, etc.)
+
+v31.0
+- Point lights: added Blending parameter to Point Light Manager
+
+v30.3.4
+- Distant fog: added "Show In Edit Mode"
+- Fade: added option to include distant fog
+
+v30.3
+- Revamped profile inspector
+- Improved rendering of border option
+- Distant fog: added transparency support option
+- Native lights: added optional "FallOff" property (enable it in Volumetric Fog Manager Shader Options)
+- Added support for Unity 6.4
+
+v30.2.7
+- Improvements to fog of war system: prevents initialization race condition and new SetFogOfWar API overloads
+
+v30.2.6
+- Added support for new input system to demo scripts
+- [Fix] API: fog of war fixes
+
+v30.2.2
+- [Fix] Fixed an issue regarding duplicated volumetric fog manager instances inside prefabs
+
+v30.2.1
+- [Fix] Fixed fog of war editor not working if SceneView gizmos are disabled
+- [Fix] Fixed fog rendering issue when volume is rotated and uses non-uniform scale
+
+v30.2
+- Distant Fog: added distance noise options
+
+v30.1
+- Added "Fog Near Stepping" parameter to increase quality at short distances while allowing lower quality at long distances
+- Internal improvements and fixes
+
 v30
 - Added ShaderGraph support / new demo scene
 - Point Light Manager: added distance dimming options

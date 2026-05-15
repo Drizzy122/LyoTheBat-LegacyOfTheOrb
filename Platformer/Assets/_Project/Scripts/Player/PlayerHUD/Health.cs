@@ -42,6 +42,13 @@ namespace Platformer
         private Material[] skinnedMaterials;
         public event Action<float> OnHit; // For Enemy Knockback
 
+        private void OnDisable()
+        {
+            // Safety: if this object is destroyed mid-invulnerability, restore layer collision
+            Physics.IgnoreLayerCollision(6, 7, false);
+            IsInvulnerable = false;
+        }
+
         private void Awake()
         {
             currentHealth = maxHealth;
@@ -142,7 +149,7 @@ namespace Platformer
             Physics.IgnoreLayerCollision(6, 7, false);
             IsInvulnerable = false;
         }
-        private void RestartScene() => SceneManager.LoadScene("PlayGround");
+        private void RestartScene() => SceneManager.LoadScene("Game");
         
         IEnumerator DissolveCo()
         {

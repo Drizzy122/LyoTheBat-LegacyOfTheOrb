@@ -54,16 +54,16 @@ namespace VolumetricFogAndMist2.Demos {
         // Update is called once per frame
         void Update() {
 
-            Vector3 mousePos = Input.mousePosition;
+            Vector3 mousePos = InputProxy.MousePosition;
             if (mousePos.x < 0 || mousePos.x >= Screen.width || mousePos.y < 0 || mousePos.y >= Screen.height) return;
 
             isGrounded = characterController.isGrounded;
 
             // Get Input
-            inputHor = Input.GetAxis("Horizontal");
-            inputVert = Input.GetAxis("Vertical");
-            mouseHor = Input.GetAxis("Mouse X");
-            mouseVert = Input.GetAxis("Mouse Y");
+            inputHor = InputProxy.GetAxis("Horizontal");
+            inputVert = InputProxy.GetAxis("Vertical");
+            mouseHor = InputProxy.GetAxis("Mouse X");
+            mouseVert = InputProxy.GetAxis("Mouse Y");
 
             // Rotate player first
             transform.Rotate(0, mouseHor * rotationSpeed * mouseSensitivity * mouseInvertX, 0);
@@ -74,13 +74,13 @@ namespace VolumetricFogAndMist2.Demos {
 
             if (isGrounded) {
                 // Increase sprint smoothly
-                if (Input.GetKey(KeyCode.LeftShift)) {
+                if (InputProxy.GetKey(KeyCode.LeftShift)) {
                     if (sprint < sprintMax) sprint += 10 * Time.deltaTime;
                 } else {
                     if (sprint > 1) sprint -= 10 * Time.deltaTime;
                 }
 
-                if (Input.GetKeyDown(KeyCode.Space)) {
+                if (InputProxy.GetKeyDown(KeyCode.Space)) {
                     jumpDirection.y = jumpHeight;
                 } else {
                     jumpDirection.y = -1;

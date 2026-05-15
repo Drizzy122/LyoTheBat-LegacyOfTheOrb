@@ -1,25 +1,52 @@
 :root {
 }
 
-.header {
-    font-size: 74px;
+.Text {
+    background-color: rgba(0, 0, 0, 0);
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/Ottselesque-Regular.otf?fileID=12800000&guid=b00bfdbd79d843a46b8b3fb62f619d32&type=3#Ottselesque-Regular");
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgba(0, 0, 0, 0);
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+    font-size: 57px;
+    height: 146px;
 }
 
 .button {
-    width: 220px;
-    height: 74px;
-    border-top-left-radius: 11px;
-    border-top-right-radius: 11px;
-    border-bottom-right-radius: 11px;
-    border-bottom-left-radius: 11px;
-    border-top-width: 6px;
-    border-right-width: 6px;
-    border-bottom-width: 6px;
-    border-left-width: 6px;
-    -unity-background-image-tint-color: rgb(255, 255, 255);
-    -unity-text-align: middle-center;
-    border-bottom-color: rgb(0, 0, 0);
-    border-left-color: rgb(0, 0, 0);
-    border-top-color: rgb(0, 0, 0);
-    border-right-color: rgb(0, 0, 0);
+    background-color: rgba(255, 255, 255, 0);
+    color: rgb(255, 255, 255);
+    height: 50px;
+    width: 360px;
+    justify-content: flex-start;
+    margin-top: 15px;
+    -unity-text-align: middle-left;
+    font-size: 25px;
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    -unity-text-outline-color: rgb(0, 0, 0);
+    -unity-text-outline-width: 2px;
+    text-shadow: 2px 2px 0 rgb(0, 0, 0);
+    border-width: 0;
+    border-radius: 0;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+    transform-origin: left;
+}
+
+.button:hover {
+    color: rgb(255, 255, 255);
+    scale: 1.15;
+    padding-left: 15px;
+}
+
+.button:focus {
+    color: rgb(120, 0, 142);
+    scale: 1.15;
+    padding-left: 15px;
+    border-left-width: 4px;
+    border-left-color: rgb(78, 0, 108);
+}
+
+.button:active {
+    scale: 1.05;
+    color: rgb(255, 255, 255);
 }

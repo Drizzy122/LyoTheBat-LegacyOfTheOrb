@@ -5,14 +5,15 @@ using static PlayerInputActions;
 
 namespace Platformer
 {
+    public interface IInputReader {
+        Vector2 Direction { get; }
+        void EnablePlayerActions();
+    }
+
     [CreateAssetMenu(fileName = "InputReader", menuName = "Platformer/InputReader")]
     public class InputReader : ScriptableObject, IPlayerActions, IMenuActions
     {
         [field: Header("Player Actions Events")]
-        PlayerInputActions inputActions;
-        public Vector3 Direction => inputActions.Player.Move.ReadValue<Vector2>();
-        public bool CounterPressed { get; set; }
-
         public event UnityAction<Vector2> Move = delegate { };
         public event UnityAction<Vector2> Look = delegate { };
         public event UnityAction<bool> Jump = delegate { };
@@ -21,22 +22,34 @@ namespace Platformer
         public event UnityAction<bool> Wallclimb = delegate { };
         public event UnityAction<bool> Glide = delegate { };
         public event UnityAction LightAttack = delegate { };
-        public event UnityAction HeavyAttack = delegate { };
+        public event UnityAction BlastAttack = delegate { };
         public event UnityAction<bool> interact = delegate { };
         public event UnityAction<bool> submit = delegate { };
         public event UnityAction Paused = delegate { };
+        public event UnityAction<RaycastHit> Click = delegate { };
+        public event UnityAction Counter = delegate { }; 
+      
+        PlayerInputActions inputActions;
+        
+        //public bool IsJumpKeyPressed() => inputActions.Player.Jump.IsPressed();
         
         public bool IsJumpKeyPressed = false;
         
-        public event UnityAction Counter = delegate { }; 
-
-        public void OnCounter(InputAction.CallbackContext context)
+        
+        public Vector2 Direction => inputActions.Player.Move.ReadValue<Vector2>();
+        public bool CounterPressed { get; set; }
+        
+        // 1. Add this variable right under your other public variables at the top
+        public bool IsUsingMouse { get; private set; }
+        
+        public void EnablePlayerActions()
         {
-            if (context.phase == InputActionPhase.Started)
+            if (inputActions == null) 
             {
-                Counter.Invoke();
-                CounterPressed = true;
+                inputActions = new PlayerInputActions();
+                inputActions.Player.SetCallbacks(this);
             }
+            inputActions.Enable();
         }
         public void OnMove(InputAction.CallbackContext context)
         {
@@ -45,7 +58,12 @@ namespace Platformer
 
         public void OnLook(InputAction.CallbackContext context)
         {
-           Look.Invoke(context.ReadValue<Vector2>());
+            if (context.control != null && context.control.device != null)
+            {
+                IsUsingMouse = context.control.device is Mouse;
+            }
+
+            Look.Invoke(context.ReadValue<Vector2>());
         }
 
         public void OnLightAttack(InputAction.CallbackContext context)
@@ -56,11 +74,11 @@ namespace Platformer
             }
         }
 
-        public void OnHeavyAttack(InputAction.CallbackContext context)
+        public void OnBlastAttack(InputAction.CallbackContext context)
         {
             if (context.phase == InputActionPhase.Started)
             {
-                HeavyAttack.Invoke();
+                BlastAttack.Invoke();
             }
         }
         public void OnJump(InputAction.CallbackContext context)
@@ -139,15 +157,7 @@ namespace Platformer
             }
         }
         public void OnSubmit(InputAction.CallbackContext context) { }
-        public void EnablePlayerActions()
-        {
-            if (inputActions == null) 
-            {
-                inputActions = new PlayerInputActions();
-                inputActions.Player.SetCallbacks(this);
-            }
-            inputActions.Enable();
-        }
+        
 
         void OnEnable()
         {
@@ -172,6 +182,15 @@ namespace Platformer
             if (context.phase == InputActionPhase.Performed)
             {
                 Paused.Invoke();
+            }
+        }
+        
+        public void OnCounter(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Started)
+            {
+                Counter.Invoke();
+                CounterPressed = true;
             }
         }
     }

@@ -107,6 +107,34 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 700
+--- !u!114 &-8218653948409025253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambience/Wind
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Ambience/Wind
+  Guid:
+    Data1: -959016292
+    Data2: 1075872433
+    Data3: -1776706911
+    Data4: -2065678078
+  Banks:
+  - {fileID: -3636820517116251897}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: -6349504172798302855}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 12000
 --- !u!114 &-7877637506800327570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,10 +177,10 @@ MonoBehaviour:
   Path: Assets/_Project/FmodAudio/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639076620705067133
+  lastModified: 639143107139197820
   FileSizes:
   - Name: Desktop
-    Value: 2106
+    Value: 2194
   Exists: 1
 --- !u!114 &-7189775898630453360
 MonoBehaviour:
@@ -294,6 +322,30 @@ MonoBehaviour:
   FileSizes:
   - Name: Desktop
     Value: 69024
+  Exists: 1
+--- !u!114 &-6349504172798302855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Wind/wind_intensity
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorParamRef
+  Name: wind_intensity
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 707551850
+    data2: 3500769605
+  Type: 0
+  IsGlobal: 0
+  Labels: []
   Exists: 1
 --- !u!114 &-6221871956479831537
 MonoBehaviour:
@@ -583,10 +635,10 @@ MonoBehaviour:
   Path: Assets/_Project/FmodAudio/Build/Desktop/Ambience.bank
   Name: Ambience
   StudioPath: bank:/Ambience
-  lastModified: 639020261784561644
+  lastModified: 639137937228250047
   FileSizes:
   - Name: Desktop
-    Value: 266272
+    Value: 1460160
   Exists: 1
 --- !u!114 &-3469484472581811649
 MonoBehaviour:
@@ -848,6 +900,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 216270
+--- !u!114 &-2434500383991989102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambience/UnusedAudio
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Ambience/UnusedAudio
+  Guid:
+    Data1: 1619520161
+    Data2: 1118718761
+    Data3: -882070881
+    Data4: 2019646952
+  Banks:
+  - {fileID: 3473845767722166073}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-2310927378856960808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1178,20 +1257,22 @@ MonoBehaviour:
   - {fileID: 6504075835020202486}
   - {fileID: 7293417086594604647}
   - {fileID: -1430502578188952374}
-  - {fileID: 6341165149974080143}
   - {fileID: -633540143285614519}
   - {fileID: 5686335523780010279}
   - {fileID: -1588288109709153272}
   - {fileID: 4751263729031518566}
   - {fileID: 506848363360780124}
   - {fileID: 2782293227603305421}
+  - {fileID: -8218653948409025253}
+  - {fileID: -2434500383991989102}
+  - {fileID: 6856066413370992550}
   EditorParameters: []
   MasterBanks:
   - {fileID: 7316301745362389456}
   StringsBanks:
   - {fileID: -7848047765112382451}
   cacheVersion: 131857
-  cacheTime: 639078462428160821
+  cacheTime: 639144072165383622
   SerializableEventsDict:
   - key: event:/Music/MainMenuMusic
     index: 0
@@ -1217,20 +1298,24 @@ MonoBehaviour:
     index: 10
   - key: event:/SFX/Enemies/Hurt
     index: 11
-  - key: event:/Ambience/BirdChirping
-    index: 12
   - key: event:/SFX/UI/ButtonAccept
-    index: 13
+    index: 12
   - key: event:/SFX/UI/ButtonDecline
-    index: 14
+    index: 13
   - key: event:/SFX/Collectables/EcliptiumCrystal
-    index: 15
+    index: 14
   - key: event:/SFX/UI/ButtonSelect
-    index: 16
+    index: 15
   - key: event:/SFX/Collectables/DestructableObj
-    index: 17
+    index: 16
   - key: event:/SFX/Player/PlayerFootSteps
+    index: 17
+  - key: event:/Ambience/Wind
     index: 18
+  - key: event:/Ambience/UnusedAudio
+    index: 19
+  - key: event:/SFX/Player/BlastAttack
+    index: 20
 --- !u!114 &506848363360780124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1644,10 +1729,10 @@ MonoBehaviour:
   Path: Assets/_Project/FmodAudio/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 639078462428160821
+  lastModified: 639143107142224728
   FileSizes:
   - Name: Desktop
-    Value: 274496
+    Value: 299776
   Exists: 1
 --- !u!114 &4163019588064303454
 MonoBehaviour:
@@ -2006,39 +2091,11 @@ MonoBehaviour:
   Path: Assets/_Project/FmodAudio/Build/Desktop/Music.bank
   Name: Music
   StudioPath: bank:/Music
-  lastModified: 639076620777958865
+  lastModified: 639144072165383622
   FileSizes:
   - Name: Desktop
-    Value: 14746304
+    Value: 16100704
   Exists: 1
---- !u!114 &6341165149974080143
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Ambience/BirdChirping
-  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
-  Path: event:/Ambience/BirdChirping
-  Guid:
-    Data1: -959016292
-    Data2: 1075872433
-    Data3: -1776706911
-    Data4: -2065678078
-  Banks:
-  - {fileID: -3636820517116251897}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters:
-  - {fileID: 7317811684181121621}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 5800
 --- !u!114 &6504075835020202486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2066,6 +2123,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2077
+--- !u!114 &6856066413370992550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/BlastAttack
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/SFX/Player/BlastAttack
+  Guid:
+    Data1: 1823210001
+    Data2: 1174535621
+    Data3: 2122446227
+    Data4: -241928351
+  Banks:
+  - {fileID: 3473845767722166073}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2136
 --- !u!114 &6879750337811644868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2135,34 +2219,10 @@ MonoBehaviour:
   Path: Assets/_Project/FmodAudio/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639076620705052085
+  lastModified: 639143107139185329
   FileSizes:
   - Name: Desktop
     Value: 1524
-  Exists: 1
---- !u!114 &7317811684181121621
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/BirdChirping/wind_intensity
-  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorParamRef
-  Name: wind_intensity
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 707551850
-    data2: 3500769605
-  Type: 0
-  IsGlobal: 0
-  Labels: []
   Exists: 1
 --- !u!114 &7426990767284676237
 MonoBehaviour:
@@ -2343,7 +2403,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 216270
+  Length: 311066
 --- !u!114 &9105618135291965089
 MonoBehaviour:
   m_ObjectHideFlags: 0

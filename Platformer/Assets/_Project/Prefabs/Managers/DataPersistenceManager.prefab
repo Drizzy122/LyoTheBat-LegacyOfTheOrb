@@ -48,6 +48,6 @@ MonoBehaviour:
   initializeDataIfNull: 0
   overrideSelectedProfileId: 0
   testSelectedProfileId: test
-  fileName: MyPlatformer.game
+  fileName: OrbsOfTheCosmos.game
   useEncryption: 0
   autoSaveTimeSeconds: 10

@@ -5,6 +5,7 @@ Shader "Hidden/VolumetricFog2/DepthOnly"
         [MainTexture] _BaseMap ("Texture", 2D) = "white" {}
         _AlphaCutOff("Alpha CutOff", Float) = 0
         _Cull("Culling", Int) = 2
+        _SkipRendering("Skip Rendering", Float) = 0
     }
     SubShader
     {
@@ -28,12 +29,15 @@ Shader "Hidden/VolumetricFog2/DepthOnly"
             TEXTURE2D(_BaseMap);
             SAMPLER(sampler_BaseMap);
 
-            #if DEPTH_PREPASS_ALPHA_TEST
-                CBUFFER_START(UnityPerMaterial)
-                half _AlphaCutOff;
-                float4 _BaseMap_ST;
-                CBUFFER_END
+            CBUFFER_START(UnityPerMaterial)
+                float _SkipRendering;
+                #if DEPTH_PREPASS_ALPHA_TEST
+                    half _AlphaCutOff;
+                    float4 _BaseMap_ST;
+                #endif
+            CBUFFER_END
 
+            #if DEPTH_PREPASS_ALPHA_TEST
                 #ifdef UNITY_DOTS_INSTANCING_ENABLED
                     UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)
                         UNITY_DOTS_INSTANCED_PROP(float, _AlphaCutOff)
@@ -67,11 +71,15 @@ Shader "Hidden/VolumetricFog2/DepthOnly"
             TEXTURE2D(_BaseMap);
             SAMPLER(sampler_BaseMap);
 
+            CBUFFER_START(UnityPerMaterial)
+                float _SkipRendering;
+                #if DEPTH_PREPASS_ALPHA_TEST
+                    half _AlphaCutOff;
+                    float4 _BaseMap_ST;
+                #endif
+            CBUFFER_END
+
             #if DEPTH_PREPASS_ALPHA_TEST
-                CBUFFER_START(UnityPerMaterial)
-                half _AlphaCutOff;
-                float4 _BaseMap_ST;
-                CBUFFER_END
             #endif
 
             #include "DepthOnly_Include.hlsl"

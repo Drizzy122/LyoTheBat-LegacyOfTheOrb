@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityUtils.StateMachine;
 
 namespace Platformer {
     public abstract class EnemyBaseState : IState {

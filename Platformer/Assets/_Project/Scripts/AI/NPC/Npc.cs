@@ -1,7 +1,8 @@
 using KBCore.Refs;
 using UnityEngine;
 using UnityEngine.AI;
-using Utilities;
+using ImprovedTimers;
+using UnityUtils.StateMachine;
 
 namespace Platformer
 {
@@ -49,8 +50,8 @@ namespace Platformer
             stateMachine.SetState(idleState);
         }
         
-        void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);
-        void Any(IState to, IPredicate condition) => stateMachine.AddAnyTransition(to, condition);
+        void At(IState from, IState to, FuncPredicate condition) => stateMachine.AddTransition(from, to, condition);
+        void Any(IState to, FuncPredicate condition) => stateMachine.AddAnyTransition(to, condition);
        
 
         public void ChangeStateToIdle()
@@ -66,8 +67,6 @@ namespace Platformer
         void Update()
         {
             stateMachine.Update();
-            idleTimer.Tick(Time.deltaTime);  // Update Idle timer
-            wanderTimer.Tick(Time.deltaTime); // Update Wander timer
         }
 
         void FixedUpdate()

@@ -19,6 +19,7 @@ namespace Platformer
         [field: SerializeField] public EventReference playerFootsteps { get; private set; }
         [field: SerializeField] public EventReference playerJump { get; private set; }
         [field: SerializeField] public EventReference playerAttack { get; private set; }
+        [field: SerializeField] public EventReference blastAttack { get; private set; }
         [field: SerializeField] public EventReference playerHurt { get; private set; }
         [field: SerializeField] public EventReference playerDeath { get; private set; }
         [field: SerializeField] public EventReference playerEcolocation { get; private set; }
@@ -29,12 +30,6 @@ namespace Platformer
         [field: SerializeField] public EventReference enemyHurt { get; private set; }
         [field: SerializeField] public EventReference enemyDeath { get; private set; }
         
-        [field:Header("Flying Enemy SFX")]
-     //   [field: SerializeField] public EventReference flyingEnemyWings { get; private set; }
-     //   [field: SerializeField] public EventReference flyingEnemyAttack { get; private set; }
-      //  [field: SerializeField] public EventReference flyingEnemyHurt { get; private set; }
-     //   [field: SerializeField] public EventReference flyingEnemyDeath { get; private set; }
-        
         [field: Header("Music")] 
         [field: SerializeField] public EventReference music { get; private set; }
         
@@ -44,9 +39,6 @@ namespace Platformer
         [field: Header("Collectable SFX")]
         [field: SerializeField] public EventReference coinCollected { get; private set;}
         [field: SerializeField] public EventReference luminCollected { get; private set;}
-        
-        [field: Header("Audio By Distance")]
-        //[field: SerializeField] public EventReference ChestIdle { get; private set; }
         
         [field: Header(("Explosion"))]
         [field: SerializeField] public EventReference explode { get; private set; }

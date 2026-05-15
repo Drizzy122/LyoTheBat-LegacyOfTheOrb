@@ -95,20 +95,35 @@ namespace VolumetricFogAndMist2 {
             }
         }
 
-        public static VolumetricFogManager GetManagerIfExists() {
-            if (_instance != null && _instance.gameObject == null) _instance = null;
+        public static VolumetricFogManager GetManagerIfExists () {
+            if (_instance != null && _instance.gameObject == null) {
+                _instance = null;
+            }
             if (_instance == null) {
-                VolumetricFogManager[] managers = Misc.FindObjectsOfType<VolumetricFogManager>(true);
-                int count = managers.Length;
+                int managersCount = 0;
+                VolumetricFogManager[] managers = null;
+#if UNITY_EDITOR
+                // First try to locate manager in the prefab stage
+                if (UnityEditor.SceneManagement.StageUtility.GetCurrentStage() != UnityEditor.SceneManagement.StageUtility.GetMainStage()) {
+                    managers = UnityEditor.SceneManagement.StageUtility.GetCurrentStageHandle().FindComponentsOfType<VolumetricFogManager>();
+                    managersCount = managers.Length;
+                }
+#endif
+
+                if (managersCount == 0) {
+                    managers = Misc.FindObjectsOfType<VolumetricFogManager>(true);
+                    managersCount = managers.Length;
+                }
+
                 // look for main manager
-                for (int k = 0; k < count; k++) {
+                for (int k = 0; k < managersCount; k++) {
                     VolumetricFogManager manager = managers[k];
                     if (manager.mainManager) {
                         _instance = manager;
                         return _instance;
                     }
                 }
-                if (count > 0) {
+                if (managersCount > 0) {
                     _instance = managers[0];
                 }
             }
@@ -129,7 +144,7 @@ namespace VolumetricFogAndMist2 {
             }
         }
 
-        void OnEnable() {
+        void OnEnable () {
             // Forces other managers to be found
             _pointLightManager = null;
             _fogVoidManager = null;
@@ -138,7 +153,13 @@ namespace VolumetricFogAndMist2 {
             if (managers.Length > 1) {
                 bool isThisTheMainManager = mainManager;
                 for (int k = 0; k < managers.Length; k++) {
-                    if (!managers[k].mainManager) DestroyImmediate(managers[k].gameObject);
+                    if (!managers[k].mainManager) {
+                        if (Application.isPlaying) {
+                            Destroy(managers[k].gameObject);
+                        } else {
+                            DestroyImmediate(managers[k].gameObject);
+                        }
+                    }
                 }
                 if (!isThisTheMainManager) return;
             }
@@ -150,7 +171,7 @@ namespace VolumetricFogAndMist2 {
             Tools.CheckManager(ref _fogVoidManager);
         }
 
-        void OnValidate() {
+        void OnValidate () {
             downscalingEdgeDepthThreshold = Mathf.Max(0.0001f, downscalingEdgeDepthThreshold);
             blurEdgeDepthThreshold = Mathf.Max(0.0001f, blurEdgeDepthThreshold);
             scatteringThreshold = Mathf.Max(0, scatteringThreshold);
@@ -159,7 +180,7 @@ namespace VolumetricFogAndMist2 {
         }
 
 
-        void SetupLights() {
+        void SetupLights () {
             Light[] lights = Misc.FindObjectsOfType<Light>();
             for (int k = 0; k < lights.Length; k++) {
                 Light l = lights[k];
@@ -172,17 +193,17 @@ namespace VolumetricFogAndMist2 {
             }
         }
 
-        void SetupDepthPrePass() {
-            #if !UNITY_EDITOR
+        void SetupDepthPrePass () {
+#if !UNITY_EDITOR
                 Shader.SetGlobalInt(SKW_FLIP_DEPTH_TEXTURE, flipDepthTexture ? 1 : 0);
-            #endif
+#endif
             DepthRenderPrePassFeature.DepthRenderPass.SetupLayerMasks(includeTransparent, includeSemiTransparent);
         }
 
         /// <summary>
         /// Creates a new fog volume
         /// </summary>
-        public static GameObject CreateFogVolume(string name) {
+        public static GameObject CreateFogVolume (string name) {
             GameObject go = Resources.Load<GameObject>("Prefabs/FogVolume2D");
             go = Instantiate(go);
             go.name = name;
@@ -192,7 +213,7 @@ namespace VolumetricFogAndMist2 {
         /// <summary>
         /// Creates a new fog void
         /// </summary>
-        public static GameObject CreateFogVoid(string name) {
+        public static GameObject CreateFogVoid (string name) {
             return new GameObject(name, typeof(FogVoid));
         }
 
@@ -200,7 +221,7 @@ namespace VolumetricFogAndMist2 {
         /// <summary>
         /// Creates a new fog sub-volume
         /// </summary>
-        public static GameObject CreateFogSubVolume(string name) {
+        public static GameObject CreateFogSubVolume (string name) {
             GameObject go = Resources.Load<GameObject>("Prefabs/FogSubVolume");
             go = Instantiate(go);
             go.name = name;

@@ -65,7 +65,7 @@ Material:
     - _Smoothness_Contrast: 0.5
     - _Smoothness_Texture_1: 1
     - _Snow_Emission: 0.05
-    - _TopGrass: 0
+    - _TopGrass: 1
     - _TopLayer_Blend_Offset: 0.47
     - _TopLayer_Blend_Sharpness: 6.82
     - _TopSand: 0
@@ -73,7 +73,7 @@ Material:
     - _UseSmoothedNormalMap: 1
     m_Colors:
     - _Grass_Tint: {r: 1, g: 1, b: 1, a: 0}
-    - _Rock_Tint: {r: 0.6431373, g: 0.4627451, b: 0.3254902, a: 1}
+    - _Rock_Tint: {r: 0.95686275, g: 0.99215686, b: 1, a: 1}
     - _Snow_Tint: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

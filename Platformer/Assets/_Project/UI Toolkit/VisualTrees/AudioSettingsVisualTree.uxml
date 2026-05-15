@@ -1,0 +1,14 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=1e607d4d39bbf3c4aa48749712dc3062&amp;type=3#MainMenuStyle"/>
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/TabViewStyle.uss?fileID=7433441132597879392&amp;guid=27fa83c6f936c03468a82829f3f3de7d&amp;type=3#TabViewStyle"/>
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/Sliders.uss?fileID=7433441132597879392&amp;guid=75107247cfbf21d45bd25fc08921f8d5&amp;type=3#Sliders"/>
+    <ui:VisualElement style="flex-grow: 1; background-image: none; display: flex;">
+        <ui:VisualElement name="VolumeRow" style="flex-grow: 0; flex-direction: column; align-self: center; height: 854px; width: 1166px; left: auto; top: 154px; position: relative;">
+            <ui:Label text="AUDIO" name="AudioHeader" class="Text" style="color: rgb(255, 255, 255); -unity-font-definition: url(&quot;project://database/Assets/_Project/Fonts/Ottselesque-Regular.otf?fileID=12800000&amp;guid=b00bfdbd79d843a46b8b3fb62f619d32&amp;type=3#Ottselesque-Regular&quot;); font-size: 50px; height: 253px; width: 159px; flex-direction: column; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; top: -96px;"/>
+            <ui:Slider label="Master Volume" value="42" high-value="1" name="MasterVolumeSlider" fill="true" style="height: auto; width: auto; background-color: rgba(92, 92, 92, 0.78); -unity-font-definition: url(&quot;project://database/Assets/Plugins/Unity%20-%20Packages/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;); color: rgb(255, 255, 255); top: auto;"/>
+            <ui:Slider label="Music Volume" value="42" high-value="1" fill="true" name="MusicVolumeSlider"/>
+            <ui:Slider label="SFX Volume" value="1" high-value="1" name="SFXVolumeSlider" fill="true" style="background-color: rgba(92, 92, 92, 0.78);"/>
+            <ui:Slider label="Ambience Volume" value="42" high-value="1" name="AmbienceVolumeSlider" fill="true"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

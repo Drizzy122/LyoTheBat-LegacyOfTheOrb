@@ -1,59 +1,97 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 namespace Platformer
 {
-    public class SaveSlotsMenu : Menu
+    [RequireComponent(typeof(UIDocument))]
+    public class SaveSlotsMenu : MonoBehaviour
     {
-        [Header("Menu Navigation")] [SerializeField]
-        private MainMenu mainMenu;
+        [Header("Menu Navigation")] 
+        // Notice we completely removed the MainMenu reference!
+        [SerializeField] private ConfirmationPopUpMenu confirmationPopupMenu;
 
-        [Header("Menu Buttons")] [SerializeField]
+        private UIDocument document;
+        private VisualElement rootContainer;
         private Button backButton;
 
-        [Header("Confirmation Popup")] [SerializeField]
-        private ConfirmationPopUpMenu confirmationPopupMenu;
-
         private SaveSlot[] saveSlots;
-
         private bool isLoadingGame = false;
+
+        // This stores the instruction on how to go back to whoever opened this menu
+        private Action onBackAction;
 
         private void Awake()
         {
-            saveSlots = this.GetComponentsInChildren<SaveSlot>();
+            document = GetComponent<UIDocument>();
+            
+            rootContainer = document.rootVisualElement.Q<VisualElement>("SaveSlotsMenuContainer"); 
+            
+            backButton = rootContainer.Q<Button>("BackButton");
+            backButton.clicked += OnBackClicked;
+
+            saveSlots = new SaveSlot[3];
+            saveSlots[0] = new SaveSlot(rootContainer.Q<VisualElement>("SaveSlot1"), "profile1");
+            saveSlots[1] = new SaveSlot(rootContainer.Q<VisualElement>("SaveSlot2"), "profile2");
+            saveSlots[2] = new SaveSlot(rootContainer.Q<VisualElement>("SaveSlot3"), "profile3");
+
+            foreach (SaveSlot slot in saveSlots)
+            {
+                SaveSlot currentSlot = slot; 
+                currentSlot.saveSlotButton.clicked += () => OnSaveSlotClicked(currentSlot);
+                currentSlot.getClearButton.clicked += () => OnClearClicked(currentSlot);
+            }
+
+            backButton.RegisterCallback<NavigationMoveEvent>(evt => 
+            {
+                if (evt.direction == NavigationMoveEvent.Direction.Down)
+                {
+                    // Check if the slot is interactable before focusing
+                    if (saveSlots[0].saveSlotButton.enabledSelf) 
+                    {
+                        saveSlots[0].saveSlotButton.Focus();
+                        evt.PreventDefault(); // Stop Unity from trying to auto-navigate
+                    }
+                }
+            });
+
+// 2. Tell the first Save Slot to go UP to the Back Button
+            saveSlots[0].saveSlotButton.RegisterCallback<NavigationMoveEvent>(evt => 
+            {
+                if (evt.direction == NavigationMoveEvent.Direction.Up)
+                {
+                    backButton.Focus();
+                    evt.PreventDefault(); // Stop Unity from trying to auto-navigate
+                }
+            });
+            
+            DeactivateMenu();
         }
 
         public void OnSaveSlotClicked(SaveSlot saveSlot)
         {
-            // disable all buttons
             DisableMenuButtons();
 
-            // case - loading game
             if (isLoadingGame)
             {
                 DataPersistenceManager.instance.ChangeSelectedProfileId(saveSlot.GetProfileId());
                 SaveGameAndLoadScene();
             }
-            // case - new game, but the save slot has data
             else if (saveSlot.hasData)
             {
                 confirmationPopupMenu.ActivateMenu(
                     "Starting a New Game with this slot will override the currently saved data. Are you sure?",
-                    // function to execute if we select 'yes'
-                    () =>
-                    {
+                    () => {
                         DataPersistenceManager.instance.ChangeSelectedProfileId(saveSlot.GetProfileId());
                         DataPersistenceManager.instance.NewGame();
                         SaveGameAndLoadScene();
                     },
-                    // function to execute if we select 'cancel'
-                    () => { this.ActivateMenu(isLoadingGame); }
+                    // We pass this.onBackAction so the menu remembers where it came from!
+                    () => { this.ActivateMenu(isLoadingGame, this.onBackAction); } 
                 );
             }
-            // case - new game, and the save slot has no data
             else
             {
                 DataPersistenceManager.instance.ChangeSelectedProfileId(saveSlot.GetProfileId());
@@ -64,9 +102,7 @@ namespace Platformer
 
         private void SaveGameAndLoadScene()
         {
-            // save the game anytime before loading a new scene
             DataPersistenceManager.instance.SaveGame();
-            // load the scene
             SceneManager.LoadSceneAsync("Game");
         }
 
@@ -76,44 +112,38 @@ namespace Platformer
 
             confirmationPopupMenu.ActivateMenu(
                 "Are you sure you want to delete this saved data?",
-                // function to execute if we select 'yes'
-                () =>
-                {
+                () => {
                     DataPersistenceManager.instance.DeleteProfileData(saveSlot.GetProfileId());
-                    ActivateMenu(isLoadingGame);
+                    ActivateMenu(isLoadingGame, this.onBackAction);
                 },
-                // function to execute if we select 'cancel'
-                () => { ActivateMenu(isLoadingGame); }
+                () => { ActivateMenu(isLoadingGame, this.onBackAction); }
             );
         }
 
         public void OnBackClicked()
         {
-            mainMenu.ActivateMenu();
             this.DeactivateMenu();
+            // This triggers the action (either opening PauseMenu or MainMenu)
+            onBackAction?.Invoke(); 
         }
 
-        public void ActivateMenu(bool isLoadingGame)
+        // Updated to require the Action
+        public void ActivateMenu(bool isLoadingGame, Action onBackAction)
         {
-            // set this menu to be active
-            this.gameObject.SetActive(true);
-
-            // set mode
+            this.onBackAction = onBackAction;
+            
+            rootContainer.style.display = DisplayStyle.Flex;
             this.isLoadingGame = isLoadingGame;
 
-            // load all of the profiles that exist
             Dictionary<string, GameData> profilesGameData = DataPersistenceManager.instance.GetAllProfilesGameData();
+            backButton.SetEnabled(true);
 
-            // ensure the back button is enabled when we activate the menu
-            backButton.interactable = true;
-
-            // loop through each save slot in the UI and set the content appropriately
-            GameObject firstSelected = backButton.gameObject;
             foreach (SaveSlot saveSlot in saveSlots)
             {
                 GameData profileData = null;
                 profilesGameData.TryGetValue(saveSlot.GetProfileId(), out profileData);
                 saveSlot.SetData(profileData);
+
                 if (profileData == null && isLoadingGame)
                 {
                     saveSlot.SetInteractable(false);
@@ -121,21 +151,19 @@ namespace Platformer
                 else
                 {
                     saveSlot.SetInteractable(true);
-                    if (firstSelected.Equals(backButton.gameObject))
-                    {
-                        firstSelected = saveSlot.gameObject;
-                    }
                 }
             }
-
-            // set the first selected button
-            Button firstSelectedButton = firstSelected.GetComponent<Button>();
-            this.SetFirstSelected(firstSelectedButton);
+            
+            backButton.Focus(); 
         }
 
         public void DeactivateMenu()
         {
-            this.gameObject.SetActive(false);
+            rootContainer.style.display = DisplayStyle.None;
+            if (confirmationPopupMenu != null)
+            {
+                confirmationPopupMenu.DeactivateMenu();
+            }
         }
 
         private void DisableMenuButtons()
@@ -144,8 +172,7 @@ namespace Platformer
             {
                 saveSlot.SetInteractable(false);
             }
-
-            backButton.interactable = false;
+            backButton.SetEnabled(false);
         }
     }
 }

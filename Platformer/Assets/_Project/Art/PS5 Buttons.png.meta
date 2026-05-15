@@ -1,0 +1,1137 @@
+fileFormatVersion: 2
+guid: 490d8cb5125145e4da53ea90b6448c62
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: PS5 Button Cross
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 1523
+        width: 170
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af2289096f40f674baa441244b10d7e1
+      internalID: 276171879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_4
+      rect:
+        serializedVersion: 2
+        x: 1796
+        y: 1506
+        width: 215
+        height: 212
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d43e1545054e7794888e27b0d3dd327a
+      internalID: -982084428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_9
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 1506
+        width: 115
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1dbe646388a702d478d7b23dc5a742ea
+      internalID: -1962037310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_25
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 1222
+        width: 226
+        height: 179
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 044331c02623ced4f8f91b792b428c34
+      internalID: -1184423805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_26
+      rect:
+        serializedVersion: 2
+        x: 892
+        y: 1184
+        width: 250
+        height: 253
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ada8e128a954634fa85270213fcc465
+      internalID: -2087176689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_28
+      rect:
+        serializedVersion: 2
+        x: 1520
+        y: 1185
+        width: 176
+        height: 215
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 968c051dd6fef5e4c9e3418b75d2f1d7
+      internalID: -338935133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_29
+      rect:
+        serializedVersion: 2
+        x: 1778
+        y: 1224
+        width: 214
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1907883ba6e8f543a245202243ddd8c
+      internalID: -509506784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_30
+      rect:
+        serializedVersion: 2
+        x: 324
+        y: 1259
+        width: 200
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 545e305939fc86b4db2bf59b7b16e2bd
+      internalID: 1668771292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_31
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 1235
+        width: 154
+        height: 158
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3014804ca1d6e6f4389a47fd4e9a359c
+      internalID: -1474588874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_36
+      rect:
+        serializedVersion: 2
+        x: 1207
+        y: 1227
+        width: 210
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1e1b294fbfbfcf408a4b8d06b25d245
+      internalID: -1409107882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_42
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 928
+        width: 257
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48157f4998ab42a4d963383544d9be4c
+      internalID: -1080536976
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_43
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 928
+        width: 215
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 035e15325c8a79a4db9134e177ad387b
+      internalID: 1541446379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_44
+      rect:
+        serializedVersion: 2
+        x: 632
+        y: 928
+        width: 176
+        height: 212
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e565d93b9e920644aadc9ed9f9d9a0a
+      internalID: -528840153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_45
+      rect:
+        serializedVersion: 2
+        x: 928
+        y: 887
+        width: 176
+        height: 254
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c020c9f19f558bc4a829e61da0387cbb
+      internalID: -1522795867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_46
+      rect:
+        serializedVersion: 2
+        x: 1224
+        y: 928
+        width: 176
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9db6d11717599614c810b9548d7c3270
+      internalID: 1957472016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_52
+      rect:
+        serializedVersion: 2
+        x: 1559
+        y: 915
+        width: 98
+        height: 207
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 991636e218cf2404d91612f7019f5b0a
+      internalID: 2147456965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_53
+      rect:
+        serializedVersion: 2
+        x: 1812
+        y: 967
+        width: 184
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7be9141356d38de4893ba1a915e62f8a
+      internalID: 1332008103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_55
+      rect:
+        serializedVersion: 2
+        x: 299
+        y: 591
+        width: 250
+        height: 254
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa2e568b867eee14aaf04f9a6abdc3cd
+      internalID: -1097507769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_57
+      rect:
+        serializedVersion: 2
+        x: 928
+        y: 632
+        width: 176
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a125adda2361174bb1b06f342f12d35
+      internalID: 852921153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_58
+      rect:
+        serializedVersion: 2
+        x: 1224
+        y: 632
+        width: 176
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4eae38ab6ac73a142b883578103f3b5f
+      internalID: -816591399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_59
+      rect:
+        serializedVersion: 2
+        x: 1480
+        y: 632
+        width: 256
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 815c01589e698de409576f462624a271
+      internalID: 1781556683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_60
+      rect:
+        serializedVersion: 2
+        x: 1816
+        y: 632
+        width: 216
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c48c279eb4a6004fac8cf06b31ccd5d
+      internalID: -1797977458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_61
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 643
+        width: 154
+        height: 158
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd898c133bc905a40a64d5bb670c9596
+      internalID: 354895514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_65
+      rect:
+        serializedVersion: 2
+        x: 1187
+        y: 663
+        width: 42
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cfa8a9d71f477a2408e01507deed6a24
+      internalID: 1041572904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_69
+      rect:
+        serializedVersion: 2
+        x: 615
+        y: 635
+        width: 210
+        height: 165
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b15a0b0b6ef24db4bb1fcaebd99556f2
+      internalID: 1098602971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_71
+      rect:
+        serializedVersion: 2
+        x: 958
+        y: 594
+        width: 117
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0aabccda4f1b2054491f22623434ea14
+      internalID: -361899693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_72
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 336
+        width: 176
+        height: 213
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de850ea2c23ee3a43b788653227223fc
+      internalID: -1118075896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_74
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 298
+        width: 176
+        height: 252
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a744260cd457a3649b6cd60e2dbf6ad0
+      internalID: 610640656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_76
+      rect:
+        serializedVersion: 2
+        x: 632
+        y: 336
+        width: 176
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 991fb00aceef8864f90ab0507338833d
+      internalID: -1906427083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons Square
+      rect:
+        serializedVersion: 2
+        x: 931
+        y: 339
+        width: 170
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 99e89c7dab67d6d499ee42cc4c3869bd
+      internalID: -2066221274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_80
+      rect:
+        serializedVersion: 2
+        x: 1187
+        y: 347
+        width: 239
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2dd332a55f450446bc3afe3a0c60de3
+      internalID: -485357250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_81
+      rect:
+        serializedVersion: 2
+        x: 1494
+        y: 358
+        width: 228
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd395bc4e69d971439ebbaa3472fe69b
+      internalID: 687954038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_82
+      rect:
+        serializedVersion: 2
+        x: 1790
+        y: 358
+        width: 228
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b22a4043337bbc94fb897f4be52f29a6
+      internalID: -168686871
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_85
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 62
+        width: 228
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1086d03c0fffa44ea2b51818173fd4e
+      internalID: -1364974517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_86
+      rect:
+        serializedVersion: 2
+        x: 310
+        y: 62
+        width: 228
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7a77abb9c855e24ca009a83469ccfc2
+      internalID: 326593614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons Triangle
+      rect:
+        serializedVersion: 2
+        x: 635
+        y: 43
+        width: 170
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a1d539566a201e459c5c3534c39fdc5
+      internalID: -1070471758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons CiRCLE
+      rect:
+        serializedVersion: 2
+        x: 931
+        y: 43
+        width: 170
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40def3f83ee46514689ee87d0c0846fc
+      internalID: 1071466057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_0
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 1512
+        width: 191
+        height: 191
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61d185ac1b32fb743889bf9e2008508d
+      internalID: 229871759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_1
+      rect:
+        serializedVersion: 2
+        x: 907
+        y: 1511
+        width: 215
+        height: 208
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 600b3b3135f936c4fa3e8e62acb1e7cc
+      internalID: 598933596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_2
+      rect:
+        serializedVersion: 2
+        x: 1213
+        y: 1502
+        width: 201
+        height: 217
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d44cfa3524cd83a4f8639215010e9a87
+      internalID: -1703664348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PS5 Buttons_3
+      rect:
+        serializedVersion: 2
+        x: 1505
+        y: 1503
+        width: 206
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 714561bf43b695747ad06fd913624a1a
+      internalID: 1757988245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: db6b42261ce744b489a08f3d3074b6e5
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      PS5 Button Cross: 276171879
+      PS5 Buttons CiRCLE: 1071466057
+      PS5 Buttons Square: -2066221274
+      PS5 Buttons Triangle: -1070471758
+      PS5 Buttons_0: 229871759
+      PS5 Buttons_1: 598933596
+      PS5 Buttons_10: 959654465
+      PS5 Buttons_11: -732620842
+      PS5 Buttons_12: -50124207
+      PS5 Buttons_13: -1622891921
+      PS5 Buttons_14: -773522041
+      PS5 Buttons_15: 1707001149
+      PS5 Buttons_16: -1761298939
+      PS5 Buttons_17: -802440084
+      PS5 Buttons_18: -133065929
+      PS5 Buttons_19: -180796554
+      PS5 Buttons_2: -1703664348
+      PS5 Buttons_20: 2084472194
+      PS5 Buttons_21: 2030006430
+      PS5 Buttons_22: -1755277784
+      PS5 Buttons_23: -34434111
+      PS5 Buttons_24: -72965147
+      PS5 Buttons_25: -1184423805
+      PS5 Buttons_26: -2087176689
+      PS5 Buttons_27: 124653001
+      PS5 Buttons_28: -338935133
+      PS5 Buttons_29: -509506784
+      PS5 Buttons_3: 1757988245
+      PS5 Buttons_30: 1668771292
+      PS5 Buttons_31: -1474588874
+      PS5 Buttons_32: -650717844
+      PS5 Buttons_33: 116458601
+      PS5 Buttons_34: -1259272955
+      PS5 Buttons_35: 1960734074
+      PS5 Buttons_36: -1409107882
+      PS5 Buttons_37: -842838831
+      PS5 Buttons_38: 1265899973
+      PS5 Buttons_39: -1893703613
+      PS5 Buttons_4: -982084428
+      PS5 Buttons_40: -35243349
+      PS5 Buttons_41: 1764226314
+      PS5 Buttons_42: -1080536976
+      PS5 Buttons_43: 1541446379
+      PS5 Buttons_44: -528840153
+      PS5 Buttons_45: -1522795867
+      PS5 Buttons_46: 1957472016
+      PS5 Buttons_47: 1614053134
+      PS5 Buttons_48: 788837377
+      PS5 Buttons_49: -2107919720
+      PS5 Buttons_5: -1309080884
+      PS5 Buttons_50: 519510282
+      PS5 Buttons_51: -1961041471
+      PS5 Buttons_52: 2147456965
+      PS5 Buttons_53: 1332008103
+      PS5 Buttons_54: 635064795
+      PS5 Buttons_55: -1097507769
+      PS5 Buttons_56: 980914747
+      PS5 Buttons_57: 852921153
+      PS5 Buttons_58: -816591399
+      PS5 Buttons_59: 1781556683
+      PS5 Buttons_6: -1722538481
+      PS5 Buttons_60: -1797977458
+      PS5 Buttons_61: 354895514
+      PS5 Buttons_62: -809358669
+      PS5 Buttons_63: -2011718376
+      PS5 Buttons_64: -1967941754
+      PS5 Buttons_65: 1041572904
+      PS5 Buttons_66: 1998362158
+      PS5 Buttons_67: -1833805036
+      PS5 Buttons_68: 13272461
+      PS5 Buttons_69: 1098602971
+      PS5 Buttons_7: 141471002
+      PS5 Buttons_70: 679340398
+      PS5 Buttons_71: -361899693
+      PS5 Buttons_72: -1118075896
+      PS5 Buttons_73: 1052768451
+      PS5 Buttons_74: 610640656
+      PS5 Buttons_75: 431693703
+      PS5 Buttons_76: -1906427083
+      PS5 Buttons_78: 466467996
+      PS5 Buttons_79: 94605526
+      PS5 Buttons_8: 583973171
+      PS5 Buttons_80: -485357250
+      PS5 Buttons_81: 687954038
+      PS5 Buttons_82: -168686871
+      PS5 Buttons_83: 710573626
+      PS5 Buttons_84: 235683506
+      PS5 Buttons_85: -1364974517
+      PS5 Buttons_86: 326593614
+      PS5 Buttons_9: -1962037310
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

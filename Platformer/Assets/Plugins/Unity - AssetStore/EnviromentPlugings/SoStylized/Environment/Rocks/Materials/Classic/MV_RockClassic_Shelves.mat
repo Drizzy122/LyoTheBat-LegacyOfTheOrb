@@ -54,19 +54,15 @@ Material:
     m_Floats:
     - _Grass_Brightness: 1
     - _Grass_Texture_Size: 0.05
-    - _Moss: 0
-    - _Moss_Sharpness: 6.61
-    - _Moss_Smoothness: 8.96
     - _Rock_Scale: 25
     - _Smoothness: 0.2
     - _Smoothness_Contrast: 0.5
-    - _TopGrass: 0
+    - _TopGrass: 1
     - _TopSnow: 0
     - _UseSmoothedNormalMap: 1
     m_Colors:
     - _Grass_Color: {r: 0.09411766, g: 0.78039217, b: 0.30265978, a: 0}
     - _Grass_Tint: {r: 0.76666665, g: 0.9019608, b: 0.8075695, a: 0}
-    - _Rock_Tint: {r: 0.6415094, g: 0.46269137, b: 0.32378072, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &8059122420911877334

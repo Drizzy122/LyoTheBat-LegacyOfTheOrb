@@ -37,8 +37,11 @@ namespace VolumetricFogAndMist2 {
     [CreateAssetMenu(menuName = "Volumetric Fog \x8B& Mist/Fog Profile", fileName = "VolumetricFogProfile", order = 1001)]
     public class VolumetricFogProfile : ScriptableObject {
 
-        [Header("Rendering")]
+        // Rendering
+        [Tooltip("The quality of the raymarching. Higher quality means more samples, which means more accurate but slower.")]
         [Range(1, 16)] public int raymarchQuality = 6;
+        [Tooltip("Increases the number of samples at short distances to improve quality while allowing a lower quality at long distances.")]
+        [Range(0f, 50)] public float raymarchNearStepping = 8;
         [Tooltip("Determines the minimum step size. Increase to improve performance / decrease to improve accuracy. When increasing this value, you can also increase 'Jittering' amount to improve quality.")]
         public float raymarchMinStep = 0.1f;
         public float jittering = 0.5f;
@@ -50,7 +53,7 @@ namespace VolumetricFogAndMist2 {
         [Tooltip("Optional sorting order for this renderer. Used to control the order with other transparent renderers, like Sprite Renderer.")]
         public int sortingOrder;
 
-        [Header("Density")]
+        // Density
         [Tooltip("Do not use any noise at all")]
         public bool constantDensity;
         public Texture2D noiseTexture;
@@ -68,7 +71,7 @@ namespace VolumetricFogAndMist2 {
 
         public float density = 1f;
 
-        [Header("Geometry")]
+        // Geometry
         public VolumetricFogShape shape = VolumetricFogShape.Box;
         [Range(0, 1)]
         public float scaleNoiseWithHeight;
@@ -95,7 +98,7 @@ namespace VolumetricFogAndMist2 {
         public float terrainFogMinAltitude;
         public float terrainFogMaxAltitude = 150f;
 
-        [Header("Colors")]
+        // Colors
         [ColorUsage(showAlpha: false)]
         public Color albedo = new Color32(227, 227, 227, 255);
         public bool enableDepthGradient;
@@ -109,13 +112,13 @@ namespace VolumetricFogAndMist2 {
         [Range(0, 1f)] public float specularThreshold = 0.637f;
         [Range(0, 1f)] public float specularIntensity = 0.428f;
 
-        [Header("Animation")]
+        // Animation
         public float turbulence = 0.73f;
         public Vector3 windDirection = new Vector3(0.02f, 0, 0);
         public bool useCustomDetailNoiseWindDirection;
         public Vector3 detailNoiseWindDirection = new Vector3(0.02f, 0, 0);
 
-        [Header("Directional Light")]
+        // Directional Light
         [Tooltip("Enable to synchronize fog light intensity and color with the Sun and the Moon (must be assigned into Volumetric Fog Manager)")]
         public bool dayNightCycle = true;
         [Tooltip("When day/night cycle option is disabled, customize the direction of the Sun light.")]
@@ -127,7 +130,7 @@ namespace VolumetricFogAndMist2 {
         [Tooltip("Ambient light influence")]
         public float ambientLightMultiplier;
         public DiffusionModel lightDiffusionModel = DiffusionModel.Simple;
-        [Range(0, 256)] public float lightDiffusionPower = 32;
+        [Range(1, 256)] public float lightDiffusionPower = 32;
         public float lightDiffusionIntensity = 0.4f;
         public float lightDiffusionNearDepthAtten;
         public bool receiveShadows;
@@ -138,9 +141,11 @@ namespace VolumetricFogAndMist2 {
         [Tooltip("Uses the directional light cookie")]
         public bool cookie;
 
-        [Header("Distant Fog")]
+        // Distant Fog
         [Tooltip("Enables exponential distant fog. Use this option to cover horizon/sky/far distances with optimal performance")]
         public bool distantFog;
+        [Tooltip("When disabled, distant fog will only be visible in play mode")]
+        public bool distantFogShowInEditMode = true;
         public float distantFogStartDistance = 1000f;
         public float distantFogDistanceDensity = 0.5f;
         public float distantFogMaxHeight = 4000;
@@ -150,6 +155,22 @@ namespace VolumetricFogAndMist2 {
         public int distantFogRenderQueue = 2999;
         public float distantFogBaseAltitude;
         public bool distantFogSymmetrical;
+
+        [Tooltip("Enables transparency support for distant fog using depth peeling and custom depth prepass. When enabled, render queue is enforced to minimum 3001.")]
+        public bool distantFogTransparencySupport;
+
+        [Tooltip("Enables noise for the distant fog")]
+        public bool distantFogNoise;
+        public Texture3D distantFogNoiseTexture;
+
+        [Tooltip("Scale of noise for distance variation")]
+        public float distantFogDistanceNoiseScale = 0.1f;
+        [Range(0, 1f)]
+        public float distantFogDistanceNoiseStrength = 0.5f;
+        [Tooltip("Maximum distance for noise fade out")]
+        public float distantFogDistanceNoiseMaxDistance = 250f;
+
+        public Vector3 distantFogNoiseWindDirection = new Vector3(0.002f, 0.002f, 0);
 
         [Tooltip("Custom mesh to use when shape is set to Custom")]
         public Mesh customMesh;
@@ -172,6 +193,9 @@ namespace VolumetricFogAndMist2 {
             }
             if (detailTexture == null) {
                 detailTexture = Resources.Load<Texture3D>("Textures/NoiseTex3D");
+            }
+            if (distantFogNoiseTexture == null) {
+                distantFogNoiseTexture = Resources.Load<Texture3D>("Textures/NoiseTex3D");
             }
             ValidateSettings();
         }
@@ -221,6 +245,7 @@ namespace VolumetricFogAndMist2 {
             ambientLightMultiplier = Mathf.Max(0, ambientLightMultiplier);
             sunIntensity = Mathf.Max(0, sunIntensity);
             shadowMaxDistance = Mathf.Max(0, shadowMaxDistance);
+            lightDiffusionPower = Mathf.Max(1, lightDiffusionPower);
             lightDiffusionIntensity = Mathf.Max(0, lightDiffusionIntensity);
             lightDiffusionNearDepthAtten = Mathf.Max(0, lightDiffusionNearDepthAtten);
             distantFogStartDistance = Mathf.Max(0, distantFogStartDistance);
@@ -228,6 +253,8 @@ namespace VolumetricFogAndMist2 {
             distantFogMaxHeight = Mathf.Max(0, distantFogMaxHeight);
             distantFogHeightDensity = Mathf.Max(0, distantFogHeightDensity);
             distantFogDiffusionIntensity = Mathf.Max(0, distantFogDiffusionIntensity);
+            distantFogDistanceNoiseScale = Mathf.Max(0.01f, distantFogDistanceNoiseScale);
+            distantFogDistanceNoiseMaxDistance = Mathf.Max(0, distantFogDistanceNoiseMaxDistance);
 
             if (enableDepthGradient) {
                 const int DEPTH_GRADIENT_TEX_SIZE = 32;
@@ -289,6 +316,7 @@ namespace VolumetricFogAndMist2 {
 
             raymarchQuality = (int)(p1.raymarchQuality * t0 + p2.raymarchQuality * t);
             raymarchMinStep = p1.raymarchMinStep * t0 + p2.raymarchMinStep * t;
+            raymarchNearStepping = p1.raymarchNearStepping * t0 + p2.raymarchNearStepping * t;
             jittering = p1.jittering * t0 + p2.jittering * t;
             dithering = p1.dithering * t0 + p2.dithering * t;
             renderQueue = t < 0.5f ? p1.renderQueue : p2.renderQueue;
@@ -348,6 +376,7 @@ namespace VolumetricFogAndMist2 {
             ambientLightMultiplier = p1.ambientLightMultiplier * t0 + p2.ambientLightMultiplier * t;
             cookie = t < 0.5f ? p1.cookie : p2.cookie;
             distantFog = t < 0.5f ? p1.distantFog : p2.distantFog;
+            distantFogShowInEditMode = t < 0.5f ? p1.distantFogShowInEditMode : p2.distantFogShowInEditMode;
             distantFogStartDistance = p1.distantFogStartDistance * t0 + p2.distantFogStartDistance * t;
             distantFogDistanceDensity = p1.distantFogDistanceDensity * t0 + p2.distantFogDistanceDensity * t;
             distantFogMaxHeight = p1.distantFogMaxHeight * t0 + p2.distantFogMaxHeight * t;
@@ -356,6 +385,17 @@ namespace VolumetricFogAndMist2 {
             distantFogDiffusionIntensity = p1.distantFogDiffusionIntensity * t0 + p2.distantFogDiffusionIntensity * t;
             distantFogBaseAltitude = p1.distantFogBaseAltitude * t0 + p2.distantFogBaseAltitude * t;
             distantFogRenderQueue = t < 0.5f ? p1.distantFogRenderQueue : p2.distantFogRenderQueue;
+            distantFogSymmetrical = t < 0.5f ? p1.distantFogSymmetrical : p2.distantFogSymmetrical;
+            distantFogTransparencySupport = t < 0.5f ? p1.distantFogTransparencySupport : p2.distantFogTransparencySupport;
+
+            distantFogNoise = t < 0.5f ? p1.distantFogNoise : p2.distantFogNoise;
+            distantFogNoiseTexture = t < 0.5f ? p1.distantFogNoiseTexture : p2.distantFogNoiseTexture;
+            
+            distantFogDistanceNoiseScale = p1.distantFogDistanceNoiseScale * t0 + p2.distantFogDistanceNoiseScale * t;
+            distantFogDistanceNoiseStrength = p1.distantFogDistanceNoiseStrength * t0 + p2.distantFogDistanceNoiseStrength * t;
+            distantFogDistanceNoiseMaxDistance = p1.distantFogDistanceNoiseMaxDistance * t0 + p2.distantFogDistanceNoiseMaxDistance * t;
+
+            distantFogNoiseWindDirection = p1.distantFogNoiseWindDirection * t0 + p2.distantFogNoiseWindDirection * t;
 
             ValidateSettings();
         }

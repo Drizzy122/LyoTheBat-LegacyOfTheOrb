@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 19101, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: PanelSettings
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.PanelSettings
-  themeUss: {fileID: -4733365628477956816, guid: 6df1bd23c41cb924eb456aa961a47af6,
+  themeUss: {fileID: -4733365628477956816, guid: 9b7a0491af507e141885bc905312366c,
     type: 3}
   m_DisableNoThemeWarning: 0
   m_TargetTexture: {fileID: 0}
@@ -52,4 +52,4 @@ MonoBehaviour:
   m_SpriteShader: {fileID: 19012, guid: 0000000000000000f000000000000000, type: 0}
   m_ICUDataAsset: {fileID: 0}
   forceGammaRendering: 0
-  textSettings: {fileID: 0}
+  textSettings: {fileID: 11400000, guid: e726af064e4dd024d9ba4f36a4621861, type: 2}

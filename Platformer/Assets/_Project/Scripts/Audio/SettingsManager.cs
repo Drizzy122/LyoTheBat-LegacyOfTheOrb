@@ -1,299 +1,288 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using UnityEngine.Rendering.Universal;
+using UnityEngine.UIElements;
 using UnityEngine.Rendering;
-using UnityEngine.EventSystems;
+using UnityEngine.Rendering.Universal;
+using KBCore.Refs; // Assuming this is a custom attribute library you use
 
 namespace Platformer
 {
-    public class SettingsManager : Menu
+    public class SettingsManager : MonoBehaviour
     {
-        public static SettingsManager Instance { get; private set; }
+        public static SettingsManager instance { get; private set; }
 
+        [field: Header("UI Document")]
+        [field: SerializeField, Self] private UIDocument document;
+        private VisualElement rootContainer;
 
-        [Header("VSync")] [SerializeField] private Toggle vsyncToggle;
-        [SerializeField] private TMP_Text vsyncText;
+        [field: Header("Window Mode")]
+        [field: SerializeField] private string[] windowModes = { "Fullscreen", "Borderless", "Maximized", "Windowed" };
+        private int currentWindowMode = 0;
 
-        [Header("Window Mode")] [SerializeField]
-        private TMP_Text windowModeText;
+        [field: Header("Resolution")]
+        private Resolution[] filteredResolutions;
+        private int currentResolutionIndex = 0;
 
-        private string[] windowModes = { "Fullscreen", "Borderless", "Maximized", "Windowed" };
-        private int currentWindowModeIndex;
-
-        [Header("Resolution")] [SerializeField]
-        private TMP_Text resolutionText;
-
-        private Resolution[] resolutions;
-        private int currentResolutionIndex;
-
-        [Header("Quality")] [SerializeField] private TMP_Text qualityText;
-        private string[] qualityLevels = { "PC", "Mobile" }; // force both to appear
+        [Header("Graphics Quality")]
+        private string[] qualityLevels;
         private int currentQualityIndex = 0;
 
-        [Header("Motion Blur")] [SerializeField]
-        private Toggle motionBlurToggle;
-
-        [SerializeField] private TMP_Text motionBlurText;
+        [Header("Graphics: Post Processing")]
+        [field: SerializeField, Anywhere] private Volume globalVolume;
+        private ColorAdjustments colorAdjustments;
         private MotionBlur motionBlur;
 
-        [Header("Gamma")] [SerializeField] private Slider gammaSlider;
-        [SerializeField] private TMP_Text gammaText;
-        private ColorAdjustments colorAdjustments;
+        // UI References
+        private Label windowModeText;
+        private Label resolutionText;
+        private Label qualityText;
+        private Slider gammaSlider;
+        private Toggle motionBlurToggle;
+        // Input UI References
+        private Slider controllerSensitivitySlider;
+        private Slider mouseSensitivitySlider;
+        private Toggle invertControllerToggle;
+        private Toggle invertMouseToggle;
 
-
-
-        [Header("Post Processing Volume")] [SerializeField]
-        private Volume postProcessingVolume;
+        private Action backButtonCallback;
 
         private void Awake()
         {
-            // Singleton pattern
-            if (Instance != null)
+            if (instance != null && instance != this)
             {
-                Debug.LogError("Found more than one SettingsManager in the scene.");
+                Debug.LogWarning("Found more than one SettingsManager in the scene. Destroying duplicate.");
+                Destroy(gameObject);
+                return;
             }
-
-            Instance = this;
-
-
+            instance = this;
         }
-
 
         private void Start()
         {
-            // --- VSync setup ---
-            if (vsyncToggle != null)
-            {
-                vsyncToggle.isOn = QualitySettings.vSyncCount > 0;
-                vsyncToggle.onValueChanged.AddListener(SetVSync);
-            }
+            // 1. Core Initialization Flow (The Initialization Pattern)
+            InitializeUIElements();
+            InitializeSettingsData();
+            BindUIEvents();
+            
+            // 2. Set initial state
+            RefreshAllUI();
+            DeactivateMenu();
+        }
 
-            UpdateVSyncUI();
+        #region Initialization Methods
+        private void InitializeUIElements()
+        {
+            document = GetComponent<UIDocument>();
+            rootContainer = document.rootVisualElement.Q<VisualElement>("SettingsContainer");
 
-            // --- Window Mode setup ---
-            currentWindowModeIndex = GetIndexFromMode(Screen.fullScreenMode);
-            UpdateWindowModeUI();
+            windowModeText = rootContainer.Q<Label>("WindowValueText");
+            resolutionText = rootContainer.Q<Label>("ResValueText");
+            qualityText = rootContainer.Q<Label>("QualityValueText");
+            gammaSlider = rootContainer.Q<Slider>("GammaSlider");
+            motionBlurToggle = rootContainer.Q<Toggle>("MotionBlurToggle"); 
+            
+          
+            controllerSensitivitySlider = rootContainer.Q<Slider>("ControllerSensitivity");
+            mouseSensitivitySlider = rootContainer.Q<Slider>("MouseSensitivity");
+            
+            invertControllerToggle = rootContainer.Q<Toggle>("InvertControllerY");
+            invertMouseToggle = rootContainer.Q<Toggle>("InvertMouseY");
+        }
 
-            // --- Resolution setup ---
-            resolutions = Screen.resolutions;
-            currentResolutionIndex = GetClosestResolutionIndex(Screen.currentResolution);
-            UpdateResolutionUI();
+        private void InitializeSettingsData()
+        {
+            // Resolutions Setup
+            SetupResolutions();
 
-            // --- Quality setup ---
+            // Quality Setup
+            qualityLevels = QualitySettings.names;
             currentQualityIndex = QualitySettings.GetQualityLevel();
-            UpdateQualityUI();
 
-            // --- Motion Blur setup ---
-            if (postProcessingVolume != null && postProcessingVolume.profile.TryGet(out motionBlur))
+            // Post Processing Setup
+            if (globalVolume != null)
             {
-                motionBlurToggle.isOn = motionBlur.active;
-                motionBlurToggle.onValueChanged.AddListener(SetMotionBlur);
+                globalVolume.profile.TryGet(out colorAdjustments);
+                globalVolume.profile.TryGet(out motionBlur);
             }
-
-            UpdateMotionBlurUI();
-
-            // --- Gamma setup
-            if (postProcessingVolume != null && postProcessingVolume.profile.TryGet(out colorAdjustments))
+            else
             {
-                colorAdjustments.postExposure.overrideState = true;
-                gammaSlider.minValue = 0f; // darker
-                gammaSlider.maxValue = 100f; // brighter
-                gammaSlider.wholeNumbers = true;
-                gammaSlider.value = 50f; // neutral
-                gammaSlider.onValueChanged.AddListener(SetGamma);
+                Debug.LogWarning("Global Volume is missing! Post-processing settings will be disabled.");
             }
-
-            UpdateGammaUI();
-
         }
 
-
-
-
-
-        // --- VSync ---
-        public void SetVSync(bool enabled)
+        private void SetupResolutions()
         {
-            QualitySettings.vSyncCount = enabled ? 1 : 0;
-            UpdateVSyncUI();
-            Debug.Log("VSync " + (enabled ? "Enabled" : "Disabled"));
+            Resolution[] allResolutions = Screen.resolutions;
+            List<Resolution> uniqueResolutions = new List<Resolution>();
+            
+            foreach (Resolution res in allResolutions)
+            {
+                if (!uniqueResolutions.Exists(x => x.width == res.width && x.height == res.height))
+                {
+                    uniqueResolutions.Add(res);
+                }
+            }
+            filteredResolutions = uniqueResolutions.ToArray();
+            
+            // Find current resolution
+            for (int i = 0; i < filteredResolutions.Length; i++)
+            {
+                if (filteredResolutions[i].width == Screen.currentResolution.width &&
+                    filteredResolutions[i].height == Screen.currentResolution.height)
+                {
+                    currentResolutionIndex = i;
+                    break;
+                }
+            }
         }
 
-        private void UpdateVSyncUI()
+        private void BindUIEvents()
         {
-            if (vsyncText != null)
-                vsyncText.text = QualitySettings.vSyncCount > 0 ? "Enabled" : "Disabled";
+            // Back Button
+            rootContainer.Q<Button>("BackButton")?.RegisterCallback<ClickEvent>(evt => 
+            {
+                DeactivateMenu();
+                backButtonCallback?.Invoke();
+            });
+
+            // Resolution Buttons
+            rootContainer.Q<Button>("ResPrevButton")?.RegisterCallback<ClickEvent>(evt => CycleResolution(-1));
+            rootContainer.Q<Button>("ResNextButton")?.RegisterCallback<ClickEvent>(evt => CycleResolution(1));
+
+            // Window Mode Buttons
+            rootContainer.Q<Button>("WindowPrevButton")?.RegisterCallback<ClickEvent>(evt => CycleWindowMode(-1));
+            rootContainer.Q<Button>("WindowNextButton")?.RegisterCallback<ClickEvent>(evt => CycleWindowMode(1));
+
+            // Quality Buttons
+            rootContainer.Q<Button>("QualityPrevButton")?.RegisterCallback<ClickEvent>(evt => CycleQuality(-1));
+            rootContainer.Q<Button>("QualityNextButton")?.RegisterCallback<ClickEvent>(evt => CycleQuality(1));
+
+            // Post Processing
+            if (colorAdjustments != null && gammaSlider != null)
+                gammaSlider.RegisterValueChangedCallback(evt => ApplyGamma(evt.newValue));
+
+            if (motionBlur != null && motionBlurToggle != null)
+            {
+                motionBlurToggle.value = motionBlur.active;
+                // CHANGED: .label is now .text
+                motionBlurToggle.text = motionBlur.active ? "Enabled" : "Disabled"; 
+                motionBlurToggle.RegisterValueChangedCallback(evt => ApplyMotionBlur(evt.newValue));
+            }
+            
+           
+            // Controller Sensitivity
+            if (controllerSensitivitySlider != null)
+                controllerSensitivitySlider.RegisterValueChangedCallback(evt => {
+                    if (CameraManager.instance != null) CameraManager.instance.SetControllerSensitivity(evt.newValue);
+                });
+
+            // Mouse Sensitivity
+            if (mouseSensitivitySlider != null)
+                mouseSensitivitySlider.RegisterValueChangedCallback(evt => {
+                    if (CameraManager.instance != null) CameraManager.instance.SetMouseSensitivity(evt.newValue);
+                });
+            
+            // Controller Invert Toggle
+            if (invertControllerToggle != null)
+                invertControllerToggle.RegisterValueChangedCallback(evt => {
+                    if (CameraManager.instance != null) CameraManager.instance.SetControllerInvertY(evt.newValue);
+                    invertControllerToggle.text = evt.newValue ? "Enabled" : "Disabled";
+                });
+
+            // Mouse Invert Toggle
+            if (invertMouseToggle != null)
+                invertMouseToggle.RegisterValueChangedCallback(evt => {
+                    if (CameraManager.instance != null) CameraManager.instance.SetMouseInvertY(evt.newValue);
+                    invertMouseToggle.text = evt.newValue ? "Enabled" : "Disabled";
+                });
+        }
+        #endregion
+
+        #region Setting Logic & Application
+        private void CycleResolution(int direction)
+        {
+            currentResolutionIndex = (currentResolutionIndex + direction + filteredResolutions.Length) % filteredResolutions.Length;
+            ApplyResolution();
         }
 
-        // --- Window Mode ---
-        public void NextWindowMode()
+        private void CycleWindowMode(int direction)
         {
-            currentWindowModeIndex = (currentWindowModeIndex + 1) % windowModes.Length;
+            currentWindowMode = (currentWindowMode + direction + windowModes.Length) % windowModes.Length;
             ApplyWindowMode();
         }
 
-        public void PreviousWindowMode()
+        private void CycleQuality(int direction)
         {
-            currentWindowModeIndex--;
-            if (currentWindowModeIndex < 0)
-                currentWindowModeIndex = windowModes.Length - 1;
-
-            ApplyWindowMode();
+            currentQualityIndex = (currentQualityIndex + direction + qualityLevels.Length) % qualityLevels.Length;
+            ApplyQuality();
         }
 
         private void ApplyWindowMode()
         {
-            switch (currentWindowModeIndex)
+            string selectedMode = windowModes[currentWindowMode];
+            switch (selectedMode)
             {
-                case 0: Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen; break;
-                case 1: Screen.fullScreenMode = FullScreenMode.FullScreenWindow; break;
-                case 2: Screen.fullScreenMode = FullScreenMode.MaximizedWindow; break;
-                case 3: Screen.fullScreenMode = FullScreenMode.Windowed; break;
+                case "Fullscreen": Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen; break;
+                case "Borderless": Screen.fullScreenMode = FullScreenMode.FullScreenWindow; break;
+                case "Maximized": Screen.fullScreenMode = FullScreenMode.MaximizedWindow; break;
+                case "Windowed": Screen.SetResolution(1280, 720, FullScreenMode.Windowed); break;
             }
-
             UpdateWindowModeUI();
-            Debug.Log("Window Mode set to: " + windowModes[currentWindowModeIndex]);
-        }
-
-        private void UpdateWindowModeUI()
-        {
-            if (windowModeText != null)
-                windowModeText.text = windowModes[currentWindowModeIndex];
-        }
-
-        private int GetIndexFromMode(FullScreenMode mode)
-        {
-            switch (mode)
-            {
-                case FullScreenMode.ExclusiveFullScreen: return 0;
-                case FullScreenMode.FullScreenWindow: return 1;
-                case FullScreenMode.MaximizedWindow: return 2;
-                case FullScreenMode.Windowed: return 3;
-                default: return 3; // fallback to windowed
-            }
-        }
-
-        // --- Resolution ---
-        public void NextResolution()
-        {
-            currentResolutionIndex = (currentResolutionIndex + 1) % resolutions.Length;
-            ApplyResolution();
-        }
-
-        public void PreviousResolution()
-        {
-            currentResolutionIndex--;
-            if (currentResolutionIndex < 0)
-                currentResolutionIndex = resolutions.Length - 1;
-
-            ApplyResolution();
         }
 
         private void ApplyResolution()
         {
-            Resolution res = resolutions[currentResolutionIndex];
+            Resolution res = filteredResolutions[currentResolutionIndex];
             Screen.SetResolution(res.width, res.height, Screen.fullScreenMode);
             UpdateResolutionUI();
-            Debug.Log("Resolution set to: " + res.width + "x" + res.height);
-        }
-
-        private void UpdateResolutionUI()
-        {
-            if (resolutionText != null)
-            {
-                Resolution res = resolutions[currentResolutionIndex];
-                resolutionText.text = res.width + " x " + res.height;
-            }
-        }
-
-        private int GetClosestResolutionIndex(Resolution current)
-        {
-            for (int i = 0; i < resolutions.Length; i++)
-            {
-                if (resolutions[i].width == current.width &&
-                    resolutions[i].height == current.height)
-                {
-                    return i;
-                }
-            }
-
-            return resolutions.Length - 1; // fallback to last
-        }
-
-        // --- Quality ---
-        public void NextQuality()
-        {
-            currentQualityIndex = (currentQualityIndex + 1) % qualityLevels.Length;
-            ApplyQuality();
-        }
-
-        public void PreviousQuality()
-        {
-            currentQualityIndex--;
-            if (currentQualityIndex < 0)
-                currentQualityIndex = qualityLevels.Length - 1;
-
-            ApplyQuality();
         }
 
         private void ApplyQuality()
         {
-            string selectedQuality = qualityLevels[currentQualityIndex];
-
-            // Find the index in QualitySettings.names
-            int index = System.Array.IndexOf(QualitySettings.names, selectedQuality);
-            if (index >= 0)
-                QualitySettings.SetQualityLevel(index);
-
+            QualitySettings.SetQualityLevel(currentQualityIndex, true);
             UpdateQualityUI();
-            Debug.Log("Graphics Quality set to: " + selectedQuality);
         }
 
-        private void UpdateQualityUI()
+        private void ApplyGamma(float sliderValue)
         {
-            if (qualityText != null)
-                qualityText.text = qualityLevels[currentQualityIndex];
+            if (colorAdjustments == null) return;
+            colorAdjustments.postExposure.overrideState = true; 
+            colorAdjustments.postExposure.value = Mathf.Lerp(-2f, 2f, sliderValue);
         }
 
-        // --- MotionBlur  ---
-        public void SetMotionBlur(bool enabled)
+        private void ApplyMotionBlur(bool isEnabled)
         {
-            if (motionBlur != null)
-            {
-                motionBlur.active = enabled;
-                UpdateMotionBlurUI();
-                Debug.Log("Motion Blur " + (enabled ? "Enabled" : "Disabled"));
-            }
+            if (motionBlur == null) return;
+            motionBlur.active = isEnabled;
+            
+            if (motionBlurToggle != null) 
+                motionBlurToggle.text = isEnabled ? "Enabled" : "Disabled";
         }
+        #endregion
 
-        private void UpdateMotionBlurUI()
+        #region UI Updates & Menu Control
+        private void RefreshAllUI()
         {
-            if (motionBlurText != null)
-                motionBlurText.text = motionBlur != null && motionBlur.active ? "Enabled" : "Disabled";
+            UpdateWindowModeUI();
+            UpdateResolutionUI();
+            UpdateQualityUI();
         }
 
-        // --- Gamma ---
+        private void UpdateWindowModeUI() { if (windowModeText != null) windowModeText.text = windowModes[currentWindowMode]; }
+        private void UpdateResolutionUI() { if (resolutionText != null) resolutionText.text = $"{filteredResolutions[currentResolutionIndex].width}x{filteredResolutions[currentResolutionIndex].height}"; }
+        private void UpdateQualityUI() { if (qualityText != null && qualityLevels.Length > 0) qualityText.text = qualityLevels[currentQualityIndex].ToUpper(); }
 
-        public void SetGamma(float sliderValue)
+        public void ActivateMenu(Action backCallback = null) 
         {
-            if (colorAdjustments != null)
-            {
-                // Map 0 → 100 slider to -2 → 2 exposure
-                float exposureValue = Mathf.Lerp(-2f, 2f, sliderValue / 100f);
-
-                colorAdjustments.postExposure.value = exposureValue;
-
-                UpdateGammaUI(); // updates UI text
-                //Debug.Log($"Slider: {sliderValue}, Exposure applied: {exposureValue}");
-            }
+            backButtonCallback = backCallback;
+            if (rootContainer != null) rootContainer.style.display = DisplayStyle.Flex;
         }
 
-        private void UpdateGammaUI()
+        public void DeactivateMenu()
         {
-            if (gammaText != null && gammaSlider != null)
-                gammaText.text = Mathf.RoundToInt(gammaSlider.value).ToString(); // shows 0 → 100
+            if (rootContainer != null) rootContainer.style.display = DisplayStyle.None;
         }
+        #endregion
     }
 }

@@ -1,0 +1,56 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=1e607d4d39bbf3c4aa48749712dc3062&amp;type=3#MainMenuStyle"/>
+    <ui:VisualElement name="SaveSlotsMenuContainer" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
+        <ui:VisualElement name="Title" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.67); position: absolute; left: -1px; height: 138px; width: 1919px;">
+            <ui:Label text="Save Select" name="SaveSelect" class="Text" style="height: auto; -unity-text-align: middle-center; top: 45px;"/>
+            <ui:Image source="project://database/Assets/_Project/Art/Modern%20GDR%20-%20Free%20icons%20pack/00_Atlas/BrightIcons.png?fileID=-767216509&amp;guid=132358e9bf26b60458b731bf001e31db&amp;type=3#Left_Bright" style="width: 91px; position: absolute; top: 41px; left: 1110px;"/>
+            <ui:Image source="project://database/Assets/_Project/Art/Modern%20GDR%20-%20Free%20icons%20pack/00_Atlas/BrightIcons.png?fileID=1502802138&amp;guid=132358e9bf26b60458b731bf001e31db&amp;type=3#Right_Bright" style="width: 91px; position: absolute; top: 41px; left: 711px;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="SaveSlot1" style="flex-grow: 1; position: absolute; height: 204px; width: 1408px; align-self: center; background-color: rgba(0, 0, 0, 0.6); border-top-left-radius: 42px; border-top-right-radius: 42px; border-bottom-right-radius: 42px; border-bottom-left-radius: 42px; top: 155px; left: auto;">
+            <ui:Button text="&#10;" name="SaveSlotButton" style="height: 162px; width: 251px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); left: 29px; bottom: -19px;">
+                <ui:VisualElement name="HasDataContent" style="flex-grow: 1; width: 1294px; align-self: flex-start; padding-left: 242px; display: flex;">
+                    <ui:Label text="Orbs of the Cosmos" name="GameName" class="header" style="color: rgb(255, 255, 255); -unity-font-definition: url(&quot;project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&amp;guid=6384753b77039dc43a7bf85678bfc68d&amp;type=3#MyFont&quot;); -unity-text-align: upper-left;"/>
+                    <ui:Image name="UnderLine" style="margin-bottom: 0; background-color: rgb(255, 255, 255); height: auto; padding-bottom: 7px;"/>
+                    <ui:Label text="0% Completed" name="PercentageCompleteText" class="header" style="color: rgb(255, 255, 255); -unity-font-definition: url(&quot;project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&amp;guid=6384753b77039dc43a7bf85678bfc68d&amp;type=3#MyFont&quot;); -unity-text-align: upper-left;"/>
+                    <ui:Label text="05/06/2002 12:00" name="SaveDateText" class="header" style="color: rgb(255, 255, 255); -unity-font-definition: url(&quot;project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&amp;guid=6384753b77039dc43a7bf85678bfc68d&amp;type=3#MyFont&quot;); -unity-text-align: upper-left;"/>
+                    <ui:VisualElement name="ThumbnailImage" style="flex-grow: 1; position: absolute; height: 150px; width: 237px; left: -4px; bottom: -5px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="NoDataContent" style="flex-grow: 1; width: 1294px; align-self: flex-start; padding-left: 242px; top: auto; display: none; font-size: 42px; -unity-text-align: middle-center;">
+                    <ui:Label text="New Data" name="NoDataText" class="header" style="color: rgb(255, 255, 255); -unity-font-definition: url(&quot;project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&amp;guid=6384753b77039dc43a7bf85678bfc68d&amp;type=3#MyFont&quot;); -unity-text-align: middle-center; height: 131px;"/>
+                </ui:VisualElement>
+            </ui:Button>
+            <ui:Button text="Clear" name="ClearButton" class="button" style="align-self: center; left: -370px; position: relative; top: -35px; -unity-text-align: middle-center; bottom: auto; width: auto; height: auto;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="SaveSlot2" style="flex-grow: 1; position: absolute; height: 204px; width: 1408px; align-self: center; background-color: rgba(0, 0, 0, 0.6); border-top-left-radius: 42px; border-top-right-radius: 42px; border-bottom-right-radius: 42px; border-bottom-left-radius: 42px; top: 423px; left: auto;">
+            <ui:Button text="&#10;" name="SaveSlotButton" style="height: 162px; width: 251px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); left: 29px; bottom: -19px;">
+                <ui:VisualElement name="HasDataContent" style="flex-grow: 1; width: 1294px; align-self: flex-start; padding-left: 242px; display: flex;">
+                    <ui:Label text="Orbs of the Cosmos" name="GameName" class="header" style="color: rgb(255, 255, 255); -unity-font-definition: url(&quot;project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&amp;guid=6384753b77039dc43a7bf85678bfc68d&amp;type=3#MyFont&quot;); -unity-text-align: upper-left;"/>
+                    <ui:Image name="UnderLine" style="margin-bottom: 0; background-color: rgb(255, 255, 255); height: auto; padding-bottom: 7px;"/>
+                    <ui:Label text="0% Completed" name="PercentageCompleteText" class="header" style="color: rgb(255, 255, 255); -unity-font-definition: url(&quot;project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&amp;guid=6384753b77039dc43a7bf85678bfc68d&amp;type=3#MyFont&quot;); -unity-text-align: upper-left;"/>
+                    <ui:Label text="05/06/2002 12:00" name="SaveDateText" class="header" style="color: rgb(255, 255, 255); -unity-font-definition: url(&quot;project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&amp;guid=6384753b77039dc43a7bf85678bfc68d&amp;type=3#MyFont&quot;); -unity-text-align: upper-left;"/>
+                    <ui:VisualElement name="ThumbnailImage" style="flex-grow: 1; position: absolute; height: 150px; width: 237px; left: -4px; bottom: -5px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="NoDataContent" style="flex-grow: 1; width: 1294px; align-self: flex-start; padding-left: 242px; top: auto; display: none; font-size: 42px; -unity-text-align: middle-center;">
+                    <ui:Label text="New Data" name="NoDataText" class="header" style="color: rgb(255, 255, 255); -unity-font-definition: url(&quot;project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&amp;guid=6384753b77039dc43a7bf85678bfc68d&amp;type=3#MyFont&quot;); -unity-text-align: middle-center; height: 131px;"/>
+                </ui:VisualElement>
+            </ui:Button>
+            <ui:Button text="Clear" name="ClearButton" class="button" style="align-self: center; left: -370px; position: relative; top: -35px; -unity-text-align: middle-center; bottom: auto; width: auto; height: auto;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="SaveSlot3" style="flex-grow: 1; position: absolute; height: 204px; width: 1408px; align-self: center; background-color: rgba(0, 0, 0, 0.6); border-top-left-radius: 42px; border-top-right-radius: 42px; border-bottom-right-radius: 42px; border-bottom-left-radius: 42px; top: 684px; left: auto;">
+            <ui:Button text="&#10;" name="SaveSlotButton" style="height: 162px; width: 251px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); left: 29px; bottom: -19px;">
+                <ui:VisualElement name="HasDataContent" style="flex-grow: 1; width: 1294px; align-self: flex-start; padding-left: 242px; display: flex;">
+                    <ui:Label text="Orbs of the Cosmos" name="GameName" class="header" style="color: rgb(255, 255, 255); -unity-font-definition: url(&quot;project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&amp;guid=6384753b77039dc43a7bf85678bfc68d&amp;type=3#MyFont&quot;); -unity-text-align: upper-left;"/>
+                    <ui:Image name="UnderLine" style="margin-bottom: 0; background-color: rgb(255, 255, 255); height: auto; padding-bottom: 7px;"/>
+                    <ui:Label text="0% Completed" name="PercentageCompleteText" class="header" style="color: rgb(255, 255, 255); -unity-font-definition: url(&quot;project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&amp;guid=6384753b77039dc43a7bf85678bfc68d&amp;type=3#MyFont&quot;); -unity-text-align: upper-left;"/>
+                    <ui:Label text="05/06/2002 12:00" name="SaveDateText" class="header" style="color: rgb(255, 255, 255); -unity-font-definition: url(&quot;project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&amp;guid=6384753b77039dc43a7bf85678bfc68d&amp;type=3#MyFont&quot;); -unity-text-align: upper-left;"/>
+                    <ui:VisualElement name="ThumbnailImage" style="flex-grow: 1; position: absolute; height: 150px; width: 237px; left: -4px; bottom: -5px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="NoDataContent" style="flex-grow: 1; width: 1294px; align-self: flex-start; padding-left: 242px; top: auto; display: none; font-size: 42px; -unity-text-align: middle-center;">
+                    <ui:Label text="New Data" name="NoDataText" class="header" style="color: rgb(255, 255, 255); -unity-font-definition: url(&quot;project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&amp;guid=6384753b77039dc43a7bf85678bfc68d&amp;type=3#MyFont&quot;); -unity-text-align: middle-center; height: 131px;"/>
+                </ui:VisualElement>
+            </ui:Button>
+            <ui:Button text="Clear" name="ClearButton" class="button" style="align-self: center; left: -370px; position: relative; top: -35px; -unity-text-align: middle-center; bottom: auto; width: auto; height: auto;"/>
+        </ui:VisualElement>
+        <ui:Button text="Back" name="BackButton" class="button" style="align-self: center; left: -892px; position: relative; top: auto; -unity-text-align: middle-center; bottom: -975px; flex-direction: column-reverse; font-size: 47px; width: auto; height: auto;"/>
+    </ui:VisualElement>
+</ui:UXML>

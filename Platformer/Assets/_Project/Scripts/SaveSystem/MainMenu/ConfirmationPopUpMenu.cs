@@ -1,45 +1,67 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Events;
-using TMPro;
+using UnityEngine.UIElements;
+using System;
 
 namespace Platformer
 {
-    public class ConfirmationPopUpMenu : Menu
+    [RequireComponent(typeof(UIDocument))]
+    public class ConfirmationPopUpMenu : MonoBehaviour
     {
-        [Header("Components")]
-        [SerializeField] private TextMeshProUGUI displayText;
-        [SerializeField] private Button confirmButton;
-        [SerializeField] private Button cancelButton;
+        private UIDocument document;
+        private VisualElement rootContainer;
+        
+        private Label displayText;
+        private Button confirmButton;
+        private Button cancelButton;
 
-        public void ActivateMenu(string displayText, UnityAction confirmAction, UnityAction cancelAction)
+        // We need to store these so we can unsubscribe from them later to prevent memory leaks/double-clicks
+        private Action currentConfirmAction;
+        private Action currentCancelAction;
+
+        private void Awake()
         {
-            this.gameObject.SetActive(true);
+            document = GetComponent<UIDocument>();
+            rootContainer = document.rootVisualElement.Q<VisualElement>("ConfirmationPopupMenuContainer");
 
-            // set the display text
-            this.displayText.text = displayText;
+            displayText = rootContainer.Q<Label>("DisplayText");
+            confirmButton = rootContainer.Q<Button>("ConfirmButton");
+            cancelButton = rootContainer.Q<Button>("CancelButton");
 
-            // remove any existing listeners just to make sure there aren't any previous ones hanging around
-            // note - this only removes listeners added through code
-            confirmButton.onClick.RemoveAllListeners();
-            cancelButton.onClick.RemoveAllListeners();
-
-            // assign the onClick listeners
-            confirmButton.onClick.AddListener(() => {
-                DeactivateMenu();
-                confirmAction();
-            });
-            cancelButton.onClick.AddListener(() => {
-                DeactivateMenu();
-                cancelAction();
-            });
+            DeactivateMenu();
         }
 
-        private void DeactivateMenu() 
+        public void ActivateMenu(string text, Action confirmAction, Action cancelAction)
         {
-            this.gameObject.SetActive(false);
+            rootContainer.style.display = DisplayStyle.Flex;
+            this.displayText.text = text;
+
+            // Unsubscribe from old events if they exist
+            if (currentConfirmAction != null) confirmButton.clicked -= currentConfirmAction;
+            if (currentCancelAction != null) cancelButton.clicked -= currentCancelAction;
+
+            // Assign new actions that include closing the menu
+            currentConfirmAction = () => {
+                DeactivateMenu();
+                confirmAction();
+            };
+            
+            currentCancelAction = () => {
+                DeactivateMenu();
+                cancelAction();
+            };
+
+            // Subscribe to the buttons
+            confirmButton.clicked += currentConfirmAction;
+            cancelButton.clicked += currentCancelAction;
+            
+            // Focus the cancel button by default for safety
+            cancelButton.Focus();
+        }
+
+        // Change this from private to public!
+        public void DeactivateMenu() 
+        {
+            rootContainer.style.display = DisplayStyle.None;
         }
     }
 }

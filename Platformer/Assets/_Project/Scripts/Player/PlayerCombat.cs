@@ -1,115 +1,130 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using DG.Tweening;
 using KBCore.Refs;
 using UnityEngine.VFX;
 using Unity.Cinemachine;
+using UnityEngine.Serialization;
 
 namespace Platformer
 {
     [System.Serializable]
-    public class ComboSlash 
+    public class ComboSlash
     {
         public GameObject slashObj;
-        public float activeDuration = 1f; // How long the slash stays visible
+        public float activeDuration = 1f;
     }
 
-    public class PlayerCombat : MonoBehaviour
+    public class PlayerCombat : MonoBehaviour, IEntity
     {
         [field: Header("References")]
         [field: SerializeField, Anywhere] CinemachineImpulseSource impulseSource;
-        [field: SerializeField] public EnemyDetection enemyDetection; // Drag the new script here!
-       
+        [field: SerializeField] public EnemyDetection enemyDetection;
+    
+        
+
         [field: Header("Attack Settings")]
         [field: SerializeField] [Range(0, 10)] float lightAttackDistance = 1f;
         [field: SerializeField] int lightAttackDamage = 10;
-        [field: SerializeField] [Range(0, 10)] float heavyAttackDistance = 5f;
-        [field: SerializeField] int heavyAttackDamage = 20;
+        [field: SerializeField] int punchDamage = 5;
+        
         [field: SerializeField] float knockbackTime = 0.5f;
-        
+
+       
+        [field: Header("Blast Settings")]
+        [field: SerializeField] SpellStragedy blastStrategy;
+        [field: SerializeField] Transform blastPoint;
+
         [field: Header("Freeflow Settings")]
-        [field: SerializeField] [Range(0, 20)] float targetingRadius = 8f; 
+        [field: SerializeField] [Range(0, 20)] float targetingRadius = 8f;
         [field: SerializeField] float slideDuration = 0.2f;
-        
+
         [field: Header("Camera Shake Settings")]
-        [field: SerializeField] float minShakeForce = 0.5f; 
+        [field: SerializeField] float minShakeForce = 0.5f;
         [field: SerializeField] float shakeDistanceMultiplier = 0.2f;
-        
-        [SerializeField] private GameObject lastHitCamera;
-        [SerializeField] private Transform lastHitFocusObject;
-        
+
+
         [field: Header("VFX Settings")]
         [field: SerializeField] VisualEffect slashVFX;
         [field: SerializeField] ComboSlash[] comboSlashes;
+
+        public bool hasWeapon { get; private set; }
+        public void EquipWeapon() => hasWeapon = true;
+
+        public int luminCharges { get; private set; }
+
+        void OnEnable() => GameEventsManager.instance.miscEvents.onLuminCollected += OnLuminCollected;
+        void OnDisable() => GameEventsManager.instance.miscEvents.onLuminCollected -= OnLuminCollected;
+        void OnLuminCollected() => luminCharges += 5;
+
         
-        
-        
-        
-        [field: Header("Combo Settings")]
-        [field: SerializeField] string[] comboAnimations = { "Attack1", "Attack2", "Attack3" };
-        
-        private float comboResetWindow = 1.5f;
-        private int comboCounter = -1;
-        private float lastAttackTime;
+
+      
+
+
 
         void Awake()
         {
-            if (slashVFX != null)
+            foreach (ComboSlash combo in comboSlashes)
             {
-                slashVFX.Stop();
+
+                if (combo != null && combo.slashObj != null)
+                {
+                    combo.slashObj.SetActive(false);
+                }
             }
         }
+
+        
 
         void Start()
         {
             impulseSource = GetComponentInChildren<CinemachineImpulseSource>();
         }
-        
-        public void PlaySlashVFX()
+        public void PlaySlashVFX(int slashIndex)
         {
-            // Make sure we have a valid combo counter and an assigned slash
-            if (comboCounter >= 0 && comboCounter < comboSlashes.Length)
+            if (slashIndex >= 0 && slashIndex < comboSlashes.Length)
             {
-                GameObject currentSlash = comboSlashes[comboCounter].slashObj;
-                float duration = comboSlashes[comboCounter].activeDuration;
+                GameObject currentSlash = comboSlashes[slashIndex].slashObj;
+                float duration = comboSlashes[slashIndex].activeDuration;
 
                 if (currentSlash != null)
                 {
-                    // Turn the slash on
+                    currentSlash.SetActive(false);
                     currentSlash.SetActive(true);
-
-                    // Since you already use DOTween, we can use it instead of a Coroutine to turn it off!
-                    DOVirtual.DelayedCall(duration, () => 
+                    DOVirtual.DelayedCall(duration, () =>
                     {
-                        currentSlash.SetActive(false);
+                        if (currentSlash != null)
+                        {
+                            currentSlash.SetActive(false);
+                        }
                     });
                 }
             }
         }
-        
+
         private void TriggerCameraShake(float distance)
         {
             if (impulseSource != null)
             {
-                // Now it uses your Inspector variables instead of Magic Numbers!
                 float shakeForce = Mathf.Max(minShakeForce, shakeDistanceMultiplier * distance);
-                
                 impulseSource.GenerateImpulseWithForce(shakeForce);
             }
         }
-       
 
-        public void LightAttack(Vector3 inputDirection)
+
+        public void lunge(Vector3 inputDirection)
         {
             float lungeDistance = 0f;
             Transform target = enemyDetection.CurrentTarget();
-            AudioManager.instance.PlayOneShot(FMODEvents.instance.playerAttack, this.transform.position);
+           
             if (target != null)
             {
                 lungeDistance = Vector3.Distance(transform.position, target.position);
-                
+
                 Vector3 directionToTarget = (target.position - transform.position).normalized;
-                directionToTarget.y = 0; 
+                directionToTarget.y = 0;
 
                 Vector3 stopPosition = target.position - (directionToTarget * 1.2f);
 
@@ -121,92 +136,53 @@ namespace Platformer
                 transform.rotation = Quaternion.LookRotation(inputDirection);
             }
 
-            // Trigger the camera shake at the exact same time the damage is dealt!
-            DOVirtual.DelayedCall(slideDuration, () => 
+            DOVirtual.DelayedCall(slideDuration, () =>
             {
-                DealDamageInFront();
-                TriggerCameraShake(lungeDistance); 
+                LightAttack();
+                TriggerCameraShake(lungeDistance);
             });
-            
-            // Only trigger Cinematic Camera if they are the last enemy or have low HP!
-            
-            
-            
         }
-        
-       
-        
-        
-        private void DealDamageInFront()
+
+
+
+
+        private void LightAttack()
         {
             Vector3 attackPos = transform.position + transform.forward * lightAttackDistance;
             Collider[] hitEnemies = Physics.OverlapSphere(attackPos, lightAttackDistance);
-            
-            
+            AudioManager.instance.PlayOneShot(FMODEvents.instance.playerAttack, transform.position);
+
             foreach (var hit in hitEnemies)
             {
                 if (hit.CompareTag("Enemy"))
                 {
                     if(hit.TryGetComponent<Health>(out Health enemyHealth))
                     {
-                        enemyHealth.TakeDamage(lightAttackDamage, knockbackTime);
-                        // THE NEW SPOT FOR THE FINAL BLOW CAMERA
-                        if (EnemyManager.instance != null && EnemyManager.instance.AliveEnemyCount() <= 1)
-                        {
-                            TriggerFinalBlowCamera(hit.transform);
-                        }
+                        enemyHealth.TakeDamage(hasWeapon ? lightAttackDamage : punchDamage, knockbackTime);
                     }
                 }
                 else if (hit.CompareTag("Destructable"))
                 {
-                    if (hit.TryGetComponent<FractureObject>(out FractureObject fractureObject))
-                    {
-                        fractureObject.Explode();
-                    }
+                    if (hit.TryGetComponent<IDamageable>(out var damageable))
+                        damageable.TakeDamage(hasWeapon ? lightAttackDamage : punchDamage, knockbackTime);
                 }
             }
         }
-        
-        public void HeavyAttack()
-        {
-            Vector3 attackPos = transform.position;
-            Collider[] hitEnemies = Physics.OverlapSphere(attackPos, heavyAttackDistance);
-            AudioManager.instance.PlayOneShot(FMODEvents.instance.playerAttack, transform.position);
 
-            foreach (var enemy in hitEnemies)
-            {
-                if (enemy.CompareTag("Enemy"))
-                {
-                    enemy.GetComponent<Health>().TakeDamage(heavyAttackDamage, knockbackTime);
-                }
-            }
-        }
-        
-        public string GetNextComboAnimation()
+        public void BlastAttack()
         {
-            if (Time.time - lastAttackTime > comboResetWindow)
-            {
-                comboCounter = -1;
-            }
-            
-            lastAttackTime = Time.time;
-            comboCounter = (int)Mathf.Repeat(comboCounter + 1, comboAnimations.Length);
-            return comboAnimations[comboCounter];
+            if (luminCharges <= 0) return;
+            luminCharges--;
+
+            AudioManager.instance.PlayOneShot(FMODEvents.instance.blastAttack, transform.position);
+            blastStrategy?.CastSpell(blastPoint != null ? blastPoint : transform, transform);
         }
 
-        private void OnDrawGizmosSelected()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position + transform.forward * lightAttackDistance, lightAttackDistance);
+        void IEntity.Attack(Vector3 direction) => lunge(direction);
+        void IEntity.Attack2() => BlastAttack();
+        void IEntity.Attack3() => CounterCheck();
 
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawWireSphere(transform.position, heavyAttackDistance);
 
-            Gizmos.color = Color.pink;
-            Gizmos.DrawWireSphere(transform.position, targetingRadius);
-        }
-        
-       
         public void CounterCheck()
         {
             Enemy bestCounterTarget = null;
@@ -245,43 +221,27 @@ namespace Platformer
 
                 // 4. FEEDBACK: Sound and Camera Effects
                 AudioManager.instance.PlayOneShot(FMODEvents.instance.playerAttack, transform.position);
-        
+
                 if (bestCounterTarget.enemyHealth != null)
                 {
                     // Deal heavy damage and trigger that beautiful Final Blow camera
-                    bestCounterTarget.enemyHealth.TakeDamage(lightAttackDamage * 2, knockbackTime); 
+                    bestCounterTarget.enemyHealth.TakeDamage(lightAttackDamage * 2, knockbackTime);
                     TriggerCameraShake(10f);
-                    
-                    
+
+
                 }
             }
         }
-        
-        private IEnumerator FinalBlowCoroutine(Transform target)
-        {
-            // 1. Enter Slow Motion
-            Time.timeScale = 0.5f; 
-            
-            // 2. Turn on the cinematic camera
-            if (lastHitCamera != null) lastHitCamera.SetActive(true);
-            
-            // 3. Move the focus object to the enemy being hit
-            if (lastHitFocusObject != null && target != null) 
-            {
-                lastHitFocusObject.position = target.position;
-            }
 
-            // 4. Wait for 2 real-world seconds (ignoring the slow motion)
-            yield return new WaitForSecondsRealtime(2f);
 
-            // 5. Turn the camera off and restore normal time
-            if (lastHitCamera != null) lastHitCamera.SetActive(false);
-            Time.timeScale = 1f; 
-        }
-        
-        public void TriggerFinalBlowCamera(Transform target)
+        private void OnDrawGizmosSelected()
         {
-            StartCoroutine(FinalBlowCoroutine(target));
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position + transform.forward * lightAttackDistance, lightAttackDistance);
+           
+
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireSphere(transform.position, targetingRadius);
         }
     }
 }

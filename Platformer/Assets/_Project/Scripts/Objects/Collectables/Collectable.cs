@@ -12,14 +12,14 @@ namespace Platformer
         
         [field: Header("Visuals")]
         [field: SerializeField, Anywhere] GameObject visualObject;
-        [field: SerializeField, Anywhere] ParticleSystem collectParticle;
+       // [field: SerializeField, Anywhere] ParticleSystem collectParticle;
         
         [ContextMenu("Generate guid for id")]
         private void GenerateGuid() => id = System.Guid.NewGuid().ToString();
 
         private void Awake()
         {
-            collectParticle.Stop();
+            //collectParticle.Stop();
         }
         private void OnTriggerEnter(Collider other)
         {
@@ -31,7 +31,7 @@ namespace Platformer
         void Collect()
         {
             isCollected = true;
-            collectParticle.Play();
+            //collectParticle.Play();
             Destroy(gameObject);
 
             switch (collectibleType)
@@ -67,7 +67,7 @@ namespace Platformer
             if (isCollected)
             {
                 visualObject.gameObject.SetActive(false);
-                collectParticle.Stop();
+              //  collectParticle.Stop();
                 Destroy(gameObject, 0.5f);
             }
         }

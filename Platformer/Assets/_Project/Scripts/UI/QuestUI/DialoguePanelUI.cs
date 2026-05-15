@@ -1,25 +1,35 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Ink.Runtime;
 
 namespace Platformer
 {
     public class DialoguePanelUI : MonoBehaviour
     {
-        [Header("Components")]
-        [SerializeField] private GameObject contentParent;
-        [SerializeField] private TextMeshProUGUI dialogueText;
-        
-        [SerializeField] private DialogueChoiceButton[] choiceButtons;
-        
+        [Header("UI Toolkit")]
+        [SerializeField] private UIDocument uiDocument;
+
+        [Header("UXML Element Names")]
+        [SerializeField] private string rootElementName = "DialogueContainer";
+        [SerializeField] private string dialogueTextName = "DialogueText";
+        [SerializeField] private string choicesContainerName = "ChoicesContainer";
+
+        private VisualElement rootContainer;
+        private Label dialogueTextLabel;
+        private VisualElement choicesContainer;
 
         private void Awake()
         {
-            contentParent.SetActive(false);
-            ResetPanel();
+            var root = uiDocument.rootVisualElement;
+            rootContainer = root.Q<VisualElement>(rootElementName);
+            dialogueTextLabel = root.Q<Label>(dialogueTextName);
+            choicesContainer = root.Q<VisualElement>(choicesContainerName);
+
+            // 1. Ensure the whole panel is hidden when the game starts
+            rootContainer.style.display = DisplayStyle.None;
         }
-        
+
         private void OnEnable()
         {
             GameEventsManager.instance.dialogueEvents.onDialogueStarted += DialogueStarted;
@@ -34,61 +44,66 @@ namespace Platformer
             GameEventsManager.instance.dialogueEvents.onDisplayDialogue -= DisplayDialogue;
         }
 
-
         private void DialogueStarted()
         {
-            contentParent.SetActive(true);
+            // Show the main panel when dialogue begins
+            rootContainer.style.display = DisplayStyle.Flex;
         }
 
         private void DialogueFinished()
         {
-            contentParent.SetActive(false);
-            
-            // reset anything for next time
-            ResetPanel();
+            // Hide the main panel when dialogue ends
+            rootContainer.style.display = DisplayStyle.None;
+            dialogueTextLabel.text = "";
+            choicesContainer.Clear();
         }
 
         private void DisplayDialogue(string dialogueLine, List<Choice> dialogueChoices)
         {
-            dialogueText.text = dialogueLine;
-            // defensive check - if there are more choices coming in than we can support, log an error
-            if (dialogueChoices.Count > choiceButtons.Length) 
+            dialogueTextLabel.text = dialogueLine;
+            choicesContainer.Clear();
+
+            // 2. Hide the choices container if there are no choices!
+            if (dialogueChoices.Count == 0)
             {
-                Debug.LogError("More dialogue choices ("
-                               + dialogueChoices.Count + ") came through than are supported ("
-                               + choiceButtons.Length + ").");
+                choicesContainer.style.display = DisplayStyle.None;
+                return; // Stop here, no buttons to create
             }
 
-            // start with all of the choice buttons hidden
-            foreach (DialogueChoiceButton choiceButton in choiceButtons) 
+            // Otherwise, show the choices container
+            choicesContainer.style.display = DisplayStyle.Flex;
+
+            for (int i = 0; i < dialogueChoices.Count; i++)
             {
-                choiceButton.gameObject.SetActive(false);
-            }
+                Choice dialogueChoice = dialogueChoices[i];
+                int choiceIndex = i; 
 
-            // enable and set info for buttons depending on ink choice information
-            int choiceButtonIndex = dialogueChoices.Count - 1;
-            for (int inkChoiceIndex = 0; inkChoiceIndex < dialogueChoices.Count; inkChoiceIndex++)
-            {
-                Choice dialogueChoice = dialogueChoices[inkChoiceIndex];
-                DialogueChoiceButton choiceButton = choiceButtons[choiceButtonIndex];
+                Button choiceButton = new Button();
+                choiceButton.text = dialogueChoice.text;
+                choiceButton.AddToClassList("dialogue-choice-button"); // For your USS styling
 
-                choiceButton.gameObject.SetActive(true);
-                choiceButton.SetChoiceText(dialogueChoice.text);
-                choiceButton.SetChoiceIndex(inkChoiceIndex);
-
-                if (inkChoiceIndex == 0)
+                // Keyboard/Gamepad focus
+                choiceButton.RegisterCallback<FocusEvent>(ev => 
                 {
-                    choiceButton.SelectButton();
-                    GameEventsManager.instance.dialogueEvents.UpdateChoiceIndex(0);
+                    GameEventsManager.instance.dialogueEvents.UpdateChoiceIndex(choiceIndex);
+                });
+
+                // Mouse hover
+                choiceButton.RegisterCallback<PointerEnterEvent>(ev =>
+                {
+                    choiceButton.Focus(); 
+                });
+
+                choicesContainer.Add(choiceButton);
+
+                if (i == 0)
+                {
+                    choiceButton.schedule.Execute(() => {
+                        choiceButton.Focus();
+                        GameEventsManager.instance.dialogueEvents.UpdateChoiceIndex(0);
+                    });
                 }
-
-                choiceButtonIndex--;
             }
-        }
-
-        private void ResetPanel()
-        {
-            dialogueText.text = "";
         }
     }
 }

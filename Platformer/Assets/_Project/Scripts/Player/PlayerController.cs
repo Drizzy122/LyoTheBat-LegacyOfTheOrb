@@ -1,12 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using KBCore.Refs;
+using ImprovedTimers;
 using UnityEngine;
-using Utilities;
-using UnityEngine.Rendering.Universal;
-using FMOD.Studio;
-using DG.Tweening;
-using UnityEngine.UI;
+using UnityUtils.StateMachine;
 
 namespace Platformer
 {
@@ -21,6 +17,7 @@ namespace Platformer
         [field: SerializeField, Self] private FootstepController footstepController;
         [field: SerializeField, Self] Health playerHealth;
         [field: SerializeField, Self]  public PlayerCombat combat;
+        [field: SerializeField, Self]  public CommandManager commandManager;
         [field: SerializeField, Self] PlayerAbilities abilities;
         [field: SerializeField, Self] GlideStamina glideStamina;
         
@@ -50,6 +47,10 @@ namespace Platformer
         
         [field: SerializeField] GameObject defaultMesh;  
         [field: SerializeField] GameObject glidingMesh;
+        
+        [field: Header("Weapon Settings")]
+        [field: SerializeField] public GameObject equippedWeapon;
+        private bool isWeaponHidden = false;
 
         [Header("Teleport Settings")] 
         public bool isTeleporting;
@@ -74,7 +75,6 @@ namespace Platformer
         public bool InWater { get; private set; }
 
         [field: Header("More variables")]
-  
         const float ZeroF = 0f;
         float currentSpeed;
         float velocity;
@@ -82,7 +82,7 @@ namespace Platformer
         float dashVelocity = 1f;
         Vector3 movement;
         Transform mainCam;
-
+        
         [field: Header("Animation Cooldown Settings")] 
         [field: SerializeField] float hurtDuration = 0.4f;
         [field: SerializeField] float jumpCooldown = 0f;
@@ -90,15 +90,15 @@ namespace Platformer
         [field: SerializeField] float sonarPulseCooldown = 0.5f;
         [field: SerializeField] float dashCooldown = 0.5f;
         [field: SerializeField] float attackCoolDown = 0.5f;
+        [field: SerializeField] float blastAttackCoolDown = 0.5f;
         
         [field: Header("Timers")] 
-        List<Timer> timers;
         CountdownTimer jumpTimer;
         CountdownTimer jumpCooldownTimer;
         CountdownTimer dashTimer;
         CountdownTimer dashCooldownTimer;
         CountdownTimer attackTimer;
-        CountdownTimer spinAttackTimer;
+        CountdownTimer blastAttackTimer;
         CountdownTimer pulseTimer;
         CountdownTimer glideTimer;
         CountdownTimer hurtTimer;
@@ -124,9 +124,9 @@ namespace Platformer
             movement = new Vector3(input.Direction.x, 0f, input.Direction.y);
             stateMachine.Update();
             
-            HandleTimers();
             TriggerFootstepEvents();
             UpdateAnimator();
+            HandleWeaponVisibility();
             
             if (combat.enemyDetection != null)
             {
@@ -155,7 +155,7 @@ namespace Platformer
             var glideState = new GlideState(this, animator);
             var dashState = new DashState(this, animator);
             var attackState = new AttackState(this, animator);
-            var spinAttackState = new SpinAttackState(this, animator);
+            var spinAttackState = new BlastAttackState(this, animator);
             var deathState = new DeathState(this, animator, playerHealth);
             var teleportState = new TeleportState(this, animator);
             var wallClimbState = new WallClimbState(this, animator);
@@ -185,12 +185,12 @@ namespace Platformer
             At(locomotionState, attackState, new FuncPredicate(() => attackTimer.IsRunning));
             At(attackState, locomotionState, new FuncPredicate(() => !attackTimer.IsRunning));;
             
-            At(locomotionState, spinAttackState, new FuncPredicate(() => spinAttackTimer.IsRunning));
-            At(spinAttackState, locomotionState, new FuncPredicate(() => !spinAttackTimer.IsRunning));
+            At(locomotionState, spinAttackState, new FuncPredicate(() => blastAttackTimer.IsRunning));
+            At(spinAttackState, locomotionState, new FuncPredicate(() => !blastAttackTimer.IsRunning));
             
             // Enable Spin Attack while jumping
-            At(jumpState, spinAttackState, new FuncPredicate(() => spinAttackTimer.IsRunning));
-            At(spinAttackState, jumpState, new FuncPredicate(() => !spinAttackTimer.IsRunning || jumpTimer.IsRunning));
+            At(jumpState, spinAttackState, new FuncPredicate(() => blastAttackTimer.IsRunning));
+            At(spinAttackState, jumpState, new FuncPredicate(() => !blastAttackTimer.IsRunning || jumpTimer.IsRunning));
             
             // Define transitions for glide
             At(jumpState, glideState, new FuncPredicate(() => glideTimer.IsRunning && !InWater));
@@ -232,7 +232,7 @@ namespace Platformer
                    && !InWater 
                    && !playerHealth.isDead
                    && !attackTimer.IsRunning
-                   && !spinAttackTimer.IsRunning
+                   && !blastAttackTimer.IsRunning
                    && !jumpTimer.IsRunning
                    && !dashTimer.IsRunning
                    && !glideTimer.IsRunning
@@ -240,18 +240,12 @@ namespace Platformer
                    && !hurtTimer.IsRunning;
 
         }
-        void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);
-        void Any(IState to, IPredicate condition) => stateMachine.AddAnyTransition(to, condition);
+        void At(IState from, IState to, FuncPredicate condition) => stateMachine.AddTransition(from, to, condition);
+        void Any(IState to, FuncPredicate condition) => stateMachine.AddAnyTransition(to, condition);
         #endregion
 
         #region Timers
-        void HandleTimers()
-        {
-            foreach (var timer in timers)
-            {
-                timer.Tick(Time.deltaTime);
-            }
-        }
+        
         void SetupTimers()
         {
             // Setup timers
@@ -260,7 +254,7 @@ namespace Platformer
             pulseTimer = new CountdownTimer(sonarPulseCooldown);
             glideTimer = new CountdownTimer(glideCoolDown);
             attackTimer = new CountdownTimer(attackCoolDown);
-            spinAttackTimer = new CountdownTimer(attackCoolDown);
+            blastAttackTimer = new CountdownTimer(blastAttackCoolDown);
             dashTimer = new CountdownTimer(dashDuration);
             dashCooldownTimer = new CountdownTimer(dashCooldown);
             
@@ -273,11 +267,6 @@ namespace Platformer
                 dashVelocity = 1f;
                 dashCooldownTimer.Start();
             };
-
-           
-
-            timers = new List<Timer>(9)
-                { jumpTimer, jumpCooldownTimer, dashTimer, dashCooldownTimer, attackTimer,spinAttackTimer, pulseTimer, glideTimer, hurtTimer };
         }
         #endregion
 
@@ -314,7 +303,7 @@ namespace Platformer
             // Adjust rotation to match movement Direction
             var targetRotation = Quaternion.LookRotation(adjustedDirection);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-           // transform.LookAt(transform.position + adjustedDirection);
+            // transform.LookAt(transform.position + adjustedDirection);
         }
         void SmoothSpeed(float value)
         {
@@ -392,7 +381,28 @@ namespace Platformer
                 hurtTimer.Start();
         
                 attackTimer.Stop();
-                spinAttackTimer.Stop();
+                blastAttackTimer.Stop();
+            }
+        }
+        
+        private void HandleWeaponVisibility()
+        {
+            // If you haven't assigned a weapon yet, do nothing
+            if (equippedWeapon == null) return;
+
+            // Determine if the player is currently in a state where the weapon should be hidden
+            bool shouldHide = glideTimer.IsRunning || wallClimbimg || InWater; 
+
+            // Only turn the weapon on/off if the state has changed (this saves performance)
+            if (shouldHide && !isWeaponHidden)
+            {
+                equippedWeapon.SetActive(false);
+                isWeaponHidden = true;
+            }
+            else if (!shouldHide && isWeaponHidden)
+            {
+                equippedWeapon.SetActive(true);
+                isWeaponHidden = false;
             }
         }
         #endregion
@@ -637,21 +647,21 @@ namespace Platformer
             if (!attackTimer.IsRunning)
             {
                 attackTimer.Start();
-            }            
+            }
         }
-        void OnHeavyAttack()
+        void OnBlastAttack()
         {
-            if (!spinAttackTimer.IsRunning)
+            if (!blastAttackTimer.IsRunning && combat.luminCharges > 0)
             {
-                spinAttackTimer.Start();
+                blastAttackTimer.Start();
             }
         }
         
         void OnSonarPulse(bool performed)
         {
-            if (performed && !pulseTimer.IsRunning && abilities.CurrentPulseCharges > 0)
+            if (performed && !pulseTimer.IsRunning)
             {
-                abilities.ExecuteSonarPulse(); 
+                abilities.ExecuteActiveAbility(); 
                 pulseTimer.Start();
                 AudioManager.instance.PlayOneShot(FMODEvents.instance.playerEcolocation, this.transform.position);
             }
@@ -660,6 +670,7 @@ namespace Platformer
         #endregion
 
         #region Interact
+        [Obsolete("Obsolete")]
         void OnInteract(bool performed)
         {
             if(performed)
@@ -742,6 +753,7 @@ namespace Platformer
                combat.CounterCheck();
            }
        }*/
+        
         void OnEnable()
         {
             input.Jump += OnJump;
@@ -750,15 +762,12 @@ namespace Platformer
             input.Wallclimb += OnWallClimb;
             input.Glide += OnGlide;
             input.LightAttack += OnLightAttack;
-            input.HeavyAttack += OnHeavyAttack;
+            input.BlastAttack += OnBlastAttack;
             input.interact += OnInteract;
             playerHealth.OnHit += HandlePlayerHurt;
             //input.Counter += OnCounter;
 
         }
-
-       
-
         void OnDisable()
         {
             input.Jump -= OnJump;
@@ -767,7 +776,7 @@ namespace Platformer
             input.Wallclimb -= OnWallClimb;
             input.Glide -= OnGlide;
             input.LightAttack -= OnLightAttack;
-            input.HeavyAttack -= OnHeavyAttack;
+            input.BlastAttack -= OnBlastAttack;
             input.interact -= OnInteract;
             playerHealth.OnHit -= HandlePlayerHurt;
             // input.Counter -= OnCounter;

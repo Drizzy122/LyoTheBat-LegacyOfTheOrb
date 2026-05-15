@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Utilities;
+using ImprovedTimers;
 
 namespace Platformer {
     public interface IDetectionStrategy {

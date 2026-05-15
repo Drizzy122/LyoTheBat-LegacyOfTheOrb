@@ -2,16 +2,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
+using UnityEngine.UIElements;
 
 namespace Platformer
 {
     public class AudioManager : MonoBehaviour
     {
         [field: Header("Game Volume")] 
-        [Range(0, 1)] public float masterVolume = 1;
-        [Range(0, 1)] public float musicVolume = 1;
-        [Range(0, 1)] public float ambienceVolume = 1;
-        [Range(0, 1)] public float SFXVolume = 1;
+        [SerializeField] UIDocument settingsUIDocument;
+        [field: Range(0, 1)] public float masterVolume = 1;
+        [field: Range(0, 1)] public float musicVolume = 1;
+        [field: Range(0, 1)] public float ambienceVolume = 1;
+        [field: Range(0, 1)] public float SFXVolume = 1;
         
         private Bus masterBus;
         private Bus musicBus;
@@ -42,21 +44,12 @@ namespace Platformer
 
         private void Start()
         {
-            LoadVolumeSettings();
-            ApplyVolumeSettings();
-            ApplyButtonPressed();
-            
             InitiializeAmbience(FMODEvents.instance.ambience);
             IntializeMusic(FMODEvents.instance.music);
+            SetupUIToolkit();
         }
         
-        private void Update()
-        {
-            masterBus.setVolume(masterVolume);
-            musicBus.setVolume(musicVolume);
-            ambienceBus.setVolume(ambienceVolume);
-            sfxBus.setVolume(SFXVolume);
-        }
+      
 
         private void InitiializeAmbience(EventReference ambienceEventReference)
         {
@@ -123,57 +116,48 @@ namespace Platformer
             CleanUp();
         }
         
-        // Method to save volume settings to PlayerPrefs
-        public void SaveVolumeSettings()
+        private void SetupUIToolkit()
         {
-            PlayerPrefs.SetFloat("MasterVolume", masterVolume);
-            PlayerPrefs.SetFloat("MusicVolume", musicVolume);
-            PlayerPrefs.SetFloat("AmbienceVolume", ambienceVolume);
-            PlayerPrefs.SetFloat("SFXVolume", SFXVolume);
-        
-            PlayerPrefs.Save(); // Ensures data is written to disk
-        }
+            // Make sure we actually assigned the UI Document in the inspector
+            if (settingsUIDocument == null) return;
 
-        // Method to load volume settings from PlayerPrefs
-        public void LoadVolumeSettings()
-        {
-            masterVolume = PlayerPrefs.GetFloat("MasterVolume", 1); // Default to 1
-            musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1);
-            ambienceVolume = PlayerPrefs.GetFloat("AmbienceVolume", 1);
-            SFXVolume = PlayerPrefs.GetFloat("SFXVolume", 1);
-            ApplyVolumeSettings(); // Apply the settings to your audio system
-        }
+            var root = settingsUIDocument.rootVisualElement;
 
-        // Apply loaded or updated volume settings (implementation depends on your setup)
-        private void ApplyVolumeSettings()
-        {
-            //Debug.Log("Applying volume settings...");
-            // Example: Call relevant methods to update the audio system with new values
-            // Adjust the master, music, ambience, SFX, and UI volumes in your system here
+            // 1. Find the sliders using the exact IDs from your UI Builder screenshot
+            Slider masterSlider = root.Q<Slider>("MasterVolumeSlider");
+            Slider musicSlider = root.Q<Slider>("MusicVolumeSlider");
+            Slider sfxSlider = root.Q<Slider>("SFXVolumeSlider");
+            Slider ambienceSlider = root.Q<Slider>("AmbienceVolumeSlider");
+
+            // 2. Set the sliders to match your saved volumes on startup
+            if (masterSlider != null) masterSlider.value = masterVolume;
+            if (musicSlider != null) musicSlider.value = musicVolume;
+            if (sfxSlider != null) sfxSlider.value = SFXVolume;
+            if (ambienceSlider != null) ambienceSlider.value = ambienceVolume;
+
+            // 3. Register Callbacks (This fires ONLY when the player moves the slider)
+            masterSlider?.RegisterValueChangedCallback(evt => {
+                masterVolume = evt.newValue;
+                masterBus.setVolume(masterVolume); // Update FMOD immediately
+            });
+
+            musicSlider?.RegisterValueChangedCallback(evt => {
+                musicVolume = evt.newValue;
+                musicBus.setVolume(musicVolume);
+            });
+
+            sfxSlider?.RegisterValueChangedCallback(evt => {
+                SFXVolume = evt.newValue;
+                sfxBus.setVolume(SFXVolume);
+            });
+
+            ambienceSlider?.RegisterValueChangedCallback(evt => {
+                ambienceVolume = evt.newValue;
+                ambienceBus.setVolume(ambienceVolume);
+            });
         }
         
-        public void UpdateVolumeLevels(float newMasterVolume, float newMusicVolume)
-        {
-            masterVolume = newMasterVolume;
-            musicVolume = newMusicVolume;
-            ambienceVolume = newMusicVolume;
-            SFXVolume = newMusicVolume;
-    
-            // Save and apply updated values
-            SaveVolumeSettings();
-        }
-        
-        public void ApplyButtonPressed()
-        {
-           // Debug.Log("Apply button pressed, saving and applying settings...");
-            SaveVolumeSettings();
-            ApplyVolumeSettings();
-        }
-        private void OnApplicationQuit()
-        {
-           // Debug.Log("Application is quitting, saving volume settings...");
-            SaveVolumeSettings();
-        }
+     
         
         public void StopMusic()
         {

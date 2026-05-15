@@ -20,6 +20,8 @@
 
 //#define FOG_BORDER
 
+//#define FOG_NATIVE_LIGHT_FALLOFF
+
 //#define FOG_MAX_DISTANCE_XZ
 
 //#define FOG_SHADOW_CANCELLATION
@@ -32,7 +34,13 @@
 
 //#define FOG_LIGHT_LAYERS
 
+
 // ***** Common URP code ***********
+
+float jitter;
+float t1depth;
+float loop_t;
+float loop_shadowMaxDistance;
 
 #if defined(USE_ALTERNATE_RECONSTRUCT_API)
    #define CLAMP_RAY_DEPTH(rayStart, uv, t1) ClampRayDepthAlt(rayStart, uv, t1)

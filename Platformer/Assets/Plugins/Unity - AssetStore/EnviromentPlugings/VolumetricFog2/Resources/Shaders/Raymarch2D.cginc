@@ -5,6 +5,12 @@
     static uint meshRenderingLayers;
 #endif
 
+#if defined(FOG_NATIVE_LIGHT_FALLOFF)
+    #define VF2_NATIVE_LIGHT_ATTEN(light) ((light).distanceAttenuation * NATIVE_LIGHT_FALLOFF + ONE_MINUS_NATIVE_LIGHT_FALLOFF)
+#else
+    #define VF2_NATIVE_LIGHT_ATTEN(light) ((light).distanceAttenuation)
+#endif
+
 void SetJitter(float2 uv) {
 
     float2 screenSize = lerp(_ScreenParams.xy, _VFRTSize.xy, _VFRTSize.z);
@@ -107,13 +113,12 @@ void AddFog(float3 rayStart, float3 wpos, float2 uv, half energyStep, half4 base
             float3 delta = wpos - _BoundsCenter;
             float distSqr = dot2(delta);
             float border = 1.0 - saturate( (distSqr - BORDER_START_SPHERE) / BORDER_SIZE_SPHERE );
-            density.a *= border * border;
         #else
             float2 dist2 = abs(wpos.xz - _BoundsCenter.xz);
             float2 border2 = saturate( (dist2 - BORDER_START_BOX) / BORDER_SIZE_BOX );
             float border = 1.0 - max(border2.x, border2.y);
-            density.a *= border * border;
         #endif
+        density.a *= smoothstep(0, 1, border);
    #endif
 
    #if VF2_DISTANCE
@@ -142,7 +147,8 @@ void AddFog(float3 rayStart, float3 wpos, float2 uv, half energyStep, half4 base
                             if (IsMatchingLightLayer(light.layerMask, meshRenderingLayers))
                         #endif
                         {
-                            fgCol.rgb += light.color * (light.distanceAttenuation * light.shadowAttenuation * _NativeLightsMultiplier);
+                            half distanceAtten = VF2_NATIVE_LIGHT_ATTEN(light);
+                            fgCol.rgb += light.color * (distanceAtten * light.shadowAttenuation * NATIVE_LIGHTS_MULTIPLIER);
                         }
                     }
                 #endif
@@ -157,7 +163,8 @@ void AddFog(float3 rayStart, float3 wpos, float2 uv, half energyStep, half4 base
                             if (IsMatchingLightLayer(light.layerMask, meshRenderingLayers))
                         #endif
                         {
-                            fgCol.rgb += light.color * (light.distanceAttenuation * light.shadowAttenuation * _NativeLightsMultiplier);
+                            half distanceAtten = VF2_NATIVE_LIGHT_ATTEN(light);
+                            fgCol.rgb += light.color * (distanceAtten * light.shadowAttenuation * NATIVE_LIGHTS_MULTIPLIER);
                         }
                     }
                 }
@@ -177,7 +184,8 @@ void AddFog(float3 rayStart, float3 wpos, float2 uv, half energyStep, half4 base
                         if (IsMatchingLightLayer(light.layerMask, meshRenderingLayers))
                     #endif
                     {
-                        fgCol.rgb += light.color * (light.distanceAttenuation * light.shadowAttenuation * _NativeLightsMultiplier);
+                        half distanceAtten = VF2_NATIVE_LIGHT_ATTEN(light);
+                        fgCol.rgb += light.color * (distanceAtten * light.shadowAttenuation * NATIVE_LIGHTS_MULTIPLIER);
                     }
                 }
             #endif
@@ -213,22 +221,22 @@ void AddFog(float3 rayStart, float3 wpos, float2 uv, half energyStep, half4 base
    }
 }
 
-#pragma warning (disable : 3571) // disable pow() negative warning
-
 half SimpleDiffusionIntensity(half cosTheta, half power) {
     return pow(cosTheta, power);
 }
 
+#define FAST_POW_1_5(x) (x * sqrt(x))
+
 half HenyeyGreenstein(half cosTheta, half g) {
     half g2 = g * g;
     half denom = 1.0 + g2 - 2.0 * g * cosTheta;
-    return (1.0 - g2) / (4.0 * 3.14159265 * pow(denom, 1.5));
+    return (1.0 - g2) / (4.0 * 3.14159265 * (FAST_POW_1_5(denom)) );
 }
 
 half MiePhase(half cosTheta, half g) {
     half g2 = g * g;
     half denom = 1.0 + g2 - 2.0 * g * cosTheta;
-    return 1.5 * ((1.0 - g2) / (2.0 + g2)) * (1.0 + cosTheta * cosTheta) / pow(denom, 1.5);
+    return 1.5 * ((1.0 - g2) / (2.0 + g2)) * (1.0 + cosTheta * cosTheta) / (FAST_POW_1_5(denom));
 }
 
 half GetDiffusionIntensity(float3 viewDir) {
@@ -252,7 +260,17 @@ half3 GetDiffusionColor(float3 viewDir, float t1) {
 half4 GetFogColor(float3 rayStart, float3 viewDir, float2 uv, float t0, float t1) {
 
     float len = t1 - t0;
-    float rs = MIN_STEPPING + max(log(len), 0) * FOG_STEPPING;     // stepping ratio with atten detail with distance
+    float distanceStepMultiplier;
+
+    // stepping ratio with atten detail with distance and finer step at short distances
+    #if VF2_NATIVE_LIGHTS
+        float rs = log(t1depth - t0);
+    #else
+        float rs = log(len);
+    #endif
+    rs *= saturate(t1 * _NearStepping);
+    rs = rs * FOG_STEPPING + MIN_STEPPING;
+
     half3 diffusionColor = GetDiffusionColor(viewDir, t1);
     half4 lightColor = half4(diffusionColor, 1.0);
 
@@ -345,6 +363,8 @@ half4 ComputeFog(float3 wpos, float2 uv) {
     t0 += jiterring;
     t1 += jiterring;
 
+    t1depth = t1;
+
     CLAMP_RAY_DEPTH(rayStartNonRotated, uv, t1); // clamp to geometry
 
     #if VF2_DEPTH_PEELING
@@ -373,7 +393,9 @@ half4 ComputeFog(float3 wpos, float2 uv) {
     #else
         half maxDistanceFallOff = (FOG_MAX_LENGTH - t0) / FOG_MAX_LENGTH_FALLOFF_PRECOMPUTED;
     #endif
-    fogColor *= saturate(maxDistanceFallOff * maxDistanceFallOff * maxDistanceFallOff * maxDistanceFallOff);
+    half mdfo_sq = maxDistanceFallOff * maxDistanceFallOff;
+    half mdfo_quad = mdfo_sq * mdfo_sq;
+    fogColor *= saturate(mdfo_quad);
 
     return fogColor;
 }
