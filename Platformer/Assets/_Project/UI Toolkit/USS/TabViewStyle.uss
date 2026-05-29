@@ -1,0 +1,189 @@
+/* ═══════════════════════════════════════════════════════
+   Settings Tab View  —  TabViewStyle.uss
+   Vertical sidebar layout, dark gold theme
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Tab view root ──────────────────────────────── */
+.unity-tab-view {
+    flex-direction: row;
+    flex-grow: 1;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* ── Left sidebar (tab headers) ─────────────────── */
+.unity-tab-view__header-container {
+    width: 340px;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 36px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: rgba(8, 5, 22, 0.7);
+    border-width: 0;
+}
+
+/* ── Right content area ─────────────────────────── */
+.unity-tab-view__content-container {
+    flex-grow: 1;
+    height: auto;
+    background-color: rgba(12, 8, 30, 0.55);
+    border-width: 0;
+}
+
+/* ── Tab button (inactive) ──────────────────────── */
+.unity-tab__header {
+    margin: 5px 0;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 16px;
+    padding-right: 16px;
+    font-size: 26px;
+    color: rgb(100, 95, 82);
+    -unity-text-align: middle-left;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    border-left-width: 3px;
+    border-left-color: rgba(190, 150, 50, 0);
+    border-radius: 0;
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    transition-duration: 0.18s;
+    transition-timing-function: ease-out;
+}
+
+/* ── Tab button (active) ────────────────────────── */
+.unity-tab__header:checked {
+    color: rgb(215, 170, 65);
+    border-left-width: 3px;
+    border-left-color: rgb(190, 150, 50);
+    padding-left: 26px;
+    background-color: rgba(190, 150, 50, 0.07);
+}
+
+/* ── Tab button (hover) ─────────────────────────── */
+.unity-tab__header:hover {
+    color: rgb(210, 200, 170);
+    padding-left: 24px;
+}
+
+/* ── Tab button (focused by controller) ─────────── */
+.unity-tab__header:focus {
+    color: rgb(235, 210, 120);
+    border-left-color: rgba(235, 210, 120, 0.9);
+    padding-left: 26px;
+    background-color: rgba(190, 150, 50, 0.14);
+}
+
+/* ═══════════════════════════════════════════════════════
+   Settings content area shared classes
+   (used by AudioSettings, VideoSettings, InputSettings)
+   ═══════════════════════════════════════════════════════ */
+
+.settings-content-area {
+    flex-grow: 1;
+    flex-direction: column;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+/* Section title (AUDIO, VIDEO, INPUT) */
+.settings-section-header {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/Ottselesque-Regular.otf?fileID=12800000&guid=b00bfdbd79d843a46b8b3fb62f619d32&type=3#Ottselesque-Regular");
+    font-size: 42px;
+    color: rgb(215, 170, 65);
+    -unity-text-align: middle-left;
+    height: auto;
+    margin-bottom: 10px;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* Thin gold line below section header */
+.settings-separator {
+    height: 1px;
+    background-color: rgba(190, 150, 50, 0.35);
+    margin-bottom: 22px;
+}
+
+/* ── Cycle-selector row (Window Mode, Resolution…) ─ */
+.settings-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    height: 56px;
+    padding-left: 20px;
+    padding-right: 12px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    color: rgb(210, 200, 180);
+    font-size: 22px;
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    -unity-text-align: middle-left;
+    background-color: rgba(255, 255, 255, 0.04);
+    border-width: 0;
+}
+
+.settings-row-alt {
+    background-color: rgba(190, 150, 50, 0.04);
+}
+
+/* ◄ ► buttons inside cycle rows */
+.settings-cycle-btn {
+    width: 30px;
+    height: 30px;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    border-radius: 4px;
+    padding: 0;
+}
+
+.settings-cycle-btn:hover {
+    background-color: rgba(190, 150, 50, 0.18);
+}
+
+.settings-cycle-btn:focus {
+    background-color: rgba(190, 150, 50, 0.26);
+    border-color: rgba(190, 150, 50, 0.6);
+    border-width: 1px;
+}
+
+/* Current value label between ◄ and ► */
+.settings-value-label {
+    width: 160px;
+    -unity-text-align: middle-center;
+    color: rgb(215, 170, 65);
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    font-size: 20px;
+}
+
+/* ── Shared back button ─────────────────────────── */
+.back-btn {
+    align-self: flex-start;
+    margin-left: 36px;
+    margin-bottom: 36px;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    color: rgb(190, 150, 50);
+    font-size: 22px;
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    -unity-text-align: middle-left;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 14px;
+    padding-right: 14px;
+    transition-duration: 0.15s;
+}
+
+.back-btn:hover {
+    color: rgb(235, 190, 75);
+    padding-left: 24px;
+}
+
+.back-btn:focus {
+    color: rgb(235, 190, 75);
+    padding-left: 24px;
+}
+
+.back-btn:active {
+    scale: 0.97;
+}

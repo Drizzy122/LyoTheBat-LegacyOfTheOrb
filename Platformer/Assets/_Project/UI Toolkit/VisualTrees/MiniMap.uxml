@@ -1,0 +1,3 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="MiniMap" style="height: 1101px; background-image: url(&quot;project://database/Assets/_Project/UI%20Toolkit/MiniMapTexture.renderTexture?fileID=8400000&amp;guid=919dcd0fd94b1a843a29b23d1a55e74e&amp;type=2#MiniMapTexture&quot;); opacity: 1;"/>
+</ui:UXML>

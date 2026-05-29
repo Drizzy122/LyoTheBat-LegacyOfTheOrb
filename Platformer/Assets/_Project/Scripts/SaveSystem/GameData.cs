@@ -9,10 +9,14 @@ namespace Platformer
     {
         public long lastUpdated;
         public Vector3 playerPosition;
-        // collectables 
+        // collectables
         public SerializableDictionary<string, bool> coinsCollected;
         public SerializableDictionary<string, bool> ecliptiumCollected;
         public SerializableDictionary<string, bool> luminCollected;
+        // sword
+        public bool hasSword;
+        // notifications
+        public SerializableDictionary<string, bool> notificationsTriggered;
 
 
         // the values defined in this constructor will be the default values
@@ -24,6 +28,9 @@ namespace Platformer
             coinsCollected = new SerializableDictionary<string, bool>();
             ecliptiumCollected = new SerializableDictionary<string, bool>();
             luminCollected = new SerializableDictionary<string, bool>();
+            // sword & notifications
+            hasSword = false;
+            notificationsTriggered = new SerializableDictionary<string, bool>();
         }
 
         public int GetPercentageComplete()

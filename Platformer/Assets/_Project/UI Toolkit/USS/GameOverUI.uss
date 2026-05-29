@@ -1,0 +1,23 @@
+.game-over-root {
+    flex-grow: 1;
+    background-color: rgba(0, 0, 0, 0.85);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.game-over-text {
+    font-size: 146px;
+    color: rgb(200, 40, 40);
+    -unity-text-align: middle-center;
+    letter-spacing: 12px;
+    margin-bottom: 20px;
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/Ottselesque-Regular.otf?fileID=12800000&guid=b00bfdbd79d843a46b8b3fb62f619d32&type=3#Ottselesque-Regular");
+}
+
+.game-over-subtitle {
+    font-size: 24px;
+    color: rgb(180, 180, 180);
+    -unity-text-align: middle-center;
+    letter-spacing: 4px;
+}

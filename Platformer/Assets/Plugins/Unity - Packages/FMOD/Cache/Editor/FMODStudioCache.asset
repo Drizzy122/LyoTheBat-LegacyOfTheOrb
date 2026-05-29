@@ -1272,7 +1272,7 @@ MonoBehaviour:
   StringsBanks:
   - {fileID: -7848047765112382451}
   cacheVersion: 131857
-  cacheTime: 639144072165383622
+  cacheTime: 639155288054079642
   SerializableEventsDict:
   - key: event:/Music/MainMenuMusic
     index: 0
@@ -1729,10 +1729,10 @@ MonoBehaviour:
   Path: Assets/_Project/FmodAudio/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 639143107142224728
+  lastModified: 639155288054079642
   FileSizes:
   - Name: Desktop
-    Value: 299776
+    Value: 937920
   Exists: 1
 --- !u!114 &4163019588064303454
 MonoBehaviour:

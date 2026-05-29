@@ -20,7 +20,7 @@ namespace Platformer
 
         private float currentStamina;
         private bool isGliding;
-        private PlayerController playerController;
+        private PlayerMovement _playerMovement;
 
         // UI Toolkit Variables
         private VisualElement barFill;
@@ -28,10 +28,10 @@ namespace Platformer
 
         private void Awake()
         {
-            playerController = GetComponent<PlayerController>();
+            _playerMovement = GetComponent<PlayerMovement>();
 
-            if (playerController != null)
-                currentStamina = playerController.glideCoolDown;
+            if (_playerMovement != null)
+                currentStamina = _playerMovement.glideCoolDown;
         }
 
         private void Start()
@@ -71,10 +71,10 @@ namespace Platformer
         private void PublishStamina()
         {
             float fraction = 0f;
-            if (playerController != null && playerController.glideCoolDown > 0f)
+            if (_playerMovement != null && _playerMovement.glideCoolDown > 0f)
             {
                 // Calculate the 0-1 percentage
-                fraction = currentStamina / playerController.glideCoolDown;
+                fraction = currentStamina / _playerMovement.glideCoolDown;
             }
 
             // 1. Broadcast to Event Bus (Optional, kept from your original script)
@@ -99,7 +99,7 @@ namespace Platformer
 
         public void StartGlide()
         {
-            if (playerController != null && currentStamina > 0f)
+            if (_playerMovement != null && currentStamina > 0f)
             {
                 isGliding = true;
             }
@@ -112,10 +112,10 @@ namespace Platformer
 
         private void DrainStamina()
         {
-            if (currentStamina > 0f && playerController != null)
+            if (currentStamina > 0f && _playerMovement != null)
             {
                 currentStamina -= Time.deltaTime;
-                currentStamina = Mathf.Clamp(currentStamina, 0f, playerController.glideCoolDown);
+                currentStamina = Mathf.Clamp(currentStamina, 0f, _playerMovement.glideCoolDown);
 
                 if (currentStamina <= 0f)
                 {
@@ -126,19 +126,19 @@ namespace Platformer
 
         private void RegenerateStamina()
         {
-            if (playerController != null && currentStamina < playerController.glideCoolDown)
+            if (_playerMovement != null && currentStamina < _playerMovement.glideCoolDown)
             {
                 currentStamina += staminaRegenRate * Time.deltaTime;
-                currentStamina = Mathf.Clamp(currentStamina, 0f, playerController.glideCoolDown);
+                currentStamina = Mathf.Clamp(currentStamina, 0f, _playerMovement.glideCoolDown);
             }
         }
 
         private void StopGlideExternally()
         {
             StopGlide();
-            if (playerController != null)
+            if (_playerMovement != null)
             {
-                playerController.OnGlide(false);
+                _playerMovement.OnGlide(false);
             }
         }
     }

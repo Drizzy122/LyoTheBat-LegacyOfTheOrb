@@ -36,6 +36,13 @@ namespace Platformer
             continueGameButton.clicked += OnContinueGameClicked;
             loadGameButton.clicked += OnLoadGameClicked;
             settingsButton.clicked += OnSettingsClicked; // Add this when you make a settings menu!
+            
+            // --- ADD THESE ---
+            AudioManager.instance.RegisterButtonAudio(newGameButton);
+            AudioManager.instance.RegisterButtonAudio(continueGameButton);
+            AudioManager.instance.RegisterButtonAudio(loadGameButton);
+            AudioManager.instance.RegisterButtonAudio(settingsButton);
+            
         }
 
         private void Start() 

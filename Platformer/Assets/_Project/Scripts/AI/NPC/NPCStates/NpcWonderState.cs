@@ -10,11 +10,11 @@ namespace Platformer
         readonly float wanderRadius;
         readonly CountdownTimer wanderTimer;
 
-        public NpcWonderState(Npc npc, Animator animator, NavMeshAgent agent, float wanderRadius, CountdownTimer wanderTimer
-        ) : base(npc, animator)
+        public NpcWonderState(Wanderer wanderer, Animator animator, NavMeshAgent agent, float wanderRadius, CountdownTimer wanderTimer
+        ) : base(wanderer, animator)
         {
             this.agent = agent;
-            this.startPoint = npc.transform.position;
+            this.startPoint = wanderer.transform.position;
             this.wanderRadius = wanderRadius;
             this.wanderTimer = wanderTimer;
         }
@@ -31,7 +31,7 @@ namespace Platformer
             // Check if the wander timer is complete, then transition back to idle
             if (!wanderTimer.IsRunning)
             {
-                npc.ChangeStateToIdle();
+                Wanderer.ChangeStateToIdle();
                 return;
             }
 
@@ -46,9 +46,9 @@ namespace Platformer
                 agent.SetDestination(finalPosition);
 
                 // Rotate smoothly towards the new direction
-                Vector3 direction = (finalPosition - npc.transform.position).normalized;
+                Vector3 direction = (finalPosition - Wanderer.transform.position).normalized;
                 Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-                npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, lookRotation, Time.deltaTime * npc.rotationSpeed);
+                Wanderer.transform.rotation = Quaternion.Slerp(Wanderer.transform.rotation, lookRotation, Time.deltaTime * Wanderer.rotationSpeed);
             }
         }
 

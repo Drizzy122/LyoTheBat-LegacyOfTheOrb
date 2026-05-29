@@ -12,5 +12,14 @@ namespace Platformer
                 onEnemyDeath();
             }
         }
+
+        public event Action<float> onEnemyHit;
+        public void EnemyHit(float knockback)
+        {
+            if (onEnemyHit != null)
+            {
+                onEnemyHit?.Invoke(knockback);
+            }
+        }
     }
 }

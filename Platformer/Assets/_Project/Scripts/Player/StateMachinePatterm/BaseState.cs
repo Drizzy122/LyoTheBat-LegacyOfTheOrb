@@ -6,7 +6,7 @@ namespace Platformer
 {
     public abstract class BaseState : IState   
     {
-        protected readonly PlayerController player;
+        protected readonly PlayerMovement player;
         protected readonly Animator animator;
 
         protected static readonly int DoubleJumpHash = Animator.StringToHash("DoubleJump");
@@ -20,11 +20,16 @@ namespace Platformer
         protected static readonly int DieHash = Animator.StringToHash("Death");
         protected static readonly int TeleportationHash = Animator.StringToHash("Teleport");
         protected static readonly int SwimHash = Animator.StringToHash("Swim");
-        protected static readonly int HurtHash = Animator.StringToHash("Hurt"); 
+        protected static readonly int HurtHash = Animator.StringToHash("Hurt");
+        protected static readonly int SprintHash = Animator.StringToHash("Sprint");
+
+        // Armed locomotion variants — used when player.combat.hasWeapon is true
+        protected static readonly int LocomotionArmedHash = Animator.StringToHash("Locomotion_Armed");
+        protected static readonly int SprintArmedHash = Animator.StringToHash("Sprint_Armed");
 
         protected const float crossFadeDuration = 0.1f;
 
-        protected BaseState(PlayerController player, Animator animator)
+        protected BaseState(PlayerMovement player, Animator animator)
         {
             this.player = player;
             this.animator = animator;
@@ -34,24 +39,71 @@ namespace Platformer
         public virtual void Update() { }
         public virtual void FixedUpdate() { }
         public virtual void OnExit() { }
+
+        // Helper for states that have armed/unarmed variants
+        protected void CrossFadeArmed(int unarmedHash, int armedHash)
+            => animator.CrossFade(player.combat.hasWeapon ? armedHash : unarmedHash, crossFadeDuration);
     }
     
     #region States
-    public class LocomotionState : BaseState 
+    public class LocomotionState : BaseState
     {
-        public LocomotionState(PlayerController player, Animator animator) : base(player, animator) { }
-        public override void OnEnter() 
+        bool wasArmed;
+
+        public LocomotionState(PlayerMovement player, Animator animator) : base(player, animator) { }
+
+        public override void OnEnter()
         {
-            animator.CrossFade(LocomotionHash, crossFadeDuration);
+            wasArmed = player.combat.hasWeapon;
+            CrossFadeArmed(LocomotionHash, LocomotionArmedHash);
         }
-        public override void FixedUpdate() 
-        { 
+
+        public override void Update()
+        {
+            // Swap anim if weapon equip state changes mid-locomotion
+            if (wasArmed != player.combat.hasWeapon)
+            {
+                wasArmed = player.combat.hasWeapon;
+                CrossFadeArmed(LocomotionHash, LocomotionArmedHash);
+            }
+        }
+
+        public override void FixedUpdate()
+        {
+            player.HandleMovement();
+        }
+    }
+
+    public class SprintState : BaseState
+    {
+        bool wasArmed;
+
+        public SprintState(PlayerMovement player, Animator animator) : base(player, animator) { }
+
+        public override void OnEnter()
+        {
+            wasArmed = player.combat.hasWeapon;
+            CrossFadeArmed(SprintHash, SprintArmedHash);
+        }
+
+        public override void Update()
+        {
+            // Swap anim if weapon equip state changes mid-sprint
+            if (wasArmed != player.combat.hasWeapon)
+            {
+                wasArmed = player.combat.hasWeapon;
+                CrossFadeArmed(SprintHash, SprintArmedHash);
+            }
+        }
+
+        public override void FixedUpdate()
+        {
             player.HandleMovement();
         }
     }
     public class SwimState : BaseState
     {
-        public SwimState(PlayerController player, Animator animator) : base(player, animator) { }
+        public SwimState(PlayerMovement player, Animator animator) : base(player, animator) { }
         public override void OnEnter()
         {
             animator.CrossFade(SwimHash, crossFadeDuration);
@@ -66,7 +118,7 @@ namespace Platformer
     }
     public class WallClimbState : BaseState
     {
-        public WallClimbState(PlayerController player, Animator animator) : base(player, animator) { }
+        public WallClimbState(PlayerMovement player, Animator animator) : base(player, animator) { }
 
         public override void OnEnter()
         {
@@ -86,7 +138,7 @@ namespace Platformer
     }
     public class DashState : BaseState
     {
-        public DashState(PlayerController player, Animator animator) : base(player, animator) { }
+        public DashState(PlayerMovement player, Animator animator) : base(player, animator) { }
         public override void OnEnter()
         {
             animator.CrossFade(DashHash, crossFadeDuration);
@@ -98,7 +150,7 @@ namespace Platformer
     }
     public class GlideState : BaseState
     {
-        public GlideState(PlayerController player, Animator animator) : base(player, animator) { }
+        public GlideState(PlayerMovement player, Animator animator) : base(player, animator) { }
         public override void OnEnter() {
             animator.CrossFade(GlideHash, crossFadeDuration);
         }
@@ -110,7 +162,7 @@ namespace Platformer
     }
     public class JumpState : BaseState 
     {
-        public JumpState(PlayerController player, Animator animator) : base(player, animator) { }
+        public JumpState(PlayerMovement player, Animator animator) : base(player, animator) { }
 
         public override void OnEnter() {
             animator.CrossFade(JumpHash, crossFadeDuration);
@@ -123,7 +175,7 @@ namespace Platformer
     }
     public class DoubleJumpState : BaseState
     {
-        public DoubleJumpState(PlayerController player, Animator animator) : base(player, animator) { }
+        public DoubleJumpState(PlayerMovement player, Animator animator) : base(player, animator) { }
 
         public override void OnEnter()
         {
@@ -138,7 +190,7 @@ namespace Platformer
         }
     }
     public class AttackState : BaseState {
-        public AttackState(PlayerController player, Animator animator) : base(player, animator) { }
+        public AttackState(PlayerMovement player, Animator animator) : base(player, animator) { }
 
         public override void OnEnter() {
             player.transform.DOKill();
@@ -155,7 +207,7 @@ namespace Platformer
     }
     public class BlastAttackState : BaseState
     {
-        public BlastAttackState(PlayerController player, Animator animator) : base(player, animator) { }
+        public BlastAttackState(PlayerMovement player, Animator animator) : base(player, animator) { }
         public override void OnEnter()
         {
             // Kill any lingering DOTween tweens (e.g. DOLookAt/DOMove from light attack)
@@ -169,7 +221,7 @@ namespace Platformer
     }
     public class HurtState : BaseState 
     {
-        public HurtState(PlayerController player, Animator animator) : base(player, animator) { }
+        public HurtState(PlayerMovement player, Animator animator) : base(player, animator) { }
 
         public override void OnEnter() 
         {
@@ -181,7 +233,7 @@ namespace Platformer
     public class DeathState : BaseState
     {
         Health playerHealth;
-        public DeathState(PlayerController player, Animator animator, Health playerHealth) : base(player, animator)
+        public DeathState(PlayerMovement player, Animator animator, Health playerHealth) : base(player, animator)
         {
             this.playerHealth = playerHealth;
         }
@@ -194,7 +246,7 @@ namespace Platformer
     }
     public class TeleportState : BaseState
     {
-        public TeleportState(PlayerController player, Animator animator) : base(player, animator) { }
+        public TeleportState(PlayerMovement player, Animator animator) : base(player, animator) { }
         
         public override void OnEnter() {
             animator.CrossFade(TeleportationHash, crossFadeDuration);

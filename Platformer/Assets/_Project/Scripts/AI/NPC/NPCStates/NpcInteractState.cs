@@ -5,7 +5,7 @@ namespace Platformer
     public class NpcInteractState : NpcBaseState
     {
         
-        public NpcInteractState(Npc npc, Animator animator) : base(npc, animator)
+        public NpcInteractState(Wanderer wanderer, Animator animator) : base(wanderer, animator)
         {
         }
 

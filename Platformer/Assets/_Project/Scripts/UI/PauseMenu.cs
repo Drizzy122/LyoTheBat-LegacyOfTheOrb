@@ -14,7 +14,7 @@ namespace Platformer
         [field: SerializeField] UIDocument pauseDocument; 
         [field: SerializeField] private SaveSlotsMenu saveSlotsMenu;
         
-        [field: SerializeField, Anywhere] PlayerController playerController;
+        [field: SerializeField, Anywhere] PlayerMovement playerMovement;
         
         [field: SerializeField] bool isPaused = false;
         [field: SerializeField] string musicName;
@@ -31,7 +31,7 @@ namespace Platformer
         private void Awake()
         {
             // Note: Using "PaueMenuContent" exactly as it is spelled in your UI Builder screenshot!
-            rootContainer = pauseDocument.rootVisualElement.Q<VisualElement>("PaueMenuContent");
+            rootContainer = pauseDocument.rootVisualElement.Q<VisualElement>("PauseMenuContents");
 
             continueButton = rootContainer.Q<Button>("ContinueGameButton");
             loadButton = rootContainer.Q<Button>("LoadGameButton");
@@ -43,6 +43,11 @@ namespace Platformer
             quitButton.clicked += QuitGame;
             loadButton.clicked += OnLoadClicked;
             settingsButton.clicked += OnSettingsClicked;
+            
+            AudioManager.instance.RegisterButtonAudio(continueButton);
+            AudioManager.instance.RegisterButtonAudio(loadButton);
+            AudioManager.instance.RegisterButtonAudio(settingsButton);
+            AudioManager.instance.RegisterButtonAudio(quitButton, isCloseAction: true);
         }
 
         void Start()
@@ -90,7 +95,7 @@ namespace Platformer
             Cursor.visible = true;
             
             // Disable the PlayerController script
-            if (playerController != null) playerController.enabled = false;
+            if (playerMovement != null) playerMovement.enabled = false;
             
             AudioManager.instance.SetMusicParameter(musicName, pausedValue);
             AudioManager.instance.SetAmbienceParameter(musicName, pausedValue);
@@ -121,7 +126,7 @@ namespace Platformer
             SettingsManager.instance.DeactivateMenu();
             
             // Re-enable the PlayerController script
-            if (playerController != null) playerController.enabled = true;
+            if (playerMovement != null) playerMovement.enabled = true;
             
             AudioManager.instance.SetMusicParameter(musicName, musicValue);
             AudioManager.instance.SetAmbienceParameter(musicName, musicValue);

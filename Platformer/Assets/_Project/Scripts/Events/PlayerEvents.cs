@@ -41,13 +41,30 @@ namespace Platformer
         }
 
         public event Action<int> onPlayerExperienceChange;
-        public void PlayerExperienceChange(int experience) 
+        public void PlayerExperienceChange(int experience)
         {
-            if (onPlayerExperienceChange != null) 
+            if (onPlayerExperienceChange != null)
             {
                 onPlayerExperienceChange(experience);
             }
         }
-        
+
+        public event Action<float> onPlayerHit;
+        public void PlayerHit(float knockback)
+        {
+            if (onPlayerHit != null)
+            {
+                onPlayerHit?.Invoke(knockback);
+            }
+        }
+
+        public event Action onPlayerDeath;
+        public void PlayerDeath()
+        {
+            if (onPlayerDeath != null)
+            {
+                onPlayerDeath?.Invoke();
+            }
+        }
     }
 }

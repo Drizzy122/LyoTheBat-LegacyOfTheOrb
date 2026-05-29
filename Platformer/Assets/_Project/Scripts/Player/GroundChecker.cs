@@ -4,25 +4,39 @@ namespace Platformer
 {
     public class GroundChecker : MonoBehaviour
     {
-        [SerializeField] float groundDistance = 0.3f; // Distance to check the ground
-        [SerializeField] LayerMask groundLayers; // Ground layers to include
+        [Header("Ground Check Settings")]
+        [SerializeField] float groundDistance = 0.3f;
+        [SerializeField] float radius = 0.3f;
+        [SerializeField] LayerMask groundLayers;
+
+        [Header("Debug")]
+        [SerializeField] bool showGizmoAlways = true;
+
         public bool IsGrounded;
+
+        Vector3 CheckPosition => transform.position + Vector3.down * groundDistance;
 
         void Update()
         {
-            // Adjust starting point slightly above the object's position
-            Vector3 origin = transform.position + Vector3.up * 0.1f;
-            // Perform raycast downwards
-            IsGrounded = Physics.Raycast(origin, Vector3.down, groundDistance + 0.1f, groundLayers);
+            IsGrounded = Physics.CheckSphere(CheckPosition, radius, groundLayers, QueryTriggerInteraction.Ignore);
         }
 
-        private void OnDrawGizmosSelected()
+        void OnDrawGizmos()
         {
-            // Use Gizmos to visualize the ground check
+            if (!showGizmoAlways) return;
+            DrawGizmo();
+        }
+
+        void OnDrawGizmosSelected()
+        {
+            if (showGizmoAlways) return;
+            DrawGizmo();
+        }
+
+        void DrawGizmo()
+        {
             Gizmos.color = IsGrounded ? Color.green : Color.red;
-            Gizmos.DrawLine(transform.position + Vector3.up * 0.1f, transform.position + Vector3.down * groundDistance);
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position + Vector3.down * groundDistance, 0.1f);
+            Gizmos.DrawWireSphere(CheckPosition, radius);
         }
     }
 }

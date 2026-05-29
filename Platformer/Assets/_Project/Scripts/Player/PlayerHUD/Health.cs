@@ -39,12 +39,15 @@ namespace Platformer
         public bool isDead { get; private set; }
         public bool IsInvulnerable { get; private set; }
 
+        // 0..1 health fraction. Safe against a zero maxHealth.
+        public float HealthPercent => maxHealth > 0f ? currentHealth / maxHealth : 0f;
+
         private Material[] skinnedMaterials;
-        public event Action<float> OnHit; // For Enemy Knockback
+        public event Action<float> OnHit;
+        public event Action OnDeath;
 
         private void OnDisable()
         {
-            // Safety: if this object is destroyed mid-invulnerability, restore layer collision
             Physics.IgnoreLayerCollision(6, 7, false);
             IsInvulnerable = false;
         }
@@ -95,18 +98,21 @@ namespace Platformer
             }
             PublishHealthPercentage();
         }
+
         private void HandleDamage(float knockBackTime)
         {
             switch (entityHealth)
             {
                 case EntityHealth.Player:
                     OnHit?.Invoke(knockBackTime);
+                    GameEventsManager.instance.playerEvents.PlayerHit(knockBackTime);
                     AudioManager.instance.PlayOneShot(FMODEvents.instance.playerHurt, transform.position);
                     StartCoroutine(Invunerability());
                     break;
 
                 case EntityHealth.Enemy:
                     OnHit?.Invoke(knockBackTime);
+                    GameEventsManager.instance.enemyEvents.EnemyHit(knockBackTime);
                     AudioManager.instance.PlayOneShot(FMODEvents.instance.enemyHurt, transform.position);
                     break;
             }
@@ -117,9 +123,11 @@ namespace Platformer
             if (!isDead)
             {
                 isDead = true;
+                OnDeath?.Invoke();
                 switch (entityHealth)
                 {
                     case EntityHealth.Player:
+                        GameEventsManager.instance.playerEvents.PlayerDeath();
                         AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDeath, transform.position);
                         AudioManager.instance.StopMusic();
                         if (freeLookCam != null) freeLookCam.gameObject.SetActive(false);
@@ -134,10 +142,11 @@ namespace Platformer
                 }
             }
         }
+
         private IEnumerator Invunerability()
         {
             IsInvulnerable = true;
-            Physics.IgnoreLayerCollision(6, 7, true); // Adjust layer numbers as needed
+            Physics.IgnoreLayerCollision(6, 7, true);
             for (int i = 0; i < numberOfFlashes; i++)
             {
                 playerMeshRenderer.material.color = new Color(1, 0, 0, 0.1f);
@@ -149,6 +158,7 @@ namespace Platformer
             Physics.IgnoreLayerCollision(6, 7, false);
             IsInvulnerable = false;
         }
+
         private void RestartScene() => SceneManager.LoadScene("Game");
         
         IEnumerator DissolveCo()

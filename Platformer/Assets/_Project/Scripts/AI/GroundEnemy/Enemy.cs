@@ -171,9 +171,9 @@ namespace Platformer
 
         public void DoChase()
         {
-            if (playerDetector.Player != null) {
-                MoveTowards(playerDetector.Player.position, chaseSpeed);
-            }
+            if (playerDetector.Player == null) return;
+            if (Vector3.Distance(transform.position, playerDetector.Player.position) <= circleRadius) return;
+            MoveTowards(playerDetector.Player.position, chaseSpeed);
         }
 
         public void DoStrafe()
@@ -183,14 +183,13 @@ namespace Platformer
             Vector3 dirToPlayer = (playerDetector.Player.position - transform.position).normalized;
             dirToPlayer.y = 0;
 
-            // The Mix & Jam 90-degree sideways vector math
             Vector3 strafeDir = Quaternion.AngleAxis(90, Vector3.up) * dirToPlayer;
             Vector3 moveVec = strafeDir * circleDirection * strafeSpeed;
 
-            // Gentle correction to keep them perfectly on the ring
+            // Proportional correction — scales with distance error so the enemy glides onto the ring instead of snapping
             float dist = Vector3.Distance(transform.position, playerDetector.Player.position);
-            if (dist > circleRadius + 0.2f) moveVec += dirToPlayer * strafeSpeed;
-            else if (dist < circleRadius - 0.2f) moveVec -= dirToPlayer * strafeSpeed;
+            float distError = dist - circleRadius;
+            moveVec += dirToPlayer * Mathf.Clamp(distError * 2f, -strafeSpeed, strafeSpeed);
 
             Controller.Move(moveVec * Time.deltaTime);
         }
@@ -304,5 +303,6 @@ namespace Platformer
             Gizmos.DrawWireSphere(transform.position, circleRadius);
         }
         #endregion
+
     }
 }

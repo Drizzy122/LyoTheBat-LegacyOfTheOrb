@@ -1,0 +1,59 @@
+/* ── Slider track ──────────────────────────────── */
+.unity-base-slider__tracker {
+    background-color: rgba(20, 15, 40, 0.9);
+    border-radius: 5px;
+    height: 8px;
+    border-width: 0;
+}
+
+/* ── Fill (progress portion) ───────────────────── */
+.unity-base-slider__fill {
+    background-color: rgb(165, 125, 40);
+    border-radius: 5px;
+    border-width: 0;
+}
+
+/* ── Drag handle ────────────────────────────────── */
+.unity-base-slider__dragger {
+    background-color: rgb(220, 180, 75);
+    border-radius: 50%;
+    border-width: 0;
+    width: 18px;
+    height: 18px;
+}
+
+/* ── Label (the text left of the slider) ────────── */
+.unity-base-field__label {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    color: rgb(210, 200, 180);
+    font-size: 22px;
+    -unity-text-align: middle-left;
+    flex-basis: 380px;
+    padding: 0;
+}
+
+/* ── Slider row spacing ─────────────────────────── */
+.unity-base-slider {
+    margin-top: 4px;
+    margin-bottom: 12px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+}
+
+/* ── Focused by controller ──────────────────────── */
+.unity-base-slider:focus {
+    background-color: rgba(190, 150, 50, 0.10);
+    border-color: rgba(190, 150, 50, 0.5);
+}
+
+.unity-base-slider:focus .unity-base-slider__dragger {
+    background-color: rgb(255, 215, 100);
+    width: 22px;
+    height: 22px;
+}

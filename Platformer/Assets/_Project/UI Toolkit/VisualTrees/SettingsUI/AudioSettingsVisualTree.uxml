@@ -1,0 +1,19 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/USS/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=1e607d4d39bbf3c4aa48749712dc3062&amp;type=3#MainMenuStyle"/>
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/USS/TabViewStyle.uss?fileID=7433441132597879392&amp;guid=27fa83c6f936c03468a82829f3f3de7d&amp;type=3#TabViewStyle"/>
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/USS/Sliders.uss?fileID=7433441132597879392&amp;guid=75107247cfbf21d45bd25fc08921f8d5&amp;type=3#Sliders"/>
+
+    <ui:VisualElement style="flex-grow: 1; display: flex; flex-direction: column;">
+        <ui:VisualElement name="VolumeRow" class="settings-content-area">
+
+            <ui:Label text="AUDIO" name="AudioHeader" class="settings-section-header" />
+            <ui:VisualElement class="settings-separator" />
+
+            <ui:Slider label="Master Volume"   value="0.8" high-value="1" name="MasterVolumeSlider"   fill="true" />
+            <ui:Slider label="Music Volume"    value="0.8" high-value="1" name="MusicVolumeSlider"    fill="true" />
+            <ui:Slider label="SFX Volume"      value="1"   high-value="1" name="SFXVolumeSlider"      fill="true" />
+            <ui:Slider label="Ambience Volume" value="0.8" high-value="1" name="AmbienceVolumeSlider" fill="true" />
+
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -75,7 +75,7 @@ namespace Platformer
                 thumbnailImage.style.backgroundImage = new StyleBackground(loadedTexture); // Use Texture2D
 
                 // Ensure the background scales correctly within the element
-                thumbnailImage.style.unityBackgroundScaleMode = ScaleMode.ScaleToFit;
+                thumbnailImage.style.backgroundSize = new BackgroundSize(BackgroundSizeType.Contain);
             }
             else
             {

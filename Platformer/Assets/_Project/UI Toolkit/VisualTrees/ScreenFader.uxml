@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="../USS/ScreenFader.uss" />
+    <ui:VisualElement name="FadeOverlay" class="fade-overlay" />
+</ui:UXML>

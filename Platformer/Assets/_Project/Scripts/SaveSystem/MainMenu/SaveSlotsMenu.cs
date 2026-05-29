@@ -52,18 +52,18 @@ namespace Platformer
                     if (saveSlots[0].saveSlotButton.enabledSelf) 
                     {
                         saveSlots[0].saveSlotButton.Focus();
-                        evt.PreventDefault(); // Stop Unity from trying to auto-navigate
+                        evt.StopPropagation(); // Stop Unity from trying to auto-navigate
                     }
                 }
             });
 
 // 2. Tell the first Save Slot to go UP to the Back Button
-            saveSlots[0].saveSlotButton.RegisterCallback<NavigationMoveEvent>(evt => 
+            saveSlots[0].saveSlotButton.RegisterCallback<NavigationMoveEvent>(evt =>
             {
                 if (evt.direction == NavigationMoveEvent.Direction.Up)
                 {
                     backButton.Focus();
-                    evt.PreventDefault(); // Stop Unity from trying to auto-navigate
+                    evt.StopPropagation(); // Stop Unity from trying to auto-navigate
                 }
             });
             

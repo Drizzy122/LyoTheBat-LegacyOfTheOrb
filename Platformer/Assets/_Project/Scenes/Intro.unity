@@ -212,7 +212,7 @@ MonoBehaviour:
   videoCanvasGroup: {fileID: 608182087}
   introClips:
   - {fileID: 32900000, guid: 0fb09f0d5f4b982469aad0d5102009c1, type: 3}
-  - {fileID: 32900000, guid: 0a183ac320eddb64bb8513de0fed3c29, type: 3}
+  - {fileID: 32900000, guid: 2e91e3be4022f19439fd681173ca9e52, type: 3}
   nextSceneName: MainMenu
   fadeDuration: 1
 --- !u!225 &608182087
@@ -394,6 +394,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0

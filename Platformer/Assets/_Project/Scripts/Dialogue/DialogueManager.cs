@@ -14,7 +14,7 @@ namespace Platformer
       private int currentChoiceIndex = -1;
       private bool dialoguePlaying = false;
 
-      private PlayerController playerController;
+      private PlayerMovement _playerMovement;
       private CameraManager cameraManager;
       
       private InkExternalFunctions inkExternalFunctions;
@@ -26,7 +26,7 @@ namespace Platformer
          inkExternalFunctions = new InkExternalFunctions();
          inkDialogueVariables = new InkDialogueVariables(story);
          inkExternalFunctions.Bind(story);
-         playerController = FindObjectOfType<PlayerController>();
+         _playerMovement = FindObjectOfType<PlayerMovement>();
          cameraManager = FindObjectOfType<CameraManager>();
       }
 
@@ -97,9 +97,9 @@ namespace Platformer
          GameEventsManager.instance.inputEvents.ChangeInputEventContext(InputEventContext.DIALOGUE);
 
          // freeze player movement
-         if (playerController != null)
+         if (_playerMovement != null)
          {
-            playerController.enabled = false;
+            _playerMovement.enabled = false;
          }
 
          // disable camera
@@ -167,9 +167,9 @@ namespace Platformer
          // inform other parts of my system that we've finished the dialogue
          GameEventsManager.instance.dialogueEvents.DialogueFinished();
 
-         if (playerController != null)
+         if (_playerMovement != null)
          {
-            playerController.enabled = true;
+            _playerMovement.enabled = true;
          }
 
          if (cameraManager != null)

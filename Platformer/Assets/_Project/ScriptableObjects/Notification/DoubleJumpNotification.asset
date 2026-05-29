@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63e7ab7d352da294eb9c55e3ac7ef69a, type: 3}
   m_Name: DoubleJumpNotification
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.NotificationSO
-  message: <sprite=0>  and then  <sprite=0>  To Double jump!
+  message: Press   <sprite=0> and then    <sprite=0> To Double jump!
   displayDuration: 5
   fadeDuration: 1

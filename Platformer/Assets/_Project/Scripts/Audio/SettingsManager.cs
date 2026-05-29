@@ -47,6 +47,10 @@ namespace Platformer
 
         private Action backButtonCallback;
 
+        // ── Controller / tab navigation ──────────────────────────────────────
+        private TabView settingsTabView;
+        private readonly List<VisualElement> tabHeaders = new List<VisualElement>();
+
         private void Awake()
         {
             if (instance != null && instance != this)
@@ -80,14 +84,73 @@ namespace Platformer
             resolutionText = rootContainer.Q<Label>("ResValueText");
             qualityText = rootContainer.Q<Label>("QualityValueText");
             gammaSlider = rootContainer.Q<Slider>("GammaSlider");
-            motionBlurToggle = rootContainer.Q<Toggle>("MotionBlurToggle"); 
-            
-          
+            motionBlurToggle = rootContainer.Q<Toggle>("MotionBlurToggle");
+
+
             controllerSensitivitySlider = rootContainer.Q<Slider>("ControllerSensitivity");
             mouseSensitivitySlider = rootContainer.Q<Slider>("MouseSensitivity");
-            
+
             invertControllerToggle = rootContainer.Q<Toggle>("InvertControllerY");
             invertMouseToggle = rootContainer.Q<Toggle>("InvertMouseY");
+
+            settingsTabView = rootContainer.Q<TabView>();
+
+            // Give the TabView one frame to build its internal header buttons before we wire them up
+            rootContainer.schedule.Execute(SetupTabNavigation);
+        }
+
+        /// <summary>
+        /// Makes TabView tabs navigable with a gamepad.
+        /// Unity's TabView headers are not focusable by default and don't forward
+        /// NavigationMoveEvent/NavigationSubmitEvent, so we do it manually.
+        /// </summary>
+        private void SetupTabNavigation()
+        {
+            tabHeaders.Clear();
+
+            var headerContainer = rootContainer.Q(className: "unity-tab-view__header-container");
+            if (headerContainer == null) return;
+
+            foreach (VisualElement child in headerContainer.Children())
+            {
+                child.focusable = true;   // allow D-pad focus
+                tabHeaders.Add(child);
+            }
+
+            for (int i = 0; i < tabHeaders.Count; i++)
+            {
+                int idx = i;
+
+                // Up / Down cycles through the tab list and switches the active tab
+                tabHeaders[i].RegisterCallback<NavigationMoveEvent>(evt =>
+                {
+                    if (evt.direction == NavigationMoveEvent.Direction.Down)
+                    {
+                        FocusAndActivateTab((idx + 1) % tabHeaders.Count);
+                        evt.StopPropagation();
+                    }
+                    else if (evt.direction == NavigationMoveEvent.Direction.Up)
+                    {
+                        FocusAndActivateTab((idx - 1 + tabHeaders.Count) % tabHeaders.Count);
+                        evt.StopPropagation();
+                    }
+                    // Left / Right: let Unity's spatial navigation find the content area
+                });
+
+                // Pressing × / A while a header is focused also activates that tab
+                tabHeaders[i].RegisterCallback<NavigationSubmitEvent>(evt =>
+                {
+                    FocusAndActivateTab(idx);
+                });
+            }
+        }
+
+        private void FocusAndActivateTab(int index)
+        {
+            if (settingsTabView == null || index < 0 || index >= tabHeaders.Count) return;
+
+            settingsTabView.selectedTabIndex = index;
+            tabHeaders[index].Focus();
         }
 
         private void InitializeSettingsData()
@@ -137,26 +200,46 @@ namespace Platformer
             }
         }
 
+        /// <summary>
+        /// Wires a cycle button (◄ ►) so it responds to both mouse clicks and
+        /// controller NavigationSubmitEvent. Using Button.clicked covers both;
+        /// RegisterCallback&lt;ClickEvent&gt; misses controller submit when the button
+        /// is nested inside a Label row element.
+        /// </summary>
+        private void BindCycleButton(string buttonName, System.Action action)
+        {
+            Button btn = rootContainer.Q<Button>(buttonName);
+            if (btn == null) return;
+            btn.clicked += action;
+            AudioManager.instance.RegisterButtonAudio(btn);
+        }
+
         private void BindUIEvents()
         {
-            // Back Button
-            rootContainer.Q<Button>("BackButton")?.RegisterCallback<ClickEvent>(evt => 
+            Button backButton = rootContainer.Q<Button>("BackButton");
+            if (backButton != null)
             {
-                DeactivateMenu();
-                backButtonCallback?.Invoke();
-            });
+                AudioManager.instance.RegisterButtonAudio(backButton, isCloseAction: true);
+                backButton.clicked += () =>
+                {
+                    DeactivateMenu();
+                    backButtonCallback?.Invoke();
+                };
+            }
 
             // Resolution Buttons
-            rootContainer.Q<Button>("ResPrevButton")?.RegisterCallback<ClickEvent>(evt => CycleResolution(-1));
-            rootContainer.Q<Button>("ResNextButton")?.RegisterCallback<ClickEvent>(evt => CycleResolution(1));
+            // Use .clicked instead of ClickEvent so controller NavigationSubmitEvent also triggers these
+            // (ClickEvent alone doesn't fire reliably when the button is a child of a Label row)
+            BindCycleButton("ResPrevButton",    () => CycleResolution(-1));
+            BindCycleButton("ResNextButton",    () => CycleResolution(1));
 
             // Window Mode Buttons
-            rootContainer.Q<Button>("WindowPrevButton")?.RegisterCallback<ClickEvent>(evt => CycleWindowMode(-1));
-            rootContainer.Q<Button>("WindowNextButton")?.RegisterCallback<ClickEvent>(evt => CycleWindowMode(1));
+            BindCycleButton("WindowPrevButton", () => CycleWindowMode(-1));
+            BindCycleButton("WindowNextButton", () => CycleWindowMode(1));
 
             // Quality Buttons
-            rootContainer.Q<Button>("QualityPrevButton")?.RegisterCallback<ClickEvent>(evt => CycleQuality(-1));
-            rootContainer.Q<Button>("QualityNextButton")?.RegisterCallback<ClickEvent>(evt => CycleQuality(1));
+            BindCycleButton("QualityPrevButton", () => CycleQuality(-1));
+            BindCycleButton("QualityNextButton", () => CycleQuality(1));
 
             // Post Processing
             if (colorAdjustments != null && gammaSlider != null)
@@ -273,10 +356,19 @@ namespace Platformer
         private void UpdateResolutionUI() { if (resolutionText != null) resolutionText.text = $"{filteredResolutions[currentResolutionIndex].width}x{filteredResolutions[currentResolutionIndex].height}"; }
         private void UpdateQualityUI() { if (qualityText != null && qualityLevels.Length > 0) qualityText.text = qualityLevels[currentQualityIndex].ToUpper(); }
 
-        public void ActivateMenu(Action backCallback = null) 
+        public void ActivateMenu(Action backCallback = null)
         {
             backButtonCallback = backCallback;
-            if (rootContainer != null) rootContainer.style.display = DisplayStyle.Flex;
+            if (rootContainer == null) return;
+
+            rootContainer.style.display = DisplayStyle.Flex;
+
+            // Focus the first tab header so the controller has an immediate entry point
+            rootContainer.schedule.Execute(() =>
+            {
+                if (tabHeaders.Count > 0)
+                    tabHeaders[0].Focus();
+            });
         }
 
         public void DeactivateMenu()

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63e7ab7d352da294eb9c55e3ac7ef69a, type: 3}
   m_Name: JumpNotification
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.NotificationSO
-  message: <sprite=0> to jump!
+  message: '             Press     <sprite=0>    to jump!'
   displayDuration: 5
   fadeDuration: 1

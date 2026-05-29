@@ -1,0 +1,36 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/USS/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=1e607d4d39bbf3c4aa48749712dc3062&amp;type=3#MainMenuStyle"/>
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/USS/TabViewStyle.uss?fileID=7433441132597879392&amp;guid=27fa83c6f936c03468a82829f3f3de7d&amp;type=3#TabViewStyle"/>
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/USS/Sliders.uss?fileID=7433441132597879392&amp;guid=75107247cfbf21d45bd25fc08921f8d5&amp;type=3#Sliders"/>
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/USS/Toggles.uss?fileID=7433441132597879392&amp;guid=556ece4fc6adc734d95e8d4ea03bd7ae&amp;type=3#Toggles"/>
+
+    <ui:VisualElement style="flex-grow: 1; display: flex; flex-direction: column;">
+        <ui:VisualElement name="InputRow" class="settings-content-area">
+
+            <ui:Label text="INPUT" name="InputSettingsHeader" class="settings-section-header" />
+            <ui:VisualElement class="settings-separator" />
+
+            <!-- Controller Vibration toggle -->
+            <ui:Label text="Controller Vibration" name="ControllerVibrate" class="settings-row">
+                <ui:Toggle name="MotionBlurToggle" value="false" toggle-on-label-click="true" />
+            </ui:Label>
+
+            <!-- Invert Mouse Y toggle -->
+            <ui:Label text="Invert Mouse Y Axis" name="MouseYaxis" class="settings-row settings-row-alt">
+                <ui:Toggle name="InvertMouseY" value="false" toggle-on-label-click="true" />
+            </ui:Label>
+
+            <!-- Mouse Sensitivity slider -->
+            <ui:Slider label="Mouse Sensitivity" value="1" low-value="0.1" high-value="3" name="MouseSensitivity" fill="true" />
+
+            <!-- Invert Controller Y toggle -->
+            <ui:Label text="Invert Controller Y Axis" name="ControllerYAxis" class="settings-row">
+                <ui:Toggle name="InvertControllerY" value="false" toggle-on-label-click="true" />
+            </ui:Label>
+
+            <!-- Controller Sensitivity slider -->
+            <ui:Slider label="Controller Sensitivity" value="1" low-value="0.1" high-value="3" name="ControllerSensitivity" fill="true" />
+
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

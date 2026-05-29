@@ -11,7 +11,7 @@ namespace Platformer
         readonly Transform player;
         readonly CountdownTimer idleTimer;
 
-        public NpcIdleState(Npc npc, Animator animator, NavMeshAgent agent, Transform player, CountdownTimer idleTimer) : base(npc, animator)
+        public NpcIdleState(Wanderer wanderer, Animator animator, NavMeshAgent agent, Transform player, CountdownTimer idleTimer) : base(wanderer, animator)
         {
             this.agent = agent;
             this.player = player;
@@ -27,15 +27,15 @@ namespace Platformer
         public override void Update()
         {
             // NPC will look at the player while idling (optional)
-            agent.SetDestination(npc.transform.position); // Stop moving
-            Vector3 direction = (player.position - npc.transform.position).normalized;
+            agent.SetDestination(Wanderer.transform.position); // Stop moving
+            Vector3 direction = (player.position - Wanderer.transform.position).normalized;
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-            npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, lookRotation, Time.deltaTime * npc.rotationSpeed);
+            Wanderer.transform.rotation = Quaternion.Slerp(Wanderer.transform.rotation, lookRotation, Time.deltaTime * Wanderer.rotationSpeed);
 
             // Check if the timer has completed
             if (!idleTimer.IsRunning)
             {
-                npc.ChangeStateToWonder(); // This triggers the transition to the Wonder state
+                Wanderer.ChangeStateToWonder(); // This triggers the transition to the Wonder state
             }
 
         }

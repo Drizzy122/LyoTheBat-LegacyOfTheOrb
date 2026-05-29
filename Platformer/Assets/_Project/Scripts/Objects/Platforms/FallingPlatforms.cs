@@ -17,7 +17,7 @@ namespace Platformer
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.GetComponent<PlayerController>() == false)
+            if (collision.gameObject.GetComponent<PlayerMovement>() == false)
             {
                 return;
             }

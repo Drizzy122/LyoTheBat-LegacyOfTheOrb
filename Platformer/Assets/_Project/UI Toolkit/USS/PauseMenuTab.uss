@@ -1,0 +1,55 @@
+:root {
+}
+
+.unity-tab-view {
+    background-color: rgba(0, 0, 0, 0.75);
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.unity-tab-view__header-container {
+    flex-direction: row;
+    position: relative;
+    top: auto;
+    left: auto;
+    right: -1229px;
+    bottom: auto;
+    padding: 0 20px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(255, 255, 255, 0.25);
+    background-color: transparent;
+    align-self: auto;
+}
+
+.unity-tab-view__content-container {
+    flex-grow: 1;
+    height: auto;
+    background-color: rgba(255, 255, 255, 0.45);
+    border-width: 0;
+}
+
+.unity-tab__header {
+    margin: 0 15px;
+    padding: 15px 5px;
+    font-size: 35px;
+    color: rgba(150, 150, 150, 0.8);
+    -unity-text-align: middle-center;
+    background-color: transparent;
+    border-width: 0;
+    border-bottom-width: 3px;
+    border-bottom-color: transparent;
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+}
+
+.unity-tab__header:checked {
+    color: rgb(255, 255, 255);
+    border-bottom-width: 3px;
+    border-bottom-color: rgb(255, 255, 255);
+    background-color: transparent;
+    padding-left: 5px;
+}
+
+.unity-tab__header:hover {
+    color: rgb(255, 255, 255);
+    scale: 1.05;
+}

@@ -290,15 +290,15 @@ MonoBehaviour:
     m_Metrics:
       m_Width: 170
       m_Height: 170
-      m_HorizontalBearingX: -85
-      m_HorizontalBearingY: 85
+      m_HorizontalBearingX: -41.1
+      m_HorizontalBearingY: 107.4
       m_HorizontalAdvance: 170
     m_GlyphRect:
       m_X: 339
       m_Y: 1519
       m_Width: 170
       m_Height: 170
-    m_Scale: 2
+    m_Scale: 2.09
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
     sprite: {fileID: 276171879, guid: 490d8cb5125145e4da53ea90b6448c62, type: 3}
@@ -514,15 +514,15 @@ MonoBehaviour:
     m_Metrics:
       m_Width: 184
       m_Height: 106
-      m_HorizontalBearingX: -92
-      m_HorizontalBearingY: 53
+      m_HorizontalBearingX: 97.24
+      m_HorizontalBearingY: 73.4
       m_HorizontalAdvance: 184
     m_GlyphRect:
       m_X: 1812
       m_Y: 967
       m_Width: 184
       m_Height: 106
-    m_Scale: 1
+    m_Scale: 1.5
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
     sprite: {fileID: 1332008103, guid: 490d8cb5125145e4da53ea90b6448c62, type: 3}
@@ -818,15 +818,15 @@ MonoBehaviour:
     m_Metrics:
       m_Width: 170
       m_Height: 170
-      m_HorizontalBearingX: -85
-      m_HorizontalBearingY: 85
+      m_HorizontalBearingX: -26.17
+      m_HorizontalBearingY: 113.4
       m_HorizontalAdvance: 170
     m_GlyphRect:
-      m_X: 931
-      m_Y: 339
+      m_X: 934
+      m_Y: 329
       m_Width: 170
       m_Height: 170
-    m_Scale: 1
+    m_Scale: 2.1
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
     sprite: {fileID: -2066221274, guid: 490d8cb5125145e4da53ea90b6448c62, type: 3}
@@ -922,7 +922,7 @@ MonoBehaviour:
       m_Y: 43
       m_Width: 170
       m_Height: 170
-    m_Scale: 1
+    m_Scale: 2.9
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
     sprite: {fileID: -1070471758, guid: 490d8cb5125145e4da53ea90b6448c62, type: 3}
@@ -930,15 +930,15 @@ MonoBehaviour:
     m_Metrics:
       m_Width: 170
       m_Height: 170
-      m_HorizontalBearingX: -85
-      m_HorizontalBearingY: 85
+      m_HorizontalBearingX: -41
+      m_HorizontalBearingY: 107.4
       m_HorizontalAdvance: 170
     m_GlyphRect:
       m_X: 931
       m_Y: 43
       m_Width: 170
       m_Height: 170
-    m_Scale: 1
+    m_Scale: 2.09
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
     sprite: {fileID: 1071466057, guid: 490d8cb5125145e4da53ea90b6448c62, type: 3}

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63e7ab7d352da294eb9c55e3ac7ef69a, type: 3}
   m_Name: AttackNotification
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.NotificationSO
-  message: <sprite=0> to Attack!
+  message: "Press  <sprite=33>to Attack! \nIndigo is able to do Combos if the  <sprite=33>
+    button  is pressed 3 times!"
   displayDuration: 5
   fadeDuration: 1

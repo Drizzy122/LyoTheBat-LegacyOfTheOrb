@@ -30,6 +30,11 @@ namespace Platformer
             DeactivateMenu();
         }
 
+        private void Start() {
+            AudioManager.instance.RegisterButtonAudio(confirmButton);
+            AudioManager.instance.RegisterButtonAudio(cancelButton, isCloseAction: true);
+        }
+
         public void ActivateMenu(string text, Action confirmAction, Action cancelAction)
         {
             rootContainer.style.display = DisplayStyle.Flex;

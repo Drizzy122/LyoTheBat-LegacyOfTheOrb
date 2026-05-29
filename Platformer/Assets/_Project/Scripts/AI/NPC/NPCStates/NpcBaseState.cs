@@ -5,7 +5,7 @@ namespace Platformer
 {
     public abstract class NpcBaseState : IState
     {
-        protected readonly Npc npc;
+        protected readonly Wanderer Wanderer;
         protected readonly Animator animator;
         
         protected static readonly int IdleHash = Animator.StringToHash("Idle");
@@ -14,9 +14,9 @@ namespace Platformer
         
         protected const float crossFadeDuration = 0.1f;
 
-        protected NpcBaseState(Npc npc, Animator animator)
+        protected NpcBaseState(Wanderer wanderer, Animator animator)
         {
-            this.npc = npc;
+            this.Wanderer = wanderer;
             this.animator = animator;
         }
         public virtual void OnEnter() {

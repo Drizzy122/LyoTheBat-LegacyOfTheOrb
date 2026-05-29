@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/USS/GameOverUI.uss?fileID=7433441132597879392&amp;guid=76093caf0c308734ab1dd39df645bdc8&amp;type=3#GameOverUI"/>
+    <ui:VisualElement name="GameOverRoot" class="game-over-root" style="background-color: rgba(0, 0, 0, 0.8);">
+        <ui:Label name="GameOverText" text="YOU DIED" class="game-over-text"/>
+        <ui:Label name="GameOverSubtitle" text="Respawning..." class="game-over-subtitle"/>
+    </ui:VisualElement>
+</ui:UXML>

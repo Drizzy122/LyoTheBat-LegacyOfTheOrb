@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78066dcbc04d44778ef25e76c0852252, type: 3}
   m_Name: ProjectileSpellStrategy
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileSpellStrategy
-  projectilePrefab: {fileID: 1840672898717558257, guid: 85edd29154847a249a04ad0b3de34b3d,
+  projectilePrefab: {fileID: 1840672898717558257, guid: 9ff119fc8b769f94aa6322003f5e6879,
     type: 3}
   speed: 20.13
   duration: 10

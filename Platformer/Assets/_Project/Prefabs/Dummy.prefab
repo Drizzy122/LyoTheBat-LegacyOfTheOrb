@@ -709,7 +709,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5837457690171322275}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.33606732, z: -0, w: 0.941838}
+  m_LocalRotation: {x: 0, y: -0.33606812, z: 0, w: 0.9418377}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -738,7 +738,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86698c89455a39747a05b87aa2b65f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FractureObject
-  maxHealth: 2
+  maxHealth: 1
   originalObject: {fileID: 5837457690171322275}
   meshRenderer: {fileID: 2103082745620487329}
   fracturedObject: {fileID: 5837457690171322275}

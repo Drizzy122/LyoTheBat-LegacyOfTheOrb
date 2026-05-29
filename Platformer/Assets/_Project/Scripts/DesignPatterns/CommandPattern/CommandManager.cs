@@ -27,7 +27,7 @@ public class CommandManager : SerializedMonoBehaviour
     void Start()
     {
         Entity = GetComponent<IEntity>();
-        var controller = GetComponent<Platformer.PlayerController>();
+        var controller = GetComponent<Platformer.PlayerMovement>();
 
         var combat = GetComponent<Platformer.PlayerCombat>();
         LightAttackCommand = new LightAttackCommand(Entity, () => controller.GetAdjustedMovementDirection(), lightAttackAnimations, punchAnimations, () => combat.hasWeapon, comboResetWindow);

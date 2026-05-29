@@ -1,0 +1,239 @@
+/* ═══════════════════════════════════════════════════════════
+   Save & Load Screen  —  SaveSlotStyle.uss
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Root ─────────────────────────────────────────────────── */
+.save-root {
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+.save-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(5, 3, 15, 0.94);
+}
+
+/* ── Title Bar ────────────────────────────────────────────── */
+.save-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    padding-left: 64px;
+    padding-right: 64px;
+    background-color: rgba(8, 5, 22, 0.98);
+    border-bottom-width: 2px;
+    border-bottom-color: rgba(190, 150, 50, 0.5);
+}
+
+.header-line {
+    flex-grow: 1;
+    height: 1px;
+    background-color: rgba(190, 150, 50, 0.3);
+    margin-top: 4px;
+}
+
+.save-title-label {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/Ottselesque-Regular.otf?fileID=12800000&guid=b00bfdbd79d843a46b8b3fb62f619d32&type=3#Ottselesque-Regular");
+    font-size: 52px;
+    color: rgb(215, 170, 65);
+    -unity-text-align: middle-center;
+    margin-left: 32px;
+    margin-right: 32px;
+}
+
+/* ── Slots Container ──────────────────────────────────────── */
+.slots-area {
+    flex-grow: 1;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+/* ── Card ─────────────────────────────────────────────────── */
+.slot-card {
+    flex-direction: row;
+    align-items: stretch;
+    height: 158px;
+    margin-bottom: 20px;
+    border-radius: 14px;
+    border-left-width: 4px;
+    border-left-color: rgb(190, 150, 50);
+    border-top-width: 1px;
+    border-top-color: rgba(255, 255, 255, 0.06);
+    border-right-width: 1px;
+    border-right-color: rgba(255, 255, 255, 0.04);
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(0, 0, 0, 0.35);
+    background-color: rgba(12, 8, 30, 0.88);
+    overflow: hidden;
+    transition-duration: 0.18s;
+    transition-timing-function: ease-out;
+}
+
+/* ── Main Click Button ────────────────────────────────────── */
+.slot-main-btn {
+    flex-grow: 1;
+    align-items: stretch;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.slot-main-btn:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.slot-main-btn:focus {
+    background-color: rgba(190, 150, 50, 0.10);
+    border-left-color: rgb(235, 190, 75);
+}
+
+/* ── HasDataContent  (thumbnail + info row) ───────────────── */
+.slot-has-data {
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+/* Screenshot / thumbnail placeholder */
+.slot-thumb {
+    width: 200px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-right-width: 1px;
+    border-right-color: rgba(190, 150, 50, 0.2);
+}
+
+/* Info column */
+.slot-info {
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 26px;
+    padding-right: 22px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.slot-game-name {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/Ottselesque-Regular.otf?fileID=12800000&guid=b00bfdbd79d843a46b8b3fb62f619d32&type=3#Ottselesque-Regular");
+    font-size: 30px;
+    color: rgb(235, 225, 205);
+    -unity-text-align: middle-left;
+}
+
+.slot-divider {
+    height: 1px;
+    background-color: rgba(190, 150, 50, 0.35);
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.slot-detail-text {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    font-size: 17px;
+    color: rgb(150, 142, 122);
+    -unity-text-align: middle-left;
+}
+
+.slot-date {
+    color: rgb(115, 108, 90);
+    font-size: 15px;
+    margin-top: 3px;
+}
+
+/* ── NoDataContent  (empty slot) ─────────────────────────── */
+.slot-no-data {
+    flex-grow: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.slot-new-label {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    font-size: 22px;
+    color: rgba(190, 150, 50, 0.45);
+    -unity-text-align: middle-center;
+}
+
+/* ── Clear Button ─────────────────────────────────────────── */
+.slot-clear-btn {
+    width: auto;
+    height: auto;
+    align-self: center;
+    margin-left: 12px;
+    margin-right: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+    background-color: rgba(180, 30, 30, 0.10);
+    border-width: 1px;
+    border-color: rgba(200, 50, 50, 0.3);
+    border-radius: 10px;
+    color: rgb(200, 70, 70);
+    font-size: 15px;
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    -unity-text-align: middle-center;
+    transition-duration: 0.15s;
+}
+
+.slot-clear-btn:hover {
+    background-color: rgba(210, 40, 40, 0.28);
+    border-color: rgb(210, 60, 60);
+    color: rgb(255, 110, 110);
+    scale: 1.05;
+}
+
+.slot-clear-btn:focus {
+    background-color: rgba(210, 40, 40, 0.28);
+    border-color: rgb(210, 60, 60);
+    color: rgb(255, 110, 110);
+}
+
+.slot-clear-btn:active {
+    scale: 0.95;
+}
+
+/* ── Back Button ──────────────────────────────────────────── */
+.save-back-btn {
+    align-self: flex-start;
+    margin-left: 100px;
+    margin-bottom: 42px;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    color: rgb(190, 150, 50);
+    font-size: 22px;
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    -unity-text-align: middle-left;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 14px;
+    padding-right: 14px;
+    transition-duration: 0.15s;
+}
+
+.save-back-btn:hover {
+    color: rgb(235, 190, 75);
+    padding-left: 24px;
+}
+
+.save-back-btn:focus {
+    color: rgb(235, 190, 75);
+    padding-left: 24px;
+}
+
+.save-back-btn:active {
+    scale: 0.97;
+}

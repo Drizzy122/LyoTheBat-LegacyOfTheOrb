@@ -1,0 +1,125 @@
+:root {
+
+}
+
+/* Full-screen dim overlay */
+.pause-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(5, 3, 15, 0.68);
+}
+
+/* Left panel */
+.pause-panel {
+    width: 460px;
+    flex-direction: column;
+    background-color: rgba(8, 5, 22, 0.97);
+    border-right-width: 2px;
+    border-right-color: rgba(190, 150, 50, 0.35);
+    padding-bottom: 50px;
+}
+
+/* Decorative header row inside panel */
+.pause-title-area {
+    flex-direction: row;
+    align-items: center;
+    padding-top: 52px;
+    padding-bottom: 20px;
+    padding-left: 36px;
+    padding-right: 36px;
+}
+
+.pause-title-line {
+    flex-grow: 1;
+    height: 1px;
+    background-color: rgba(190, 150, 50, 0.3);
+    margin-top: 4px;
+}
+
+/* "GAME PAUSED" label */
+.pause-title-label {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/Ottselesque-Regular.otf?fileID=12800000&guid=b00bfdbd79d843a46b8b3fb62f619d32&type=3#Ottselesque-Regular");
+    font-size: 30px;
+    color: rgb(215, 170, 65);
+    -unity-text-align: middle-center;
+    margin-left: 16px;
+    margin-right: 16px;
+    height: auto;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* Gold separator under title */
+.pause-divider {
+    height: 1px;
+    background-color: rgba(190, 150, 50, 0.22);
+    margin-left: 36px;
+    margin-right: 36px;
+}
+
+/* Buttons column */
+.pause-btn-list {
+    flex-direction: column;
+    flex-grow: 1;
+    padding-top: 36px;
+    padding-left: 36px;
+    padding-right: 36px;
+    justify-content: center;
+}
+
+/* Pause menu button */
+.pause-btn {
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    border-left-width: 3px;
+    border-left-color: rgba(190, 150, 50, 0);
+    border-radius: 0;
+    color: rgb(190, 178, 150);
+    font-size: 24px;
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    -unity-text-align: middle-left;
+    height: 54px;
+    width: auto;
+    margin-bottom: 6px;
+    padding-left: 18px;
+    transition-duration: 0.18s;
+    transition-timing-function: ease-out;
+    transform-origin: left;
+}
+
+.pause-btn:hover {
+    color: rgb(255, 245, 215);
+    border-left-color: rgb(190, 150, 50);
+    padding-left: 28px;
+    scale: 1.03;
+}
+
+.pause-btn:focus {
+    color: rgb(255, 245, 215);
+    border-left-color: rgb(190, 150, 50);
+    padding-left: 28px;
+    scale: 1.03;
+}
+
+.pause-btn:active {
+    scale: 1.01;
+}
+
+/* Quit gets a red tint */
+.pause-btn-quit {
+    color: rgb(175, 80, 80);
+    margin-top: 24px;
+    border-left-color: rgba(200, 50, 50, 0);
+}
+
+.pause-btn-quit:hover {
+    color: rgb(255, 110, 110);
+    border-left-color: rgb(200, 50, 50);
+}
+
+.pause-btn-quit:focus {
+    color: rgb(255, 110, 110);
+    border-left-color: rgb(200, 50, 50);
+}

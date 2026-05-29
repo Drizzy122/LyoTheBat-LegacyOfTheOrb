@@ -25,7 +25,9 @@ namespace Platformer
         
         private EventInstance ambienceEventInstance;
         private EventInstance musicEventInstance;
+
         public static AudioManager instance { get; private set; }
+
         private void Awake()
         {
             if (instance != null)
@@ -34,12 +36,12 @@ namespace Platformer
             }
             instance = this;
             eventInstances = new List<EventInstance>();
-            eventEmitters = new List<StudioEventEmitter>();
+            eventEmitters  = new List<StudioEventEmitter>();
             
-            masterBus = RuntimeManager.GetBus("bus:/");
-            musicBus = RuntimeManager.GetBus("bus:/Music");
+            masterBus   = RuntimeManager.GetBus("bus:/");
+            musicBus    = RuntimeManager.GetBus("bus:/Music");
             ambienceBus = RuntimeManager.GetBus("bus:/Ambience");
-            sfxBus = RuntimeManager.GetBus("bus:/SFX");
+            sfxBus      = RuntimeManager.GetBus("bus:/SFX");
         }
 
         private void Start()
@@ -48,40 +50,39 @@ namespace Platformer
             IntializeMusic(FMODEvents.instance.music);
             SetupUIToolkit();
         }
-        
-      
 
-        private void InitiializeAmbience(EventReference ambienceEventReference)
+        // -------------------------------------------------------------------------
+        // Footsteps — fire and forget, NOT added to the tracked list
+        // -------------------------------------------------------------------------
+        public void PlayFootstep(EventReference eventReference, Vector3 worldPos, int terrain, int walkRun)
         {
-            ambienceEventInstance = CreateEventInstance(ambienceEventReference);
-            ambienceEventInstance.start();
+            EventInstance instance = RuntimeManager.CreateInstance(eventReference);
+            instance.set3DAttributes(RuntimeUtils.To3DAttributes(worldPos));
+            instance.setParameterByName("Terrain", terrain);
+            instance.setParameterByName("WalkRun", walkRun);
+            instance.start();
+            instance.release(); // FMOD cleans this up automatically after it finishes
         }
-        
-        public void SetAmbienceParameter(string parameterName, float parameterValue)
-        {
-            ambienceEventInstance.setParameterByName(parameterName, parameterValue);
-        }
-        
-        private void IntializeMusic(EventReference musicEventReference)
-        {
-            musicEventInstance = CreateEventInstance(musicEventReference);
-            musicEventInstance.start();
-        }
-     
-        public void SetMusicArea(MusicArea area)
-        {
-            musicEventInstance.setParameterByName("Area", (float)area);
-        }
-        
-        public void SetMusicParameter(string parameterName, float parameterValue)
-        {
-            musicEventInstance.setParameterByName(parameterName, parameterValue);
-        }
+
+        // -------------------------------------------------------------------------
+        // One-shot (no parameters needed)
+        // -------------------------------------------------------------------------
         public void PlayOneShot(EventReference sound, Vector3 worldPos)
         {
             RuntimeManager.PlayOneShot(sound, worldPos);
         }
+        public void RegisterButtonAudio(Button button, bool isCloseAction = false)
+        {
+            button.RegisterCallback<PointerEnterEvent>(evt =>
+                PlayOneShot(FMODEvents.instance.ui, Vector3.zero));
 
+            button.clicked += () =>
+                PlayOneShot(isCloseAction ? FMODEvents.instance.uiclose : FMODEvents.instance.uiopen, Vector3.zero);
+        }
+
+        // -------------------------------------------------------------------------
+        // Long-lived instances (music, ambience, etc.) — tracked for cleanup
+        // -------------------------------------------------------------------------
         public EventInstance CreateEventInstance(EventReference eventReference)
         {
             EventInstance eventInstance = RuntimeManager.CreateInstance(eventReference);
@@ -97,48 +98,88 @@ namespace Platformer
             return emitter;
         }
 
+        // -------------------------------------------------------------------------
+        // Ambience
+        // -------------------------------------------------------------------------
+        private void InitiializeAmbience(EventReference ambienceEventReference)
+        {
+            ambienceEventInstance = CreateEventInstance(ambienceEventReference);
+            ambienceEventInstance.start();
+        }
+
+        public void SetAmbienceParameter(string parameterName, float parameterValue)
+        {
+            ambienceEventInstance.setParameterByName(parameterName, parameterValue);
+        }
+
+        // -------------------------------------------------------------------------
+        // Music
+        // -------------------------------------------------------------------------
+        private void IntializeMusic(EventReference musicEventReference)
+        {
+            musicEventInstance = CreateEventInstance(musicEventReference);
+            musicEventInstance.start();
+        }
+
+        public void SetMusicArea(MusicArea area)
+        {
+            musicEventInstance.setParameterByName("Area", (float)area);
+        }
+
+        public void SetMusicParameter(string parameterName, float parameterValue)
+        {
+            musicEventInstance.setParameterByName(parameterName, parameterValue);
+        }
+
+        public void StopMusic()
+        {
+            if (musicEventInstance.isValid())
+                musicEventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        }
+
+        // -------------------------------------------------------------------------
+        // Cleanup
+        // -------------------------------------------------------------------------
         private void CleanUp()
         {
-            // stop and release any created instance
             foreach (EventInstance eventInstance in eventInstances)
             {
                 eventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
                 eventInstance.release();
             }
-            // stop all of the event emitters, because they may hang around in other scenes
             foreach (StudioEventEmitter emitter in eventEmitters)
             {
                 emitter.Stop();
             }
         }
+
         private void OnDestroy()
         {
             CleanUp();
         }
-        
+
+        // -------------------------------------------------------------------------
+        // UI Volume Sliders
+        // -------------------------------------------------------------------------
         private void SetupUIToolkit()
         {
-            // Make sure we actually assigned the UI Document in the inspector
             if (settingsUIDocument == null) return;
 
             var root = settingsUIDocument.rootVisualElement;
 
-            // 1. Find the sliders using the exact IDs from your UI Builder screenshot
-            Slider masterSlider = root.Q<Slider>("MasterVolumeSlider");
-            Slider musicSlider = root.Q<Slider>("MusicVolumeSlider");
-            Slider sfxSlider = root.Q<Slider>("SFXVolumeSlider");
+            Slider masterSlider   = root.Q<Slider>("MasterVolumeSlider");
+            Slider musicSlider    = root.Q<Slider>("MusicVolumeSlider");
+            Slider sfxSlider      = root.Q<Slider>("SFXVolumeSlider");
             Slider ambienceSlider = root.Q<Slider>("AmbienceVolumeSlider");
 
-            // 2. Set the sliders to match your saved volumes on startup
-            if (masterSlider != null) masterSlider.value = masterVolume;
-            if (musicSlider != null) musicSlider.value = musicVolume;
-            if (sfxSlider != null) sfxSlider.value = SFXVolume;
+            if (masterSlider != null)   masterSlider.value   = masterVolume;
+            if (musicSlider != null)    musicSlider.value    = musicVolume;
+            if (sfxSlider != null)      sfxSlider.value      = SFXVolume;
             if (ambienceSlider != null) ambienceSlider.value = ambienceVolume;
 
-            // 3. Register Callbacks (This fires ONLY when the player moves the slider)
             masterSlider?.RegisterValueChangedCallback(evt => {
                 masterVolume = evt.newValue;
-                masterBus.setVolume(masterVolume); // Update FMOD immediately
+                masterBus.setVolume(masterVolume);
             });
 
             musicSlider?.RegisterValueChangedCallback(evt => {
@@ -155,16 +196,6 @@ namespace Platformer
                 ambienceVolume = evt.newValue;
                 ambienceBus.setVolume(ambienceVolume);
             });
-        }
-        
-     
-        
-        public void StopMusic()
-        {
-            if (musicEventInstance.isValid())
-            {
-                musicEventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-            }
         }
     }
 }

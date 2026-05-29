@@ -1,0 +1,298 @@
+/* ═══════════════════════════════════════════════════════
+   Quest Log  —  QuestLogStyle.uss
+   Dark gold theme, matches PauseMenu / Settings
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Full-screen overlay (hidden by default) ─────────── */
+.quest-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+
+/* ── Dark backdrop behind the panel ─────────────────── */
+.quest-backdrop {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.62);
+}
+
+/* ── Floating panel ──────────────────────────────────── */
+.quest-panel {
+    width: 960px;
+    height: 580px;
+    background-color: rgba(5, 3, 15, 0.97);
+    border-width: 1px;
+    border-color: rgba(190, 150, 50, 0.40);
+    border-radius: 4px;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ── Title bar ───────────────────────────────────────── */
+.quest-header {
+    flex-direction: row;
+    align-items: center;
+    height: 74px;
+    padding-left: 32px;
+    padding-right: 32px;
+    flex-shrink: 0;
+    background-color: rgba(8, 5, 22, 0.98);
+}
+
+.quest-header-line {
+    flex-grow: 1;
+    height: 1px;
+    background-color: rgba(190, 150, 50, 0.28);
+    margin-top: 4px;
+}
+
+.quest-title {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/Ottselesque-Regular.otf?fileID=12800000&guid=b00bfdbd79d843a46b8b3fb62f619d32&type=3#Ottselesque-Regular");
+    font-size: 42px;
+    color: rgb(215, 170, 65);
+    -unity-text-align: middle-center;
+    margin-left: 24px;
+    margin-right: 24px;
+}
+
+/* ── Horizontal gold rule below title ────────────────── */
+.quest-divider {
+    height: 2px;
+    background-color: rgba(190, 150, 50, 0.45);
+    flex-shrink: 0;
+}
+
+/* ── Body: list + divider + detail ──────────────────── */
+.quest-body {
+    flex-direction: row;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+/* ── Left: quest list panel ──────────────────────────── */
+.quest-list-panel {
+    width: 268px;
+    flex-shrink: 0;
+    flex-direction: column;
+    background-color: rgba(8, 5, 22, 0.70);
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+
+.quest-list-scroll {
+    flex-grow: 1;
+}
+
+/* Hide horizontal scrollbar */
+.quest-list-scroll > #unity-horizontal-scroller {
+    display: none;
+}
+
+/* Subtle gold vertical scrollbar */
+.quest-list-scroll > #unity-vertical-scroller {
+    width: 6px;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+}
+
+.quest-list-scroll > #unity-vertical-scroller .unity-base-slider__dragger {
+    background-color: rgba(190, 150, 50, 0.45);
+    border-radius: 3px;
+    width: 4px;
+    margin-left: 1px;
+    border-width: 0;
+}
+
+.quest-list-scroll > #unity-vertical-scroller .unity-base-slider__tracker {
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+}
+
+/* ── Gold vertical rule between panels ───────────────── */
+.quest-vert-rule {
+    width: 1px;
+    background-color: rgba(190, 150, 50, 0.35);
+    flex-shrink: 0;
+}
+
+/* ── Right: quest detail panel ───────────────────────── */
+.quest-detail-panel {
+    flex-grow: 1;
+    padding-top: 28px;
+    padding-bottom: 20px;
+    padding-left: 36px;
+    padding-right: 36px;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Quest name (Ottselesque, gold) */
+.quest-name {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/Ottselesque-Regular.otf?fileID=12800000&guid=b00bfdbd79d843a46b8b3fb62f619d32&type=3#Ottselesque-Regular");
+    font-size: 28px;
+    color: rgb(225, 185, 80);
+    -unity-text-align: middle-left;
+    margin-bottom: 8px;
+    white-space: normal;
+    flex-shrink: 0;
+}
+
+.quest-name-rule {
+    height: 1px;
+    background-color: rgba(190, 150, 50, 0.32);
+    margin-bottom: 14px;
+    flex-shrink: 0;
+}
+
+/* Status text (multi-line, wraps) */
+.quest-status {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    font-size: 17px;
+    color: rgb(190, 180, 160);
+    white-space: normal;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+/* Section block (Rewards / Requirements) */
+.quest-section {
+    flex-direction: column;
+    margin-bottom: 14px;
+    flex-shrink: 0;
+}
+
+.quest-section-header {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/Ottselesque-Regular.otf?fileID=12800000&guid=b00bfdbd79d843a46b8b3fb62f619d32&type=3#Ottselesque-Regular");
+    font-size: 22px;
+    color: rgb(215, 170, 65);
+    margin-bottom: 4px;
+}
+
+.quest-section-rule {
+    height: 1px;
+    background-color: rgba(190, 150, 50, 0.28);
+    margin-bottom: 8px;
+}
+
+.quest-info-text {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    font-size: 18px;
+    color: rgb(210, 200, 178);
+    white-space: normal;
+    margin-bottom: 3px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   Quest list buttons
+   ═══════════════════════════════════════════════════════ */
+
+.quest-list-btn {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    font-size: 18px;
+    color: rgb(210, 200, 180);
+    -unity-text-align: middle-left;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    border-left-width: 3px;
+    border-left-color: rgba(0, 0, 0, 0);
+    border-radius: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 14px;
+    margin: 1px 0;
+    transition-duration: 0.12s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.quest-list-btn:hover {
+    background-color: rgba(190, 150, 50, 0.07);
+    color: rgb(232, 222, 198);
+}
+
+.quest-list-btn:focus {
+    background-color: rgba(190, 150, 50, 0.14);
+    border-left-color: rgb(215, 170, 65);
+    color: rgb(240, 215, 120);
+}
+
+.quest-list-btn:active {
+    background-color: rgba(190, 150, 50, 0.24);
+}
+
+/* ── State modifier classes ─────────────────────────── */
+
+/* Locked / requirements not met — muted red */
+.quest-list-btn.quest-btn-locked {
+    color: rgb(200, 90, 90);
+}
+.quest-list-btn.quest-btn-locked:hover {
+    color: rgb(230, 120, 120);
+}
+.quest-list-btn.quest-btn-locked:focus {
+    color: rgb(235, 130, 130);
+    border-left-color: rgb(200, 80, 80);
+}
+
+/* In progress / can finish — gold */
+.quest-list-btn.quest-btn-active {
+    color: rgb(215, 170, 65);
+}
+.quest-list-btn.quest-btn-active:hover {
+    color: rgb(238, 195, 90);
+}
+.quest-list-btn.quest-btn-active:focus {
+    color: rgb(248, 210, 100);
+    border-left-color: rgb(215, 170, 65);
+}
+
+/* Finished — soft green */
+.quest-list-btn.quest-btn-done {
+    color: rgb(100, 195, 130);
+}
+.quest-list-btn.quest-btn-done:hover {
+    color: rgb(130, 220, 155);
+}
+.quest-list-btn.quest-btn-done:focus {
+    color: rgb(140, 230, 165);
+    border-left-color: rgb(100, 195, 130);
+}
+
+/* ── Close button ───────────────────────────────────── */
+.quest-close-btn {
+    align-self: flex-end;
+    margin-right: 30px;
+    margin-bottom: 18px;
+    margin-top: 8px;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    color: rgb(190, 150, 50);
+    font-size: 20px;
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    -unity-text-align: middle-right;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 14px;
+    padding-right: 14px;
+    flex-shrink: 0;
+    transition-duration: 0.15s;
+}
+
+.quest-close-btn:hover {
+    color: rgb(235, 190, 75);
+    padding-right: 24px;
+}
+
+.quest-close-btn:focus {
+    color: rgb(235, 190, 75);
+    padding-right: 24px;
+}
+
+.quest-close-btn:active {
+    scale: 0.97;
+}

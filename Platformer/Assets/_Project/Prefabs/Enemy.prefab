@@ -5986,7 +5986,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bca416045c4769c4c9116eb431fdbea1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.HealthBar
-  healthBar: {fileID: 6481609669978923618}
+  uiDocument: {fileID: 0}
   lerpSpeed: 5
 --- !u!1 &3599257829722232827
 GameObject:

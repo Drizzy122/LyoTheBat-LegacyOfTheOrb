@@ -12,7 +12,7 @@ namespace Platformer
         
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out PlayerController playerController))
+            if (other.TryGetComponent(out PlayerMovement playerController))
             {
                 if (playerController.glideBoost <= 1)
                 {
@@ -26,13 +26,13 @@ namespace Platformer
             }
         }
         
-        private System.Collections.IEnumerator ResetGlideBoostAfterDuration(PlayerController playerController)
+        private System.Collections.IEnumerator ResetGlideBoostAfterDuration(PlayerMovement playerMovement)
         {
             // Wait for the specified duration
             yield return new WaitForSeconds(boostDuration);
 
             // Reset the glide boost to its default value
-            playerController.glideBoost = 1;
+            playerMovement.glideBoost = 1;
             Debug.Log("Glide Boost reset to default value");
         }
 

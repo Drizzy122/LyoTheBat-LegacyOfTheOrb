@@ -8,11 +8,11 @@ namespace Platformer
         public GameObject targetLocation;
         [SerializeField] private float timeToTeleport = 1;
         private float teleportTimer;
-        private PlayerController player;
+        private PlayerInteraction player;
 
         private void Awake()
         {
-            player = FindAnyObjectByType<PlayerController>();
+            player = FindAnyObjectByType<PlayerInteraction>();
         }
 
         public void StartTeleport()

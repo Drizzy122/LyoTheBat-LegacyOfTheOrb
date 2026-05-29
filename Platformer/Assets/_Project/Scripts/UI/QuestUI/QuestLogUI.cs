@@ -12,8 +12,8 @@ namespace Platformer
     {
         [Header("Components")] [SerializeField]
         private GameObject contentParent;
-        
-        private PlayerController playerController;
+
+        private PlayerMovement _playerMovement;
         private CameraManager cameraManager;
         [SerializeField] private QuestLogScrollingList scrollingList;
         [SerializeField] private TextMeshProUGUI questDisplayNameText;
@@ -26,7 +26,7 @@ namespace Platformer
         [Obsolete("Obsolete")]
         private void Awake()
         {
-            playerController = FindObjectOfType<PlayerController>();
+            _playerMovement = FindObjectOfType<PlayerMovement>();
             cameraManager = FindObjectOfType<CameraManager>();
         }
 
@@ -35,9 +35,8 @@ namespace Platformer
         {
             GameEventsManager.instance.questEvents.onQuestStateChange += QuestStateChange;
             GameEventsManager.instance.inputEvents.onQuestLogTogglePressed += QuestLogTogglePressed;
-            
         }
-        
+
         private void OnDisable()
         {
             GameEventsManager.instance.questEvents.onQuestStateChange -= QuestStateChange;
@@ -55,24 +54,18 @@ namespace Platformer
                 ShowUI();
             }
         }
-        
+
         private void ShowUI()
         {
             contentParent.SetActive(true);
-            //GameEventsManager.instance.playerEvents.DisablePlayerMovement();
-            // disable the playerController
-            if (playerController != null)
+            if (_playerMovement != null)
             {
-                playerController.enabled = false;
+                _playerMovement.enabled = false;
             }
-
             if (cameraManager != null)
             {
                 cameraManager.enabled = false;
             }
-            
-            // this needs to happen after the content parent is set active,
-            // or else the onSelectAction wont work as expected
             if (firstSelectedButton != null)
             {
                 firstSelectedButton.Select();
@@ -83,58 +76,47 @@ namespace Platformer
             }
             Time.timeScale = 0;
         }
+
         private void HideUI()
         {
             contentParent.SetActive(false);
-            //GameEventsManager.instance.playerEvents.EnablePlayerMovement();
-            if (playerController != null)
+            if (_playerMovement != null)
             {
-                playerController.enabled = true;
+                _playerMovement.enabled = true;
             }
-
             if (cameraManager != null)
             {
                 cameraManager.enabled = true;
             }
-
             EventSystem.current.SetSelectedGameObject(null);
             Time.timeScale = 1;
         }
-        
+
         private void QuestStateChange(Quest quest)
         {
-            // add the button to the scrolling list if not already added
             QuestLogButton questLogButton = scrollingList.CreateButtonIfNotExists(quest, () =>
             {
                 SetQuestLogInfo(quest);
             });
 
-            // initialize the first selected button if not already so that it's always the top button
             if (firstSelectedButton == null)
             {
                 firstSelectedButton = questLogButton.button;
-                
             }
-            
+
             questLogButton.SetState(quest.state);
-            
         }
+
         private void SetQuestLogInfo(Quest quest)
         {
-            // quest name
             questDisplayNameText.text = quest.info.displayName;
-            
-            // todo
             questStatusText.text = quest.GetFullStatusText();
-            // requirements
             levelRequirementsText.text = "Level " + quest.info.levelRequirement;
             questRequirementsText.text = "";
             foreach (QuestInfoSO prerequiQuestInfoSo in quest.info.questPrerequisites)
             {
                 questRequirementsText.text += prerequiQuestInfoSo.displayName + "\n";
             }
-            
-            // rewards
             goldRewardsText.text = "Gold: " + quest.info.goldReward;
             experienceRewardsText.text = "Experience: " + quest.info.experienceReward;
         }

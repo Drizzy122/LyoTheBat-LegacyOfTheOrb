@@ -16,6 +16,7 @@ namespace Platformer
         [field: Header("Player Actions Events")]
         public event UnityAction<Vector2> Move = delegate { };
         public event UnityAction<Vector2> Look = delegate { };
+        public event UnityAction<bool> Sprint = delegate { };
         public event UnityAction<bool> Jump = delegate { };
         public event UnityAction<bool> Dash = delegate { };
         public event UnityAction<bool> SonarPulse = delegate { };
@@ -191,6 +192,19 @@ namespace Platformer
             {
                 Counter.Invoke();
                 CounterPressed = true;
+            }
+        }
+
+        public void OnSprint(InputAction.CallbackContext context)
+        {
+            switch (context.phase)
+            {
+                case InputActionPhase.Started:
+                    Sprint.Invoke(true);
+                    break;
+                case InputActionPhase.Canceled:
+                    Sprint.Invoke(false);
+                    break;
             }
         }
     }
