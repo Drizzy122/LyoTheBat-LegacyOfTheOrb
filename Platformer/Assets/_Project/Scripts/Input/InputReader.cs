@@ -24,11 +24,15 @@ namespace Platformer
         public event UnityAction<bool> Glide = delegate { };
         public event UnityAction LightAttack = delegate { };
         public event UnityAction BlastAttack = delegate { };
+        public event UnityAction SwapWeapon = delegate { };
         public event UnityAction<bool> interact = delegate { };
+        public event UnityAction<bool> Aim = delegate { };
         public event UnityAction<bool> submit = delegate { };
         public event UnityAction Paused = delegate { };
+        public event UnityAction PreviousTab = delegate { };
+        public event UnityAction NextTab = delegate { };
         public event UnityAction<RaycastHit> Click = delegate { };
-        public event UnityAction Counter = delegate { }; 
+        public event UnityAction Counter = delegate { };
       
         PlayerInputActions inputActions;
         
@@ -45,12 +49,23 @@ namespace Platformer
         
         public void EnablePlayerActions()
         {
-            if (inputActions == null) 
+            if (inputActions == null)
             {
                 inputActions = new PlayerInputActions();
                 inputActions.Player.SetCallbacks(this);
+                inputActions.Menu.SetCallbacks(this);
             }
             inputActions.Enable();
+        }
+
+        public void EnablePlayerMap()
+        {
+            if (inputActions != null) inputActions.Player.Enable();
+        }
+
+        public void DisablePlayerMap()
+        {
+            if (inputActions != null) inputActions.Player.Disable();
         }
         public void OnMove(InputAction.CallbackContext context)
         {
@@ -80,6 +95,14 @@ namespace Platformer
             if (context.phase == InputActionPhase.Started)
             {
                 BlastAttack.Invoke();
+            }
+        }
+
+        public void OnSwapWeapon(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Started)
+            {
+                SwapWeapon.Invoke();
             }
         }
         public void OnJump(InputAction.CallbackContext context)
@@ -166,15 +189,14 @@ namespace Platformer
             {
                 inputActions = new PlayerInputActions();
                 inputActions.Player.SetCallbacks(this);
+                inputActions.Menu.SetCallbacks(this);
             }
-            inputActions.Menu.Escape.performed += OnEscape;
             EnablePlayerActions();
         }
         void OnDisable()
         {
             if (inputActions != null)
             {
-                inputActions.Menu.Escape.performed -= OnEscape;
                 inputActions.Disable();
             }
         }
@@ -184,6 +206,18 @@ namespace Platformer
             {
                 Paused.Invoke();
             }
+        }
+
+        public void OnPreviousTab(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Performed)
+                PreviousTab.Invoke();
+        }
+
+        public void OnNextTab(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Performed)
+                NextTab.Invoke();
         }
         
         public void OnCounter(InputAction.CallbackContext context)
@@ -204,6 +238,19 @@ namespace Platformer
                     break;
                 case InputActionPhase.Canceled:
                     Sprint.Invoke(false);
+                    break;
+            }
+        }
+
+        public void OnAim(InputAction.CallbackContext context)
+        {
+            switch (context.phase)
+            {
+                case InputActionPhase.Started:
+                    Aim.Invoke(true);
+                    break;
+                case InputActionPhase.Canceled:
+                    Aim.Invoke(false);
                     break;
             }
         }

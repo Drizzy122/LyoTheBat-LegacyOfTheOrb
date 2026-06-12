@@ -183,12 +183,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
-  m_Name: FullScreenPassRendererFeature
+  m_Name: LowHealth
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.FullScreenPassRendererFeature
   m_Active: 1
-  injectionPoint: 600
+  injectionPoint: 550
   fetchColorBuffer: 1
-  requirements: 4
+  requirements: 0
   passMaterial: {fileID: 2100000, guid: 1696a24634d55d644b667286be96b024, type: 2}
   passIndex: 0
   bindDepthStencilAttachment: 0
@@ -203,12 +203,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
-  m_Name: FullScreenPassRendererFeature
+  m_Name: Wind
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.FullScreenPassRendererFeature
   m_Active: 1
   injectionPoint: 550
   fetchColorBuffer: 1
-  requirements: 4
+  requirements: 0
   passMaterial: {fileID: 2100000, guid: 5bde12991c926474eb44dcf13cd9cf7a, type: 2}
   passIndex: 0
   bindDepthStencilAttachment: 0

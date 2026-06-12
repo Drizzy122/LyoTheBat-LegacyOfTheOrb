@@ -1,0 +1,162 @@
+.menu-hub {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(5, 3, 15);
+    flex-direction: column;
+}
+
+.info-bar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 90px;
+    padding: 0 60px;
+    background-color: rgba(8, 5, 22, 0.98);
+    border-bottom-width: 2px;
+    border-bottom-color: rgba(190, 150, 50, 0.5);
+}
+
+.player-info {
+    flex-direction: column;
+    justify-content: center;
+}
+
+.player-name {
+    font-size: 28px;
+    color: rgb(215, 170, 65);
+    -unity-font-style: bold;
+    letter-spacing: 3px;
+}
+
+.player-level {
+    font-size: 13px;
+    color: rgb(150, 130, 80);
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    margin-top: 2px;
+}
+
+.currency-strip {
+    flex-direction: row;
+    align-items: center;
+}
+
+.currency {
+    color: rgb(215, 170, 65);
+    font-size: 20px;
+    -unity-font-style: bold;
+    margin-left: 16px;
+    letter-spacing: 1px;
+}
+
+.main-tabs {
+    flex-grow: 1;
+}
+
+.main-tabs > .unity-tab-view__header-container {
+    background-color: rgba(8, 5, 22, 0.98);
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(190, 150, 50, 0.4);
+    justify-content: center;
+    height: 56px;
+    flex-shrink: 0;
+}
+
+.main-tabs .unity-tab__header,
+.main-tabs .unity-tab__header:hover,
+.main-tabs .unity-tab__header:checked,
+.main-tabs .unity-tab__header:focus,
+.main-tabs .unity-tab__header:active {
+    background-color: rgba(0, 0, 0, 0);
+    padding: 0 32px;
+    margin: 0;
+    border-width: 0;
+}
+
+.main-tabs .unity-tab__header-label {
+    color: rgb(140, 130, 100);
+    font-size: 14px;
+    -unity-font-style: bold;
+    letter-spacing: 3px;
+}
+
+.main-tabs .unity-tab__header:hover .unity-tab__header-label {
+    color: rgb(230, 200, 130);
+}
+
+.main-tabs .unity-tab__header:checked .unity-tab__header-label {
+    color: rgb(215, 170, 65);
+}
+
+.main-tabs .unity-tab__header-underline {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.main-tabs .unity-tab__header:checked .unity-tab__header-underline {
+    background-color: rgb(215, 170, 65);
+    height: 3px;
+}
+
+.page {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-placeholder {
+    color: rgb(120, 110, 80);
+    font-size: 24px;
+    -unity-font-style: italic;
+    letter-spacing: 1px;
+}
+
+.hints-bar {
+    height: 40px;
+    padding: 0 60px;
+    background-color: rgba(8, 5, 22, 0.98);
+    border-top-width: 1px;
+    border-top-color: rgba(190, 150, 50, 0.4);
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: row;
+}
+
+.hint-label {
+    color: rgb(150, 130, 80);
+    font-size: 13px;
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+}
+
+.menu-hub .inventory-header {
+    display: none;
+}
+
+.menu-hub TemplateContainer {
+    flex-grow: 1;
+}
+
+.menu-hub .back-btn {
+    display: none;
+}
+
+.menu-hub .unity-tab-view__chevron-button,
+.menu-hub .unity-tab-view__previous-button,
+.menu-hub .unity-tab-view__next-button,
+.menu-hub .unity-tab-view__scroller-prev,
+.menu-hub .unity-tab-view__scroller-next,
+.menu-hub .unity-scroller__low-button,
+.menu-hub .unity-scroller__high-button {
+    display: none;
+}
+
+.menu-hub .unity-tab {
+    flex-grow: 1;
+}
+
+.menu-hub #SettingsContainer .unity-tab-view {
+    min-height: 900px;
+}

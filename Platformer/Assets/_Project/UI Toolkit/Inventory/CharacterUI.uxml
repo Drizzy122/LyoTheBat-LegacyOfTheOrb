@@ -1,0 +1,203 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="CharacterUI.uss"/>
+    <ui:VisualElement name="character-panel" class="inventory-panel" style="display: flex;">
+        <ui:VisualElement name="character-header" class="inventory-header">
+            <ui:Label name="character-title" text="Character" class="header-title"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="character-body" class="character-body">
+
+            <!-- ═══ LEFT: weapons ═══ -->
+            <ui:VisualElement name="weapons-column" class="character-column character-column--weapons">
+                <ui:Label name="weapons-title" text="WEAPONS" class="column-title"/>
+                <ui:VisualElement name="weapons-title-underline" class="column-title-underline"/>
+
+                <ui:VisualElement name="weapons-row-Weapon" class="weapons-row">
+                    <!-- Grid tiles below are DESIGN-TIME PREVIEWS — cleared and rebuilt at
+                         runtime by CharacterUIController. Style them via the USS classes,
+                         not inline, or your changes won't apply in-game. -->
+                    <ui:VisualElement name="weapons-grid-Weapon" class="weapons-grid">
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                    </ui:VisualElement>
+                    <!-- Slot children ARE the runtime elements (reused by the controller). -->
+                    <ui:VisualElement name="slot-Weapon" class="equip-slot equip-slot--compact">
+                        <ui:Label name="label" text="Weapon" class="equip-slot-label"/>
+                        <ui:VisualElement name="icon" class="equip-slot-icon"/>
+                        <ui:Label name="name" text="(empty)" class="equip-slot-name"/>
+                        <ui:Label name="active-tag" text="ACTIVE" class="equip-slot-active-tag"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement name="weapons-row-SecondaryWeapon" class="weapons-row">
+                    <ui:VisualElement name="weapons-grid-SecondaryWeapon" class="weapons-grid">
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="slot-SecondaryWeapon" class="equip-slot equip-slot--compact">
+                        <ui:Label name="label" text="SecondaryWeapon" class="equip-slot-label"/>
+                        <ui:VisualElement name="icon" class="equip-slot-icon"/>
+                        <ui:Label name="name" text="(empty)" class="equip-slot-name"/>
+                        <ui:Label name="active-tag" text="ACTIVE" class="equip-slot-active-tag"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement name="weapons-row-Shield" class="weapons-row">
+                    <ui:VisualElement name="weapons-grid-Shield" class="weapons-grid">
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="slot-Shield" class="equip-slot equip-slot--compact">
+                        <ui:Label name="label" text="Shield" class="equip-slot-label"/>
+                        <ui:VisualElement name="icon" class="equip-slot-icon"/>
+                        <ui:Label name="name" text="(empty)" class="equip-slot-name"/>
+                        <ui:Label name="active-tag" text="ACTIVE" class="equip-slot-active-tag"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- ═══ CENTER: character preview ═══ -->
+            <ui:VisualElement name="CharacterPreview" class="character-preview" style="background-image: url(&quot;project://database/Assets/_Project/UI%20Toolkit/CharacterPreviewTexture.renderTexture?fileID=8400000&amp;guid=dbd2dfcccee307c41bdc40e48ca8cc9b&amp;type=2#CharacterPreviewTexture&quot;); background-color: rgba(15, 12, 30, 0.41);"/>
+
+            <!-- ═══ RIGHT: armor ═══ -->
+            <ui:VisualElement name="armor-column" class="character-column character-column--armor" style="display: flex;">
+                <ui:Label name="armor-title" text="ARMOR" class="column-title"/>
+                <ui:VisualElement name="armor-title-underline" class="column-title-underline"/>
+
+                <ui:VisualElement name="armor-row-Head" class="armor-row">
+                    <ui:VisualElement name="slot-Head" class="equip-slot equip-slot--compact">
+                        <ui:Label name="label" text="Head" class="equip-slot-label"/>
+                        <ui:VisualElement name="icon" class="equip-slot-icon"/>
+                        <ui:Label name="name" text="(empty)" class="equip-slot-name"/>
+                        <ui:Label name="active-tag" text="ACTIVE" class="equip-slot-active-tag"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="armor-grid-Head" class="armor-grid">
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement name="armor-row-Arms" class="armor-row">
+                    <ui:VisualElement name="slot-Arms" class="equip-slot equip-slot--compact">
+                        <ui:Label name="label" text="Arms" class="equip-slot-label"/>
+                        <ui:VisualElement name="icon" class="equip-slot-icon"/>
+                        <ui:Label name="name" text="(empty)" class="equip-slot-name"/>
+                        <ui:Label name="active-tag" text="ACTIVE" class="equip-slot-active-tag"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="armor-grid-Arms" class="armor-grid">
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement name="armor-row-Chest" class="armor-row">
+                    <ui:VisualElement name="slot-Chest" class="equip-slot equip-slot--compact">
+                        <ui:Label name="label" text="Chest" class="equip-slot-label"/>
+                        <ui:VisualElement name="icon" class="equip-slot-icon"/>
+                        <ui:Label name="name" text="(empty)" class="equip-slot-name"/>
+                        <ui:Label name="active-tag" text="ACTIVE" class="equip-slot-active-tag"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="armor-grid-Chest" class="armor-grid">
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement name="armor-row-Legs" class="armor-row">
+                    <ui:VisualElement name="slot-Legs" class="equip-slot equip-slot--compact">
+                        <ui:Label name="label" text="Legs" class="equip-slot-label"/>
+                        <ui:VisualElement name="icon" class="equip-slot-icon"/>
+                        <ui:Label name="name" text="(empty)" class="equip-slot-name"/>
+                        <ui:Label name="active-tag" text="ACTIVE" class="equip-slot-active-tag"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="armor-grid-Legs" class="armor-grid">
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement name="armor-row-ClassItem" class="armor-row">
+                    <ui:VisualElement name="slot-ClassItem" class="equip-slot equip-slot--compact">
+                        <ui:Label name="label" text="ClassItem" class="equip-slot-label"/>
+                        <ui:VisualElement name="icon" class="equip-slot-icon"/>
+                        <ui:Label name="name" text="(empty)" class="equip-slot-name"/>
+                        <ui:Label name="active-tag" text="ACTIVE" class="equip-slot-active-tag"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="armor-grid-ClassItem" class="armor-grid">
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                        <ui:VisualElement class="item-tile item-tile--mini item-tile--empty"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- ═══ Detail popup (hover) — set display:flex while editing to see it ═══ -->
+            <ui:VisualElement name="detail-panel" class="detail-panel" style="display: none; top: 59px; left: 387px;">
+                <ui:VisualElement name="detail-header" class="detail-header">
+                    <ui:VisualElement name="detail-icon" class="detail-icon"/>
+                    <ui:VisualElement name="detail-titles" class="detail-titles">
+                        <ui:Label name="detail-name" text="Item Name" class="detail-name"/>
+                        <ui:Label name="detail-rarity" text="RARITY" class="detail-rarity"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="detail-separator" class="detail-separator"/>
+                <ui:Label name="detail-description" text="Item description preview text." class="detail-description"/>
+                <ui:VisualElement name="detail-stats" class="detail-stats"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

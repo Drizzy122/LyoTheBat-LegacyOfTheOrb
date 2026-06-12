@@ -153,7 +153,9 @@ namespace Platformer
             #endif
         }
 
-        private void OnEnable() => input.Paused += OnPause;
-        private void OnDisable() => input.Paused -= OnPause;
+        // Temporarily disabled while building the new MenuHub.
+        // Once PauseMenu's buttons are folded into the Settings tab, this can be deleted.
+        private void OnEnable() { /* input.Paused += OnPause; */ }
+        private void OnDisable() { /* input.Paused -= OnPause; */ }
     }
 }

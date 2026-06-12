@@ -3,53 +3,122 @@ using UnityEngine;
 
 namespace Platformer
 {
+    /// <summary>
+    /// One script for every world pickup. Pick a type in the inspector:
+    ///   Coin / LuminOrb / Ecliptium — currency: fires misc events (counters, quests)
+    ///   Health                     — instant heal on touch (skipped at full HP)
+    ///   Item                       — adds an ItemData (weapon/armor/consumable) to the inventory
+    /// Replaces the old SwordPickup and HealthCollectible scripts.
+    /// </summary>
     public class Collectable : ValidatedMonoBehaviour, IDataPersistence
     {
         [field: Header("Settings")]
         [field: SerializeField] CollectableType collectibleType;
         [field: SerializeField] string id;
         [field: SerializeField] bool isCollected;
-        
+
+        [Header("Health Settings (type = Health)")]
+        [SerializeField] float healthValue = 25f;
+
+        [Header("Item Settings (type = Item)")]
+        [SerializeField] ItemData itemToGive;
+        [SerializeField, Min(1)] int itemQuantity = 1;
+        [Tooltip("If the matching equipment slot is empty, equip this item on pickup.")]
+        [SerializeField] bool autoEquipIfSlotEmpty = true;
+
         [field: Header("Visuals")]
         [field: SerializeField, Anywhere] GameObject visualObject;
-       // [field: SerializeField, Anywhere] ParticleSystem collectParticle;
-        
+
         [ContextMenu("Generate guid for id")]
         private void GenerateGuid() => id = System.Guid.NewGuid().ToString();
 
-        private void Awake()
-        {
-            //collectParticle.Stop();
-        }
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player"))
-            {
-                Collect();
-            }
+            if (isCollected) return;
+            if (!other.CompareTag("Player")) return;
+            Collect(other.gameObject);
         }
-        void Collect()
-        {
-            isCollected = true;
-            //collectParticle.Play();
-            Destroy(gameObject);
 
+        void Collect(GameObject player)
+        {
             switch (collectibleType)
             {
                 case CollectableType.Coin:
                     GameEventsManager.instance.miscEvents.CoinCollected();
-                    AudioManager.instance.PlayOneShot(FMODEvents.instance.coinCollected, this.transform.position);
+                    AudioManager.instance.PlayOneShot(FMODEvents.instance.coinCollected, transform.position);
                     break;
+
                 case CollectableType.LuminOrb:
                     GameEventsManager.instance.miscEvents.LuminCollected();
-                    AudioManager.instance.PlayOneShot(FMODEvents.instance.luminCollected, this.transform.position);
+                    AudioManager.instance.PlayOneShot(FMODEvents.instance.luminCollected, transform.position);
                     break;
+
                 case CollectableType.Ecliptium:
                     GameEventsManager.instance.miscEvents.EcliptiumCollected();
-                    AudioManager.instance.PlayOneShot(FMODEvents.instance.luminCollected, this.transform.position);
+                    AudioManager.instance.PlayOneShot(FMODEvents.instance.luminCollected, transform.position);
+                    break;
+
+                case CollectableType.Health:
+                    var health = player.GetComponent<Health>();
+                    if (health == null) return;
+                    if (health.HealthPercent >= 1f) return;   // full HP — leave the pickup in the world
+                    health.AddHealth(healthValue);
+                    // TODO: dedicated heal-pickup FMOD event
+                    AudioManager.instance.PlayOneShot(FMODEvents.instance.luminCollected, transform.position);
+                    break;
+
+                case CollectableType.Item:
+                    if (!TryGiveItem(player)) return;          // bag full / no inventory — leave the pickup
+                    // TODO: dedicated item-pickup FMOD event
+                    AudioManager.instance.PlayOneShot(FMODEvents.instance.luminCollected, transform.position);
                     break;
             }
+
+            isCollected = true;
+            Destroy(gameObject);
         }
+
+        bool TryGiveItem(GameObject player)
+        {
+            if (itemToGive == null)
+            {
+                Debug.LogWarning($"{name}: Collectable type is Item but no ItemData assigned.", this);
+                return false;
+            }
+
+            var inventory = player.GetComponent<Inventory>();
+            if (inventory == null) return false;
+            if (!inventory.Add(itemToGive, itemQuantity)) return false;
+
+            if (autoEquipIfSlotEmpty)
+            {
+                var equipment = player.GetComponent<PlayerEquipment>();
+                var slot = SlotFor(itemToGive);
+                if (equipment != null && slot != EquipSlot.None && !equipment.HasEquipped(slot))
+                {
+                    // The most recently added matching entry is at the end of the list.
+                    for (int i = inventory.Items.Count - 1; i >= 0; i--)
+                    {
+                        if (inventory.Items[i].data == itemToGive)
+                        {
+                            equipment.Equip(inventory.Items[i]);
+                            break;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        static EquipSlot SlotFor(ItemData data)
+        {
+            if (data is WeaponData weapon) return weapon.slot;
+            if (data is ArmorData armor) return armor.slot;
+            return EquipSlot.None;   // consumables etc. don't equip
+        }
+
+        // ─── IDataPersistence ──────────────────────────────────────────────────
+
         public void LoadData(GameData data)
         {
             switch (collectibleType)
@@ -63,38 +132,37 @@ namespace Platformer
                 case CollectableType.Ecliptium:
                     data.ecliptiumCollected.TryGetValue(id, out isCollected);
                     break;
+                case CollectableType.Health:
+                case CollectableType.Item:
+                    data.collectablesCollected.TryGetValue(id, out isCollected);
+                    break;
             }
+
             if (isCollected)
             {
-                visualObject.gameObject.SetActive(false);
-              //  collectParticle.Stop();
+                // Note: Item pickups don't need to re-grant on load — the item itself
+                // is restored by Inventory's own persistence.
+                if (visualObject != null) visualObject.SetActive(false);
                 Destroy(gameObject, 0.5f);
             }
         }
+
         public void SaveData(GameData data)
         {
             switch (collectibleType)
             {
                 case CollectableType.Coin:
-                    if (data.coinsCollected.ContainsKey(id))
-                    {
-                        data.coinsCollected.Remove(id);
-                    }
-                    data.coinsCollected.Add(id, isCollected); 
+                    data.coinsCollected[id] = isCollected;
                     break;
                 case CollectableType.LuminOrb:
-                    if (data.luminCollected.ContainsKey(id))
-                    {
-                        data.luminCollected.Remove(id);
-                    }
-                    data.luminCollected.Add(id, isCollected); 
+                    data.luminCollected[id] = isCollected;
                     break;
                 case CollectableType.Ecliptium:
-                    if (data.ecliptiumCollected.ContainsKey(id))
-                    {
-                        data.ecliptiumCollected.Remove(id);
-                    }
-                    data.ecliptiumCollected.Add(id, isCollected); 
+                    data.ecliptiumCollected[id] = isCollected;
+                    break;
+                case CollectableType.Health:
+                case CollectableType.Item:
+                    data.collectablesCollected[id] = isCollected;
                     break;
             }
         }

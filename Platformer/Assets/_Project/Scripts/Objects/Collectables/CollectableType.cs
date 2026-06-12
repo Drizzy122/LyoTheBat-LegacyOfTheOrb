@@ -4,6 +4,8 @@ namespace Platformer
     {
         Coin,
         LuminOrb,
-        Ecliptium
+        Ecliptium,
+        Health,   // instant heal on touch
+        Item      // adds an ItemData (weapon / armor / consumable) to the inventory
     }
 }

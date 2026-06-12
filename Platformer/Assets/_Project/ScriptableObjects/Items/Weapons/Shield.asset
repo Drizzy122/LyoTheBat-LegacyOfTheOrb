@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95deeb35195bfcf40ac073a5f4a5c4d5, type: 3}
+  m_Name: Shield
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.WeaponData
+  <id>k__BackingField: Shield
+  <displayName>k__BackingField: 'test shield '
+  <description>k__BackingField: this is a test shield yay
+  <icon>k__BackingField: {fileID: 362099136, guid: 132358e9bf26b60458b731bf001e31db,
+    type: 3}
+  <rarity>k__BackingField: 0
+  <maxStack>k__BackingField: 1
+  <slot>k__BackingField: 3
+  <weaponPrefab>k__BackingField: {fileID: 6089977208192055215, guid: 4e6a0a6f10c3814489c0e7b0b1ba6e1a,
+    type: 3}
+  <damage>k__BackingField: 0
+  <attackSpeed>k__BackingField: 0
+  <range>k__BackingField: 0.5
+  <knockback>k__BackingField: 0.5

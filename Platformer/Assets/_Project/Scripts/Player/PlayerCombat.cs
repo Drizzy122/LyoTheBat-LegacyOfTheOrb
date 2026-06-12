@@ -58,13 +58,11 @@ namespace Platformer
         [field: SerializeField] VisualEffect slashVFX;
         [field: SerializeField] ComboSlash[] comboSlashes;
 
-        [Header("Weapon Settings")]
-        [SerializeField] public GameObject equippedWeapon;
-        private bool isWeaponHidden = false;
         private PlayerMovement playerMovement;
+        private PlayerEquipment playerEquipment;
 
-        public bool hasWeapon { get; private set; }
-        public void EquipWeapon() => hasWeapon = true;
+        // Derived from whatever weapon is currently IN HAND (active slot).
+        public bool hasWeapon => playerEquipment != null && playerEquipment.ActiveWeapon != null;
 
         public int luminCharges { get; private set; }
 
@@ -73,6 +71,7 @@ namespace Platformer
             GameEventsManager.instance.miscEvents.onLuminCollected += OnLuminCollected;
             input.LightAttack += OnLightAttack;
             input.BlastAttack += OnBlastAttack;
+            input.SwapWeapon += OnSwapWeapon;
         }
 
         void OnDisable()
@@ -80,7 +79,10 @@ namespace Platformer
             GameEventsManager.instance.miscEvents.onLuminCollected -= OnLuminCollected;
             input.LightAttack -= OnLightAttack;
             input.BlastAttack -= OnBlastAttack;
+            input.SwapWeapon -= OnSwapWeapon;
         }
+
+        void OnSwapWeapon() => playerEquipment?.SwapActiveWeapon();
 
         void OnLuminCollected() => luminCharges += 5;
 
@@ -109,6 +111,7 @@ namespace Platformer
         void Awake()
         {
             playerMovement = GetComponent<PlayerMovement>();
+            playerEquipment = GetComponent<PlayerEquipment>();
             attackTimer = new CountdownTimer(attackCoolDown);
             blastAttackTimer = new CountdownTimer(blastAttackCoolDown);
 
@@ -134,21 +137,25 @@ namespace Platformer
 
         private void HandleWeaponVisibility()
         {
-            if (equippedWeapon == null) return;
+            if (playerEquipment == null) return;
 
-            bool shouldHide = !hasWeapon
-                              || (playerMovement != null && (playerMovement.IsGliding || playerMovement.wallClimbimg || playerMovement.InWater));
+            bool shouldHide = playerMovement != null &&
+                              (playerMovement.IsGliding || playerMovement.wallClimbimg || playerMovement.InWater);
 
-            if (shouldHide && !isWeaponHidden)
-            {
-                equippedWeapon.SetActive(false);
-                isWeaponHidden = true;
-            }
-            else if (!shouldHide && isWeaponHidden)
-            {
-                equippedWeapon.SetActive(true);
-                isWeaponHidden = false;
-            }
+            // Active weapon + shield both tuck away while gliding/climbing/swimming.
+            var weaponVisual = playerEquipment.GetEquippedVisual(playerEquipment.ActiveWeaponSlot);
+            if (weaponVisual != null) weaponVisual.SetActive(!shouldHide);
+
+            var shieldVisual = playerEquipment.GetEquippedVisual(EquipSlot.Shield);
+            if (shieldVisual != null) shieldVisual.SetActive(!shouldHide);
+        }
+
+        /// <summary>Damage to apply on a successful melee hit. Pulls from the ACTIVE weapon when present.</summary>
+        int CurrentMeleeDamage()
+        {
+            if (!hasWeapon) return punchDamage;
+            var weapon = playerEquipment.ActiveWeapon.data as WeaponData;
+            return weapon != null ? weapon.damage : lightAttackDamage;
         }
 
         
@@ -227,19 +234,20 @@ namespace Platformer
             Collider[] hitEnemies = Physics.OverlapSphere(attackPos, lightAttackDistance);
             AudioManager.instance.PlayOneShot(FMODEvents.instance.playerAttack, transform.position);
 
+            int damage = CurrentMeleeDamage();
             foreach (var hit in hitEnemies)
             {
                 if (hit.CompareTag("Enemy"))
                 {
                     if(hit.TryGetComponent<Health>(out Health enemyHealth))
                     {
-                        enemyHealth.TakeDamage(hasWeapon ? lightAttackDamage : punchDamage, knockbackTime);
+                        enemyHealth.TakeDamage(damage, knockbackTime);
                     }
                 }
                 else if (hit.CompareTag("Destructable"))
                 {
                     if (hit.TryGetComponent<IDamageable>(out var damageable))
-                        damageable.TakeDamage(hasWeapon ? lightAttackDamage : punchDamage, knockbackTime);
+                        damageable.TakeDamage(damage, knockbackTime);
                 }
             }
         }

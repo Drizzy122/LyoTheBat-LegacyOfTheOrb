@@ -1,0 +1,422 @@
+/* ════════════════════════════════════════════════════════
+   CharacterUI.uss — Character tab only.
+   (InventoryUI.uss styles the Inventory tab.)
+   Gold/amber theme matching the Settings screens.
+   ════════════════════════════════════════════════════════ */
+
+/* Panel + header (header is hidden when embedded in the MenuHub) */
+.inventory-panel {
+    flex-grow: 1;
+    background-color: rgba(0, 0, 0, 0);
+    flex-direction: column;
+    padding: 32px;
+}
+.inventory-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.header-title {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/Ottselesque-Regular.otf?fileID=12800000&guid=b00bfdbd79d843a46b8b3fb62f619d32&type=3#Ottselesque-Regular");
+    font-size: 36px;
+    color: rgb(215, 170, 65);
+    letter-spacing: 2px;
+}
+
+/* 3-column body: weapons | preview | armor */
+.character-body {
+    flex-direction: row;
+    flex-grow: 1;
+    padding: 24px;
+    position: relative;        /* anchor for the absolute detail-panel */
+}
+.character-column {
+    flex-direction: column;
+    width: 200px;
+}
+.character-column--weapons {
+    width: 300px;             /* fits the hover-expanded row: grid 150 + gap 12 + slot 130 */
+    margin-right: 24px;
+}
+.character-column--armor {
+    width: 300px;             /* fits the hover-expanded row: slot 130 + gap 12 + grid 150 */
+    margin-left: 24px;
+}
+.column-title {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/Ottselesque-Regular.otf?fileID=12800000&guid=b00bfdbd79d843a46b8b3fb62f619d32&type=3#Ottselesque-Regular");
+    color: rgb(215, 170, 65);
+    font-size: 20px;
+    letter-spacing: 3px;
+    margin-bottom: 4px;
+    -unity-text-align: middle-center;
+}
+/* thin gold underline under the column titles */
+.column-title-underline {
+    height: 1px;
+    background-color: rgba(190, 150, 50, 0.35);
+    margin-bottom: 16px;
+}
+
+/* Slot rows — one per equipment slot */
+.weapons-row,
+.armor-row {
+    flex-direction: row;
+    align-items: flex-start;
+    margin-bottom: 14px;
+}
+.weapons-row > .equip-slot--compact,
+.armor-row > .equip-slot--compact {
+    width: 130px;
+    flex-shrink: 0;
+}
+
+/* Per-slot 3×3 grids — grow IN LAYOUT on row hover (no z-index in UI Toolkit,
+   a scale transform would bleed over neighbors). */
+.weapons-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 78px;              /* 3 × (22 + 2*2) */
+    flex-shrink: 0;
+    margin-right: 12px;
+    transition-property: width;
+    transition-duration: 0.18s;
+    transition-timing-function: ease-out;
+}
+.armor-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 78px;
+    flex-shrink: 0;
+    margin-left: 12px;        /* mirrored: slot left, grid right */
+    transition-property: width;
+    transition-duration: 0.18s;
+    transition-timing-function: ease-out;
+}
+.weapons-row:hover .weapons-grid,
+.armor-row:hover .armor-grid {
+    width: 150px;             /* 3 × (46 + 2*2) */
+}
+
+/* ── Item tiles (mini variant used in the grids) ─────────── */
+.item-tile {
+    width: 80px;
+    height: 80px;
+    margin: 4px;
+    background-color: rgba(30, 24, 50, 0.9);
+    border-width: 1px;
+    border-color: rgba(190, 150, 50, 0.25);
+    border-radius: 2px;
+    align-items: center;
+    justify-content: center;
+    transition-property: border-color, background-color;
+    transition-duration: 0.12s;
+}
+.item-tile:hover {
+    border-color: rgb(215, 170, 65);
+    background-color: rgba(50, 40, 75, 0.95);
+}
+.item-tile--equipped {
+    border-color: rgb(190, 150, 50);
+    border-width: 2px;
+    background-color: rgba(60, 48, 95, 0.95);
+}
+.item-tile-icon {
+    width: 64px;
+    height: 64px;
+}
+
+/* Rarity tiers */
+.item-tile--common    { border-color: rgb(160, 160, 160); }
+.item-tile--uncommon  { border-color: rgb(91, 155, 58); }
+.item-tile--rare      { border-color: rgb(77, 128, 198); }
+.item-tile--legendary { border-color: rgb(156, 78, 214); }
+.item-tile--exotic    { border-color: rgb(224, 176, 74); }
+.item-tile--common:hover    { border-color: rgb(200, 200, 200); }
+.item-tile--uncommon:hover  { border-color: rgb(130, 195, 90); }
+.item-tile--rare:hover      { border-color: rgb(120, 170, 230); }
+.item-tile--legendary:hover { border-color: rgb(200, 130, 240); }
+.item-tile--exotic:hover    { border-color: rgb(255, 215, 110); }
+
+.item-tile--mini {
+    width: 22px;
+    height: 22px;
+    margin: 2px;
+    flex-shrink: 0;
+    border-width: 1px;
+    transition-property: width, height, border-color;
+    transition-duration: 0.18s;
+    transition-timing-function: ease-out;
+}
+.weapons-row:hover .item-tile--mini,
+.armor-row:hover .item-tile--mini {
+    width: 46px;
+    height: 46px;
+}
+.item-tile--mini .item-tile-icon {
+    width: 18px;
+    height: 18px;
+    transition-property: width, height;
+    transition-duration: 0.18s;
+    transition-timing-function: ease-out;
+}
+.weapons-row:hover .item-tile--mini .item-tile-icon,
+.armor-row:hover .item-tile--mini .item-tile-icon {
+    width: 38px;
+    height: 38px;
+}
+
+/* Empty placeholder cell */
+.item-tile--empty {
+    background-color: rgba(50, 50, 60, 0.55);
+    border-color: rgba(90, 90, 100, 0.4);
+    border-width: 1px;
+}
+.item-tile--empty:hover {
+    background-color: rgba(50, 50, 60, 0.55);
+    border-color: rgba(90, 90, 100, 0.4);
+}
+
+/* ── Equipped slot cards ─────────────────────────────────── */
+.equip-slot {
+    flex-direction: row;
+    align-items: center;
+    height: 60px;
+    padding: 8px;
+    margin-bottom: 6px;
+    background-color: rgba(30, 24, 50, 0.85);
+    border-radius: 2px;
+    border-left-width: 3px;
+    border-left-color: rgba(190, 150, 50, 0.3);
+}
+.equip-slot:hover {
+    border-left-color: rgb(215, 170, 65);
+    background-color: rgba(50, 40, 75, 0.95);
+}
+.equip-slot-label {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    color: rgb(150, 130, 90);
+    width: 90px;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+.equip-slot-icon {
+    width: 44px;
+    height: 44px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 2px;
+    margin-right: 10px;
+}
+.equip-slot-name {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    color: rgb(220, 210, 190);
+    font-size: 14px;
+    flex-grow: 1;
+}
+
+/* Compact variant — vertical, icon-prominent (Character tab) */
+.equip-slot--compact {
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    padding: 12px;
+    margin-bottom: 8px;
+    align-items: center;
+    background-color: rgba(30, 24, 50, 0.85);
+    border-radius: 2px;
+    border-width: 1px;
+    border-left-width: 1px;
+    border-color: rgba(190, 150, 50, 0.3);
+    transition-property: border-color, background-color;
+    transition-duration: 0.12s;
+}
+.equip-slot--compact:hover {
+    border-color: rgb(215, 170, 65);
+    background-color: rgba(50, 40, 75, 0.95);
+}
+.equip-slot--compact .equip-slot-label {
+    width: auto;
+    margin-bottom: 6px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    -unity-text-align: middle-center;
+    color: rgb(150, 130, 90);
+}
+.equip-slot--compact .equip-slot-icon {
+    width: 64px;
+    height: 64px;
+    margin-right: 0;
+    margin-bottom: 6px;
+}
+.equip-slot--compact .equip-slot-name {
+    font-size: 11px;
+    -unity-text-align: middle-center;
+    flex-grow: 0;
+    width: 100%;
+    white-space: normal;
+}
+
+/* Vacant slot — dimmed so filled slots pop */
+.equip-slot--vacant {
+    border-color: rgba(190, 150, 50, 0.12);
+    background-color: rgba(30, 24, 50, 0.45);
+}
+.equip-slot--vacant .equip-slot-icon {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.equip-slot--vacant .equip-slot-name {
+    color: rgb(110, 100, 85);
+    -unity-font-style: italic;
+}
+
+/* Active (in-hand) weapon — gold badge + bright border */
+.equip-slot--active {
+    border-color: rgb(215, 170, 65);
+}
+.equip-slot-active-tag {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: rgb(8, 5, 22);
+    background-color: rgb(215, 170, 65);
+    padding: 1px 5px;
+    border-radius: 2px;
+}
+.equip-slot--active .equip-slot-active-tag {
+    display: flex;
+}
+
+/* ── Center character preview ────────────────────────────── */
+.character-preview {
+    flex-grow: 1;
+    background-color: rgba(15, 12, 30, 0.5);
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: rgba(190, 150, 50, 0.2);
+    align-items: center;
+    justify-content: center;
+}
+.preview-placeholder {
+    color: rgb(80, 70, 50);
+    font-size: 18px;
+    -unity-font-style: italic;
+    letter-spacing: 2px;
+}
+
+/* ── Item details popup ──────────────────────────────────── */
+.detail-panel {
+    position: absolute;
+    top: 240px;
+    left: 24px;
+    width: 380px;
+    height: auto;
+    flex-direction: column;
+    padding: 0;
+    background-color: rgba(8, 5, 22, 0.96);
+    border-radius: 4px;
+    border-width: 1px;
+    border-left-width: 3px;
+    border-color: rgba(190, 150, 50, 0.6);
+}
+/* Rarity stripe + header band tint, set by ItemDetailPanel.cs */
+.detail-panel--common    { border-left-color: rgb(160, 160, 160); }
+.detail-panel--uncommon  { border-left-color: rgb(91, 155, 58); }
+.detail-panel--rare      { border-left-color: rgb(77, 128, 198); }
+.detail-panel--legendary { border-left-color: rgb(156, 78, 214); }
+.detail-panel--exotic    { border-left-color: rgb(224, 176, 74); }
+.detail-panel--common    .detail-header { background-color: rgba(160, 160, 160, 0.12); }
+.detail-panel--uncommon  .detail-header { background-color: rgba(91, 155, 58, 0.14); }
+.detail-panel--rare      .detail-header { background-color: rgba(77, 128, 198, 0.14); }
+.detail-panel--legendary .detail-header { background-color: rgba(156, 78, 214, 0.14); }
+.detail-panel--exotic    .detail-header { background-color: rgba(224, 176, 74, 0.14); }
+
+.detail-header {
+    flex-direction: row;
+    align-items: center;
+    padding: 14px 18px;
+    margin-bottom: 4px;
+}
+.detail-icon {
+    width: 64px;
+    height: 64px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 3px;
+    margin-right: 14px;
+}
+.detail-titles {
+    flex-direction: column;
+    flex-grow: 1;
+}
+.detail-name {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    color: rgb(240, 230, 200);
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+.detail-rarity {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-top: 3px;
+}
+.detail-separator {
+    height: 1px;
+    background-color: rgba(190, 150, 50, 0.35);
+    margin: 0 18px 12px 18px;
+}
+.detail-description {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    color: rgb(180, 175, 160);
+    font-size: 13px;
+    -unity-font-style: italic;
+    white-space: normal;
+    margin: 0 18px 14px 18px;
+}
+.detail-stats {
+    flex-direction: column;
+    padding: 0 18px 16px 18px;
+}
+.detail-stat-row {
+    flex-direction: row;
+    align-items: center;
+    padding: 4px 0;
+}
+.detail-stat-label {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    color: rgb(160, 150, 120);
+    font-size: 12px;
+    letter-spacing: 1px;
+    width: 110px;
+}
+.detail-stat-value {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    color: rgb(215, 170, 65);
+    font-size: 13px;
+    width: 44px;
+    -unity-text-align: middle-right;
+}
+/* Destiny-style stat bars */
+.stat-bar-track {
+    flex-grow: 1;
+    height: 8px;
+    margin: 0 10px;
+    background-color: rgba(255, 255, 255, 0.07);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.stat-bar-fill {
+    height: 100%;
+    background-color: rgb(230, 225, 210);
+    border-radius: 2px;
+}
+
+/* Rarity text colors for the detail-rarity label */
+.detail-rarity--common    { color: rgb(160, 160, 160); }
+.detail-rarity--uncommon  { color: rgb(91, 155, 58); }
+.detail-rarity--rare      { color: rgb(77, 128, 198); }
+.detail-rarity--legendary { color: rgb(156, 78, 214); }
+.detail-rarity--exotic    { color: rgb(224, 176, 74); }

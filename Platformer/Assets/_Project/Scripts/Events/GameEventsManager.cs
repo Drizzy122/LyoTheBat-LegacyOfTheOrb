@@ -12,6 +12,7 @@ namespace Platformer
         public InputEvents inputEvents;
         public EnemyEvents enemyEvents;
         public DialogueEvents dialogueEvents;
+        public InventoryEvents inventoryEvents;
         
 
       
@@ -30,6 +31,7 @@ namespace Platformer
             inputEvents = new InputEvents();
             enemyEvents = new EnemyEvents();
             dialogueEvents = new DialogueEvents();
+            inventoryEvents = new InventoryEvents();
         }
     }
 }

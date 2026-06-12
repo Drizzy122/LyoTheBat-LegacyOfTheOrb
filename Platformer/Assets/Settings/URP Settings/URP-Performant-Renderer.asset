@@ -13,6 +13,17 @@ MonoBehaviour:
   m_Name: StylizedWater3.StylizedWaterRenderFeature
   m_EditorClassIdentifier: sc.stylizedwater3.runtime::StylizedWater3.StylizedWaterRenderFeature
   m_Active: 1
+  dynamicEffectsSettings:
+    enabled: 1
+    renderRange: 500
+    fadePercentage: 10
+    texelsPerUnit: 8
+    maxResolution: 4096
+    enableDisplacement: 1
+    enableNormals: 1
+    halfResolutionNormals: 0
+    normalMipmaps: 1
+    ignoreSceneView: 0
   transparencyRefraction: 0
   screenSpaceReflectionSettings:
     allow: 1
@@ -27,6 +38,52 @@ MonoBehaviour:
   heightReadbackCS: {fileID: 7200000, guid: 768e0c28dfdbc6b429fd59518fa03f2d, type: 3}
   heightProcessingShader: {fileID: 4800000, guid: a1cfcf2c2c8140c084fb10845093540e,
     type: 3}
+  underwaterRenderingSettings:
+    enable: 1
+    renderMethod: 0
+    ignoreSceneView: 0
+  underwaterResources: {fileID: 11400000, guid: 185c96ef53e9cf14bbc913f624752e24,
+    type: 2}
+--- !u!114 &-2891092381213823678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
+  m_Name: LowHealth
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.FullScreenPassRendererFeature
+  m_Active: 1
+  injectionPoint: 550
+  fetchColorBuffer: 1
+  requirements: 0
+  passMaterial: {fileID: 2100000, guid: 1696a24634d55d644b667286be96b024, type: 2}
+  passIndex: 0
+  bindDepthStencilAttachment: 0
+  m_Version: 1
+--- !u!114 &-24113231924589152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
+  m_Name: Wind
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.FullScreenPassRendererFeature
+  m_Active: 1
+  injectionPoint: 550
+  fetchColorBuffer: 1
+  requirements: 0
+  passMaterial: {fileID: 2100000, guid: 5bde12991c926474eb44dcf13cd9cf7a, type: 2}
+  passIndex: 0
+  bindDepthStencilAttachment: 0
+  m_Version: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55,7 +112,9 @@ MonoBehaviour:
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
   - {fileID: -6846889755996627466}
-  m_RendererFeatureMap: 
+  - {fileID: -24113231924589152}
+  - {fileID: -2891092381213823678}
+  m_RendererFeatureMap: a08dbfb02455aaff426de904ccc6e0d7
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}

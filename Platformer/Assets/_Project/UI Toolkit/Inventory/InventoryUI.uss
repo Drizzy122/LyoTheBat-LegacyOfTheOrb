@@ -1,0 +1,142 @@
+/* ════════════════════════════════════════════════════════
+   InventoryUI.uss — Inventory tab (consumables) only.
+   (CharacterUI.uss styles the Character tab.)
+   Gold/amber theme matching the Settings screens.
+   ════════════════════════════════════════════════════════ */
+
+/* Panel + header (header is hidden when embedded in the MenuHub) */
+.inventory-panel {
+    flex-grow: 1;
+    background-color: rgba(0, 0, 0, 0);
+    flex-direction: column;
+    padding: 32px;
+}
+.inventory-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.header-title {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/Ottselesque-Regular.otf?fileID=12800000&guid=b00bfdbd79d843a46b8b3fb62f619d32&type=3#Ottselesque-Regular");
+    font-size: 36px;
+    color: rgb(215, 170, 65);
+    letter-spacing: 2px;
+}
+.close-button {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(180, 60, 60, 0.6);
+    color: white;
+    -unity-font-style: bold;
+    border-radius: 4px;
+    border-width: 0;
+}
+.close-button:hover {
+    background-color: rgb(220, 80, 80);
+}
+
+/* Items panel */
+.grid-panel {
+    flex-grow: 1;
+    padding: 18px;
+    background-color: rgba(15, 12, 30, 0.75);
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: rgba(190, 150, 50, 0.3);
+}
+/* Section header row: title left, capacity counter right */
+.items-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+.section-title {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/Ottselesque-Regular.otf?fileID=12800000&guid=b00bfdbd79d843a46b8b3fb62f619d32&type=3#Ottselesque-Regular");
+    color: rgb(215, 170, 65);
+    font-size: 22px;
+    letter-spacing: 2px;
+}
+.capacity-label {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    color: rgb(150, 130, 90);
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+.section-underline {
+    height: 1px;
+    background-color: rgba(190, 150, 50, 0.35);
+    margin-bottom: 14px;
+}
+/* Shown when the player has no consumables */
+.empty-state {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    color: rgb(120, 110, 80);
+    font-size: 15px;
+    -unity-font-style: italic;
+    padding: 24px 8px;
+}
+
+/* Grid */
+.item-scroll {
+    flex-grow: 1;
+}
+.item-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+/* Item tiles (full size) */
+.item-tile {
+    width: 80px;
+    height: 80px;
+    margin: 4px;
+    background-color: rgba(30, 24, 50, 0.9);
+    border-width: 1px;
+    border-color: rgba(190, 150, 50, 0.25);
+    border-radius: 2px;
+    align-items: center;
+    justify-content: center;
+    transition-property: border-color, background-color;
+    transition-duration: 0.12s;
+}
+.item-tile:hover {
+    border-color: rgb(215, 170, 65);
+    background-color: rgba(50, 40, 75, 0.95);
+}
+.item-tile--equipped {
+    border-color: rgb(190, 150, 50);
+    border-width: 2px;
+    background-color: rgba(60, 48, 95, 0.95);
+}
+.item-tile-icon {
+    width: 64px;
+    height: 64px;
+}
+/* Quantity badge — dark pill, bottom-right */
+.item-tile-quantity {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    color: rgb(215, 170, 65);
+    font-size: 12px;
+    background-color: rgba(8, 5, 22, 0.85);
+    padding: 1px 5px;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: rgba(190, 150, 50, 0.4);
+}
+
+/* Rarity tiers */
+.item-tile--common    { border-color: rgb(160, 160, 160); }
+.item-tile--uncommon  { border-color: rgb(91, 155, 58); }
+.item-tile--rare      { border-color: rgb(77, 128, 198); }
+.item-tile--legendary { border-color: rgb(156, 78, 214); }
+.item-tile--exotic    { border-color: rgb(224, 176, 74); }
+.item-tile--common:hover    { border-color: rgb(200, 200, 200); }
+.item-tile--uncommon:hover  { border-color: rgb(130, 195, 90); }
+.item-tile--rare:hover      { border-color: rgb(120, 170, 230); }
+.item-tile--legendary:hover { border-color: rgb(200, 130, 240); }
+.item-tile--exotic:hover    { border-color: rgb(255, 215, 110); }

@@ -13,8 +13,14 @@ namespace Platformer
         public static SettingsManager instance { get; private set; }
 
         [field: Header("UI Document")]
-        [field: SerializeField, Self] private UIDocument document;
+        [field: SerializeField] private UIDocument document;
         private VisualElement rootContainer;
+
+        [Header("Behavior")]
+        [SerializeField, Tooltip(
+            "True (standalone): SettingsContainer starts hidden, shown via ActivateMenu().\n" +
+            "False (embedded in MenuHub): TabView controls visibility — don't auto-hide.")]
+        private bool startHidden = true;
 
         [field: Header("Window Mode")]
         [field: SerializeField] private string[] windowModes = { "Fullscreen", "Borderless", "Maximized", "Windowed" };
@@ -71,7 +77,7 @@ namespace Platformer
             
             // 2. Set initial state
             RefreshAllUI();
-            DeactivateMenu();
+            if (startHidden) DeactivateMenu();
         }
 
         #region Initialization Methods

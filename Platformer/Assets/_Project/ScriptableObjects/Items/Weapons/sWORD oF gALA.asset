@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95deeb35195bfcf40ac073a5f4a5c4d5, type: 3}
+  m_Name: sWORD oF gALA
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.WeaponData
+  <id>k__BackingField: sWORD oF gALA
+  <displayName>k__BackingField: 
+  <description>k__BackingField: 
+  <icon>k__BackingField: {fileID: 0}
+  <rarity>k__BackingField: 2
+  <maxStack>k__BackingField: 1
+  <slot>k__BackingField: 2
+  <weaponPrefab>k__BackingField: {fileID: 1626995285411598704, guid: 874f9c68f1306b04f811ed9722115a79,
+    type: 3}
+  <damage>k__BackingField: 10
+  <attackSpeed>k__BackingField: 1
+  <range>k__BackingField: 1
+  <knockback>k__BackingField: 0.5

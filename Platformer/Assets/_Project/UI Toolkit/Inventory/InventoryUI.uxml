@@ -1,0 +1,41 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/_Project/UI%20Toolkit/Inventory/InventoryUI.uss?fileID=7433441132597879392&amp;guid=4f44b24bbad836542b9782697c0826d1&amp;type=3#InventoryUI"/>
+    <ui:VisualElement name="inventory-panel" class="inventory-panel" style="display: flex;">
+        <ui:VisualElement name="inventory-header" class="inventory-header">
+            <ui:Label name="inventory-title" text="Inventory" class="header-title"/>
+            <ui:Button name="close-button" text="X" class="close-button"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="items-panel" class="grid-panel">
+            <ui:VisualElement name="items-header" class="items-header">
+                <ui:Label name="items-section-title" text="CONSUMABLES" class="section-title"/>
+                <ui:Label name="items-capacity" text="0/50" class="capacity-label"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="items-underline" class="section-underline"/>
+            <ui:Label name="empty-state" text="No consumables yet — potions and food you collect will appear here." class="empty-state" style="display: none;"/>
+            <ui:ScrollView name="item-scroll" class="item-scroll">
+                <ui:VisualElement name="item-grid" class="item-grid">
+                    <!-- DESIGN-TIME PREVIEW tiles — cleared at runtime by InventoryUIController.
+                         Style tiles via the USS classes, not inline on these elements. -->
+                    <ui:VisualElement class="item-tile item-tile--common">
+                        <ui:VisualElement class="item-tile-icon"/>
+                        <ui:Label text="x5" class="item-tile-quantity"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="item-tile item-tile--uncommon">
+                        <ui:VisualElement class="item-tile-icon"/>
+                        <ui:Label text="x12" class="item-tile-quantity"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="item-tile item-tile--rare">
+                        <ui:VisualElement class="item-tile-icon"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="item-tile item-tile--legendary">
+                        <ui:VisualElement class="item-tile-icon"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="item-tile item-tile--exotic">
+                        <ui:VisualElement class="item-tile-icon"/>
+                        <ui:Label text="x99" class="item-tile-quantity"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:ScrollView>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

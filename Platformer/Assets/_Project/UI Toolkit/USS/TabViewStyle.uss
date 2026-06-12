@@ -81,6 +81,7 @@
 .settings-content-area {
     flex-grow: 1;
     flex-direction: column;
+    justify-content: space-evenly;
     padding-top: 40px;
     padding-bottom: 40px;
     padding-left: 50px;

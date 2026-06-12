@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a05fbaaf01be229428d6e0e3611862e6, type: 3}
+  m_Name: HealthPotion
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.ConsumableData
+  <id>k__BackingField: HealthPotion
+  <displayName>k__BackingField: potion
+  <description>k__BackingField: health potion
+  <icon>k__BackingField: {fileID: 641452470, guid: a5129965d9f7c604cb1842f6662f7e07,
+    type: 3}
+  <rarity>k__BackingField: 2
+  <maxStack>k__BackingField: 99
+  <healAmount>k__BackingField: 40

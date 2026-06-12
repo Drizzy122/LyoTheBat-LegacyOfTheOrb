@@ -5,6 +5,13 @@ using UnityEngine;
 namespace Platformer
 {
     [System.Serializable]
+    public struct InventoryEntry
+    {
+        public string itemId;
+        public int quantity;
+    }
+
+    [System.Serializable]
     public class GameData
     {
         public long lastUpdated;
@@ -13,8 +20,13 @@ namespace Platformer
         public SerializableDictionary<string, bool> coinsCollected;
         public SerializableDictionary<string, bool> ecliptiumCollected;
         public SerializableDictionary<string, bool> luminCollected;
-        // sword
+        // sword (legacy — superseded by inventoryItems, kept for back-compat with old saves)
         public bool hasSword;
+        // inventory & equipment
+        public List<InventoryEntry> inventoryItems;
+        public SerializableDictionary<string, string> equippedSlots; // slot.ToString() → itemId
+        // generic world pickups (Health / Item collectables) — keyed by collectable id
+        public SerializableDictionary<string, bool> collectablesCollected;
         // notifications
         public SerializableDictionary<string, bool> notificationsTriggered;
 
@@ -30,6 +42,10 @@ namespace Platformer
             luminCollected = new SerializableDictionary<string, bool>();
             // sword & notifications
             hasSword = false;
+            // inventory & equipment
+            inventoryItems = new List<InventoryEntry>();
+            equippedSlots = new SerializableDictionary<string, string>();
+            collectablesCollected = new SerializableDictionary<string, bool>();
             notificationsTriggered = new SerializableDictionary<string, bool>();
         }
 
