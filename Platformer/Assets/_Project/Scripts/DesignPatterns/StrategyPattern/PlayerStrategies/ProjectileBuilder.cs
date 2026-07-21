@@ -31,9 +31,11 @@ public class ProjectileBuilder
         return this;
     }
 
-    public GameObject Build(Transform origin)
+    public GameObject Build(Transform origin) => Build(origin.position, origin.rotation);
+
+    public GameObject Build(Vector3 position, Quaternion rotation)
     {
-        GameObject blastProjectile = Object.Instantiate(_projectilePrefab, origin.position, origin.rotation);
+        GameObject blastProjectile = Object.Instantiate(_projectilePrefab, position, rotation);
 
         // Ignore all caster colliders immediately — before any physics step
         if (_caster != null && blastProjectile.TryGetComponent<Collider>(out var projectileCollider))
@@ -43,7 +45,7 @@ public class ProjectileBuilder
         }
 
         if (blastProjectile.TryGetComponent<Rigidbody>(out var rb))
-            rb.linearVelocity = origin.forward * _speed;
+            rb.linearVelocity = rotation * Vector3.forward * _speed;
 
         Object.Destroy(blastProjectile, _duration);
 

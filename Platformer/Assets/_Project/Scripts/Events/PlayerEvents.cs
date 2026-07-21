@@ -49,6 +49,12 @@ namespace Platformer
             }
         }
 
+        public event Action<int> onLuminChargesChanged;
+        public void LuminChargesChanged(int charges) => onLuminChargesChanged?.Invoke(charges);
+
+        public event Action<int> onComboChanged;
+        public void ComboChanged(int combo) => onComboChanged?.Invoke(combo);
+
         public event Action<float> onPlayerHit;
         public void PlayerHit(float knockback)
         {

@@ -1,11 +1,12 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using KBCore.Refs;
 using Cursor = UnityEngine.Cursor;
 
 namespace Platformer
 {
-    public enum MenuTab { Map, QuestLog, Character, Inventory, Settings }
+    public enum MenuTab { Map, QuestLog, Character, Inventory, Abilities, Settings }
 
     /// <summary>
     /// Owns the menu hub shell: toggle via pause button, cycle tabs with LB/RB,
@@ -23,10 +24,13 @@ namespace Platformer
         [Header("Default")]
         [SerializeField] MenuTab defaultTab = MenuTab.Character;
 
+        [Header("Return To Menu")]
+        [SerializeField] string mainMenuSceneName = "MainMenu";
+
         // LB/RB cycle through this order. Must match the Tab order in the UXML.
         static readonly MenuTab[] TabOrder =
         {
-            MenuTab.Map, MenuTab.QuestLog, MenuTab.Character, MenuTab.Inventory, MenuTab.Settings
+            MenuTab.Map, MenuTab.QuestLog, MenuTab.Character, MenuTab.Inventory, MenuTab.Abilities, MenuTab.Settings
         };
 
         VisualElement panel;
@@ -34,6 +38,10 @@ namespace Platformer
 
         MenuTab activeTab;
         bool isOpen;
+
+        // Context to restore on close — pausing mid-dialogue must return to
+        // DIALOGUE, not DEFAULT, so NPCs don't react to menu button presses.
+        InputEventContext contextBeforeOpen = InputEventContext.DEFAULT;
 
         void Reset() => document = GetComponent<UIDocument>();
 
@@ -43,9 +51,34 @@ namespace Platformer
             panel = root.Q<VisualElement>("menu-hub");
             tabView = root.Q<TabView>("main-tabs");
 
+            // The settings tree hides this button by default (it's shared with the
+            // main menu's settings, where it makes no sense) — the in-game hub
+            // reveals and wires it.
+            var returnButton = root.Q<Button>("ReturnToMenuButton");
+            if (returnButton != null)
+            {
+                returnButton.style.display = DisplayStyle.Flex;
+                returnButton.clicked += ReturnToMainMenu;
+            }
+
             SubscribeInput();
             SetVisible(false);
             SetActiveTab(defaultTab);
+        }
+
+        void ReturnToMainMenu()
+        {
+            // Persist progress before leaving gameplay
+            if (DataPersistenceManager.instance != null) DataPersistenceManager.instance.SaveGame();
+
+            // Undo the pause state by hand — Close() locks the cursor for gameplay,
+            // but the main menu wants it free
+            Time.timeScale = 1f;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            if (input != null) input.EnablePlayerMap();
+
+            SceneManager.LoadScene(mainMenuSceneName);
         }
 
         void OnDisable()
@@ -109,6 +142,13 @@ namespace Platformer
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
+            var inputEvents = GameEventsManager.instance != null ? GameEventsManager.instance.inputEvents : null;
+            if (inputEvents != null)
+            {
+                contextBeforeOpen = inputEvents.inputEventContext;
+                inputEvents.ChangeInputEventContext(InputEventContext.MENU);
+            }
+
             if (input != null) input.DisablePlayerMap();
             if (playerMovement != null) playerMovement.enabled = false;
         }
@@ -123,8 +163,14 @@ namespace Platformer
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
-            if (input != null) input.EnablePlayerMap();
-            if (playerMovement != null) playerMovement.enabled = true;
+            if (GameEventsManager.instance != null)
+                GameEventsManager.instance.inputEvents.ChangeInputEventContext(contextBeforeOpen);
+
+            // Paused mid-dialogue: leave gameplay input/movement to DialogueManager —
+            // it re-enables both when the conversation actually ends.
+            bool inDialogue = contextBeforeOpen == InputEventContext.DIALOGUE;
+            if (input != null && !inDialogue) input.EnablePlayerMap();
+            if (playerMovement != null && !inDialogue) playerMovement.enabled = true;
         }
 
         void SetVisible(bool show) => panel.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;

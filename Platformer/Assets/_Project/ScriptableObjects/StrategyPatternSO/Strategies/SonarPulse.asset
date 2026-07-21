@@ -13,11 +13,10 @@ MonoBehaviour:
   m_Name: SonarPulse
   m_EditorClassIdentifier: Assembly-CSharp::SonarPulseAbility
   abilityName: SonarPulse
-  cooldownTime: 2
   detectionLayer:
     serializedVersion: 2
     m_Bits: 320
-  detectionRadius: 30
+  detectionRadius: 1000
   detectionDuration: 3
   terrainScanPrefab: {fileID: 3466635451878667950, guid: 0b3ec2c3b0878b84996f66068aad430d,
     type: 3}

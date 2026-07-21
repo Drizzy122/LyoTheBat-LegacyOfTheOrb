@@ -33,6 +33,11 @@ namespace Platformer
         [field: SerializeField] VisualEffect VFXGraph;
         [field: SerializeField] float dissolveRate = 0.0125f;
         [field: SerializeField] float refreshRate = 0.025f;
+        [field: SerializeField] float hitFlashDuration = 0.08f;
+
+        static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        static readonly int ColorId = Shader.PropertyToID("_Color");
+        Coroutine hitFlashRoutine;
         
         [field: Header("State")]
         public float currentHealth { get; private set; }
@@ -78,15 +83,45 @@ namespace Platformer
             currentHealth = Mathf.Clamp(currentHealth + value, 0, maxHealth);
             PublishHealthPercentage();
         }
+
+        /// <summary>Change max health (e.g. level-up scaling). When growing and
+        /// healByDelta is true, the gained chunk is granted as current health too —
+        /// leveling up feels like a reward, not a suddenly-emptier bar.</summary>
+        public void SetMaxHealth(float newMax, bool healByDelta = true)
+        {
+            float delta = newMax - maxHealth;
+            maxHealth = Mathf.Max(1f, newMax);
+            if (healByDelta && delta > 0f) currentHealth += delta;
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+            PublishHealthPercentage();
+        }
         
         private void PublishHealthPercentage()
         {
             if (healthEventChannel != null)
                 healthEventChannel.Invoke(currentHealth / maxHealth);
         }
+
+        /// <summary>External i-frame control (e.g. dodge). Player-only — enemies
+        /// never get invulnerability. Reuses the same player/enemy collision-ignore
+        /// trick as the post-hit invulnerability.</summary>
+        public void SetInvulnerable(bool value)
+        {
+            if (entityHealth != EntityHealth.Player) return;
+            IsInvulnerable = value;
+            Physics.IgnoreLayerCollision(6, 7, value);
+        }
         
+        AbilityTree abilityTree;
+
         public void TakeDamage(float damage, float knockBackTime = 0f)
         {
+            // Defense branch of the ability tree — flat damage reduction, never below 1.
+            // Only the player has an AbilityTree component; enemies are unaffected.
+            if (abilityTree == null) abilityTree = GetComponent<AbilityTree>();
+            if (abilityTree != null && damage > 0f)
+                damage = Mathf.Max(1f, damage - abilityTree.GetStat(AbilityTree.StatDefense));
+
             currentHealth = Mathf.Clamp(currentHealth - damage, 0, maxHealth);
             if (currentHealth > 0)
             {
@@ -114,6 +149,12 @@ namespace Platformer
                     OnHit?.Invoke(knockBackTime);
                     GameEventsManager.instance.enemyEvents.EnemyHit(knockBackTime);
                     AudioManager.instance.PlayOneShot(FMODEvents.instance.enemyHurt, transform.position);
+
+                    if (enemySkinnedMesh != null)
+                    {
+                        if (hitFlashRoutine != null) StopCoroutine(hitFlashRoutine);
+                        hitFlashRoutine = StartCoroutine(HitFlash());
+                    }
                     break;
             }
         }
@@ -159,7 +200,29 @@ namespace Platformer
             IsInvulnerable = false;
         }
 
-        private void RestartScene() => SceneManager.LoadScene("Game");
+        // Overbright white flash via MaterialPropertyBlock — no material instancing,
+        // resets cleanly, and silently does nothing if the shader has no color property.
+        private IEnumerator HitFlash()
+        {
+            var mat = enemySkinnedMesh.sharedMaterial;
+            int prop = mat != null && mat.HasProperty(BaseColorId) ? BaseColorId
+                     : mat != null && mat.HasProperty(ColorId) ? ColorId : -1;
+            if (prop == -1) yield break;
+
+            var block = new MaterialPropertyBlock();
+            enemySkinnedMesh.GetPropertyBlock(block);
+            block.SetColor(prop, Color.white * 4f);
+            enemySkinnedMesh.SetPropertyBlock(block);
+
+            // Realtime so the flash isn't stretched by hitstop
+            yield return new WaitForSecondsRealtime(hitFlashDuration);
+
+            block.Clear();
+            enemySkinnedMesh.SetPropertyBlock(block);
+            hitFlashRoutine = null;
+        }
+
+        private void RestartScene() => SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         
         IEnumerator DissolveCo()
         {

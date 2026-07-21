@@ -32,6 +32,14 @@ namespace Platformer
         [ContextMenu("Generate guid for id")]
         private void GenerateGuid() => id = System.Guid.NewGuid().ToString();
 
+        /// <summary>Call on runtime-spawned drops (enemy loot) so they get a fresh
+        /// save-id and never collide with authored pickups in the save file.</summary>
+        public void InitAsRuntimeDrop()
+        {
+            id = System.Guid.NewGuid().ToString();
+            isCollected = false;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (isCollected) return;

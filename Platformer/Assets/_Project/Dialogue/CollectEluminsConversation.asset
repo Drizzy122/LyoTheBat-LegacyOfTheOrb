@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45cbe2fe1e2101b41bb046315ec452de, type: 3}
+  m_Name: CollectEluminsConversation
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.DialogueConversationSO
+  quest: {fileID: 11400000, guid: d787a6c7d2a896643af0d476f0e939e0, type: 2}
+  requirementsNotMet:
+    lines:
+    - speaker: 
+      text: "You\u2019re not quite ready for this task. Come back after you\u2019ve
+        gained a bit more experience."
+    choices: []
+  canStart:
+    lines:
+    - speaker: 
+      text: Hey, traveler! Could I ask a favor?
+    choices:
+    - text: What do you need help with?
+      action: 0
+      responseLines:
+      - speaker: 
+        text: There are Bugs and Plague bats in the abandoned island can you clear
+          that area please
+    - text: Of Course
+      action: 1
+      responseLines:
+      - speaker: 
+        text: Perfect thank you so much!
+    - text: Not right now.
+      action: 0
+      responseLines:
+      - speaker: 
+        text: No worries. Come back if you change your mind.
+  inProgress:
+    lines:
+    - speaker: 
+      text: Those bugs and plague bats destroyed that island, its a shame really
+        it is said that there is a powerful orb somewhere within the island that
+        can give you incredible power?
+    choices: []
+  canFinish:
+    lines:
+    - speaker: 
+      text: "You defeated all enemies? Incredible\u2014thank you!"
+    choices:
+    - text: no worries.
+      action: 3
+      responseLines:
+      - speaker: 
+        text: you are the best, return to me soon and ill have another mission for
+          you.
+  finished:
+    lines:
+    - speaker: 
+      text: Thanks again for your help!
+    choices: []
+  fallback:
+    lines:
+    - speaker: 
+      text: Hm? What do you want?
+    choices:
+    - text: Nothing, I guess.
+      action: 0
+      responseLines: []

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c61768a1516ef0a449f9f7f93772fd01, type: 3}
+  m_Name: ability_power_1
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.AbilityNodeData
+  id: ability_power_1
+  displayName: Twin Bolt
+  description: Blast attack fires +1 projectile.
+  icon: {fileID: 0}
+  branch: 1
+  tier: 1
+  cost: 1
+  statKey: blast_projectiles
+  statValue: 1

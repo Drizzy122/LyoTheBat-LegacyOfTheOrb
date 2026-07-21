@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Ink.Runtime;
 
 namespace Platformer
 {
@@ -58,7 +57,7 @@ namespace Platformer
             choicesContainer.Clear();
         }
 
-        private void DisplayDialogue(string dialogueLine, List<Choice> dialogueChoices)
+        private void DisplayDialogue(string dialogueLine, List<string> dialogueChoices)
         {
             dialogueTextLabel.text = dialogueLine;
             choicesContainer.Clear();
@@ -75,11 +74,10 @@ namespace Platformer
 
             for (int i = 0; i < dialogueChoices.Count; i++)
             {
-                Choice dialogueChoice = dialogueChoices[i];
-                int choiceIndex = i; 
+                int choiceIndex = i;
 
                 Button choiceButton = new Button();
-                choiceButton.text = dialogueChoice.text;
+                choiceButton.text = dialogueChoices[i];
                 choiceButton.AddToClassList("dialogue-choice-button"); // For your USS styling
 
                 // Keyboard/Gamepad focus

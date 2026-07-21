@@ -14,9 +14,6 @@ namespace Platformer
         [Header("UI Toolkit Integration")]
         [SerializeField] private UIDocument uiDocument;
         [SerializeField] private string targetElementID = "StaminaBar";
-        [Tooltip("If true, the container will fade out when the bar reaches 100%.")]
-        [SerializeField] private bool hideWhenFull = true;
-        [SerializeField] private string containerElementID = "StaminaContainer";
 
         private float currentStamina;
         private bool isGliding;
@@ -24,7 +21,6 @@ namespace Platformer
 
         // UI Toolkit Variables
         private VisualElement barFill;
-        private VisualElement barContainer;
 
         private void Awake()
         {
@@ -41,11 +37,6 @@ namespace Platformer
             {
                 var root = uiDocument.rootVisualElement;
                 barFill = root.Q<VisualElement>(targetElementID);
-
-                if (hideWhenFull)
-                {
-                    barContainer = root.Q<VisualElement>(containerElementID);
-                }
             }
             else
             {
@@ -88,12 +79,6 @@ namespace Platformer
             {
                 // Snap the width (Rely on USS transitions for smoothing)
                 barFill.style.width = new Length(fraction * 100f, LengthUnit.Percent);
-            }
-
-            // 3. Handle the fade out when full
-            if (hideWhenFull && barContainer != null)
-            {
-                barContainer.style.opacity = fraction >= 0.99f ? 0f : 1f;
             }
         }
 

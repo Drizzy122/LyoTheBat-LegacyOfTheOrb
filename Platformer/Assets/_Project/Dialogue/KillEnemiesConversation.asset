@@ -1,0 +1,160 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45cbe2fe1e2101b41bb046315ec452de, type: 3}
+  m_Name: KillEnemiesConversation
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.DialogueConversationSO
+  quest: {fileID: 11400000, guid: dc46214149acf2444a49964e7fd0f2e2, type: 2}
+  requirementsNotMet:
+    lines:
+    - speaker: Elder Vesper
+      text: "Mm? You're eager, little wing \u2014 I can hear it in your heartbeat.
+        But eagerness alone won't keep you alive out there."
+    - speaker: Elder Vesper
+      text: Grow a little stronger first. Then we'll talk.
+    repeatLines: []
+    choices: []
+  canStart:
+    lines:
+    - speaker: Elder Vesper
+      text: Ah... Lyo. Come closer, let these old ears have a look at you.
+    - speaker: Elder Vesper
+      text: "You've heard the skittering at night, haven't you? The island across
+        the water \u2014 it's crawling with bugs and plague bats now."
+    - speaker: Elder Vesper
+      text: They've already chewed through half our supply caves. If no one thins
+        them out, the village won't last the season.
+    - speaker: Elder Vesper
+      text: You're young, but you fly better than anyone I've seen. Will you help
+        us?
+    repeatLines:
+    - speaker: Elder Vesper
+      text: "Back again, little wing? The island still crawls \u2014 and my offer
+        still stands."
+    choices:
+    - text: What exactly am I dealing with?
+      action: 0
+      responseLines:
+      - speaker: Elder Vesper
+        text: "Bugs the size of your head, and plague bats \u2014 twisted, sickly
+          things. They were ordinary creatures once, before the island changed."
+      - speaker: Elder Vesper
+        text: Some say it started when the old Orb was lost there. But that's a story
+          for another night.
+      - speaker: Elder Vesper
+        text: Come back when you're ready to give me an answer.
+    - text: Is there anything in it for me?
+      action: 0
+      responseLines:
+      - speaker: Elder Vesper
+        text: "Ha! Spoken like a true forager. Twenty-five coins from the village
+          chest, and you'll come back tougher than you left \u2014 that I can promise."
+      - speaker: Elder Vesper
+        text: Well? Do we have a deal or not, little wing?
+    - text: I'll clear the island.
+      action: 1
+      responseLines:
+      - speaker: Elder Vesper
+        text: I knew there was steel under those wings.
+      - speaker: Elder Vesper
+        text: "Glide across when the water is calm, and trust your ears \u2014 your
+          echo will find them before your eyes do."
+      - speaker: Elder Vesper
+        text: Thin them out and come straight back to me. Don't linger after dark.
+    - text: Not right now.
+      action: 0
+      responseLines:
+      - speaker: Elder Vesper
+        text: "Hmph. Honesty is better than bravado \u2014 I'll give you that."
+      - speaker: Elder Vesper
+        text: The island isn't going anywhere. Sadly. Come back when you find your
+          nerve.
+  inProgress:
+    lines:
+    - speaker: Elder Vesper
+      text: Still breathing? Good. The island hasn't beaten you yet.
+    - speaker: Elder Vesper
+      text: Trust your echo, strike before they swarm, and don't let the plague bats
+        corner you against the cliffs.
+    repeatLines:
+    - speaker: Elder Vesper
+      text: The hunt's not done, little wing. What do you need?
+    choices:
+    - text: Tell me about the Orb you mentioned.
+      action: 0
+      responseLines:
+      - speaker: Elder Vesper
+        text: "Curious little thing, aren't you. Long ago this valley was watched
+          over by a great Orb of light \u2014 until it was carried off and lost on
+          that very island."
+      - speaker: Elder Vesper
+        text: Some nights, when the water is still, you can see a faint glow through
+          the mist. Old eyes playing tricks... or maybe not.
+      - speaker: Elder Vesper
+        text: Finish the hunt first, Lyo. Legends keep better than villages do.
+    - text: Just checking in.
+      action: 0
+      responseLines:
+      - speaker: Elder Vesper
+        text: "Then off with you \u2014 every hour we wait, they multiply."
+  canFinish:
+    lines:
+    - speaker: Elder Vesper
+      text: The night sounds... quiet. Quieter than it's been in months.
+    - speaker: Elder Vesper
+      text: You actually did it, didn't you? The swarm is broken!
+    - speaker: Elder Vesper
+      text: "Come here, let me look at you \u2014 not a scratch worth crying over.
+        Incredible."
+    repeatLines:
+    - speaker: Elder Vesper
+      text: Ready to make it official, little wing?
+    choices:
+    - text: The island is clear.
+      action: 3
+      responseLines:
+      - speaker: Elder Vesper
+        text: "Wings of my wings, you've saved us all. Take this \u2014 twenty-five
+          coins, and worth every one."
+      - speaker: Elder Vesper
+        text: Rest tonight, Lyo. You've earned it.
+      - speaker: Elder Vesper
+        text: And come see me tomorrow. There's something glowing out on that island...
+          something I want you to see for yourself.
+    - text: "Not yet \u2014 I want to double-check the island."
+      action: 0
+      responseLines:
+      - speaker: Elder Vesper
+        text: Careful is a fine way to stay alive. Return when you're certain.
+  finished:
+    lines:
+    - speaker: Elder Vesper
+      text: There's a lightness in the village I haven't felt in years. That's your
+        doing, little wing.
+    - speaker: Elder Vesper
+      text: "Now \u2014 about those glowing elumins on the island. They won't gather
+        themselves..."
+    repeatLines: []
+    choices:
+    - text: Just passing through.
+      action: 0
+      responseLines:
+      - speaker: Elder Vesper
+        text: Then pass through often. The village sleeps easier with you around.
+  fallback:
+    lines:
+    - speaker: Elder Vesper
+      text: "Hm? Speak up, little wing \u2014 these ears are old."
+    repeatLines: []
+    choices:
+    - text: Never mind.
+      action: 0
+      responseLines: []

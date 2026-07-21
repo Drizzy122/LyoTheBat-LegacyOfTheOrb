@@ -25,9 +25,12 @@ public class SonarPulseStrategy : AbilityStrategy
             GameObject vfx = Instantiate(terrainScanPrefab, player.transform.position, Quaternion.identity, player.transform);
             Destroy(vfx, 3f); // Clean it up after 3 seconds
         }
-        
-        // 2 Highlight Objects 
-        
+
+        // Screen dims for the scan window, then eases back on its own
+        SonarVisionEffect.Instance?.Play(detectionDuration);
+
+        // 2 Highlight Objects
+
         Collider[] detectedObjects = Physics.OverlapSphere(player.transform.position, detectionRadius, detectionLayer);
         bool foundSomething = false;
         foreach (Collider collider in detectedObjects)

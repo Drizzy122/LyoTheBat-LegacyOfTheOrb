@@ -31,8 +31,10 @@ namespace Platformer
         [field: SerializeField] int lightAttackDamage = 10;
         [field: SerializeField] int punchDamage = 5;
         [field: SerializeField] float knockbackTime = 0.5f;
-        [field: SerializeField] float attackCoolDown = 0.5f;
-        [field: SerializeField] float blastAttackCoolDown = 0.5f;
+        [Tooltip("Despite the name, this is how long the attack STATE lasts (how much of the swing animation plays). Ground combo clips are 1.6-1.9s.")]
+        [field: SerializeField] float attackCoolDown = 0.9f;
+        [Tooltip("How long the blast STATE lasts. The air/wave clips are ~0.85-0.9s.")]
+        [field: SerializeField] float blastAttackCoolDown = 0.85f;
 
         private CountdownTimer attackTimer;
         private CountdownTimer blastAttackTimer;
@@ -48,6 +50,10 @@ namespace Platformer
         [field: Header("Freeflow Settings")]
         [field: SerializeField] [Range(0, 20)] float targetingRadius = 8f;
         [field: SerializeField] float slideDuration = 0.2f;
+        [field: SerializeField] float maxLungeRange = 6f;
+
+        private Tween lungeMoveTween;
+        private Tween pendingAttackCall;
 
         [field: Header("Camera Shake Settings")]
         [field: SerializeField] float minShakeForce = 0.5f;
@@ -57,9 +63,11 @@ namespace Platformer
         [field: Header("VFX Settings")]
         [field: SerializeField] VisualEffect slashVFX;
         [field: SerializeField] ComboSlash[] comboSlashes;
+        [field: SerializeField] GameObject impactVFX;
 
         private PlayerMovement playerMovement;
         private PlayerEquipment playerEquipment;
+        private PlayerAim playerAim;
 
         // Derived from whatever weapon is currently IN HAND (active slot).
         public bool hasWeapon => playerEquipment != null && playerEquipment.ActiveWeapon != null;
@@ -84,10 +92,22 @@ namespace Platformer
 
         void OnSwapWeapon() => playerEquipment?.SwapActiveWeapon();
 
-        void OnLuminCollected() => luminCharges += 5;
+        void OnLuminCollected()
+        {
+            luminCharges += 5;
+            GameEventsManager.instance?.playerEvents.LuminChargesChanged(luminCharges);
+        }
 
         void OnLightAttack()
         {
+            // While aiming with charges available, the attack button fires the blast
+            // at the reticle (Spider-Man style) instead of swinging melee
+            if (playerAim != null && playerAim.IsAiming && luminCharges > 0)
+            {
+                OnBlastAttack();
+                return;
+            }
+
             if (!IsAttacking) attackTimer.Start();
         }
 
@@ -100,6 +120,11 @@ namespace Platformer
         {
             attackTimer?.Stop();
             blastAttackTimer?.Stop();
+
+            // Also kill any in-flight lunge and its pending hit — otherwise getting
+            // hurt mid-attack still slides us in and lands the swing from HurtState.
+            lungeMoveTween?.Kill();
+            pendingAttackCall?.Kill();
         }
 
         
@@ -108,10 +133,14 @@ namespace Platformer
 
 
 
+        AbilityTree abilityTree;
+
         void Awake()
         {
             playerMovement = GetComponent<PlayerMovement>();
             playerEquipment = GetComponent<PlayerEquipment>();
+            playerAim = GetComponent<PlayerAim>();
+            abilityTree = GetComponent<AbilityTree>();
             attackTimer = new CountdownTimer(attackCoolDown);
             blastAttackTimer = new CountdownTimer(blastAttackCoolDown);
 
@@ -139,10 +168,11 @@ namespace Platformer
         {
             if (playerEquipment == null) return;
 
-            bool shouldHide = playerMovement != null &&
-                              (playerMovement.IsGliding || playerMovement.wallClimbimg || playerMovement.InWater);
+            bool shouldHide = (playerMovement != null &&
+                              (playerMovement.IsGliding || playerMovement.wallClimbimg || playerMovement.InWater))
+                              || (playerAim != null && playerAim.IsAiming);
 
-            // Active weapon + shield both tuck away while gliding/climbing/swimming.
+            // Active weapon + shield tuck away while gliding/climbing/swimming/aiming.
             var weaponVisual = playerEquipment.GetEquippedVisual(playerEquipment.ActiveWeaponSlot);
             if (weaponVisual != null) weaponVisual.SetActive(!shouldHide);
 
@@ -150,19 +180,28 @@ namespace Platformer
             if (shieldVisual != null) shieldVisual.SetActive(!shouldHide);
         }
 
-        /// <summary>Damage to apply on a successful melee hit. Pulls from the ACTIVE weapon when present.</summary>
+        /// <summary>Damage to apply on a successful melee hit. Pulls from the ACTIVE weapon
+        /// when present, plus the Combat branch bonus from the ability tree.</summary>
         int CurrentMeleeDamage()
         {
-            if (!hasWeapon) return punchDamage;
+            int abilityBonus = abilityTree != null
+                ? Mathf.RoundToInt(abilityTree.GetStat(AbilityTree.StatMeleeDamage))
+                : 0;
+
+            if (!hasWeapon) return punchDamage + abilityBonus;
             var weapon = playerEquipment.ActiveWeapon.data as WeaponData;
-            return weapon != null ? weapon.damage : lightAttackDamage;
+            return (weapon != null ? weapon.damage : lightAttackDamage) + abilityBonus;
         }
 
         
 
         void Start()
         {
-            impulseSource = GetComponentInChildren<CinemachineImpulseSource>();
+            if (impulseSource == null)
+                impulseSource = GetComponentInChildren<CinemachineImpulseSource>();
+
+            // Initial broadcast so the HUD charge bar starts correct.
+            GameEventsManager.instance?.playerEvents.LuminChargesChanged(luminCharges);
         }
         public void PlaySlashVFX(int slashIndex)
         {
@@ -200,65 +239,126 @@ namespace Platformer
         {
             float lungeDistance = 0f;
             Transform target = enemyDetection.CurrentTarget();
-           
+
             if (target != null)
             {
                 lungeDistance = Vector3.Distance(transform.position, target.position);
 
-                Vector3 directionToTarget = (target.position - transform.position).normalized;
+                // Flatten BEFORE normalizing so elevation differences don't shrink the
+                // stop offset, and keep our own Y so we don't get dragged to the
+                // enemy's height (ground clip / float).
+                Vector3 directionToTarget = target.position - transform.position;
                 directionToTarget.y = 0;
+                directionToTarget = directionToTarget.normalized;
 
                 Vector3 stopPosition = target.position - (directionToTarget * 1.2f);
+                stopPosition.y = transform.position.y;
 
                 transform.DOLookAt(target.position, 0.1f, AxisConstraint.Y);
-                transform.DOMove(stopPosition, slideDuration).SetEase(Ease.OutQuad);
+
+                // Only warp within a sane range — beyond it we just face the target
+                if (lungeDistance <= maxLungeRange)
+                {
+                    lungeMoveTween = transform.DOMove(stopPosition, slideDuration).SetEase(Ease.OutQuad);
+                }
             }
             else if (inputDirection != Vector3.zero)
             {
                 transform.rotation = Quaternion.LookRotation(inputDirection);
             }
 
-            DOVirtual.DelayedCall(slideDuration, () =>
+            pendingAttackCall = DOVirtual.DelayedCall(slideDuration, () =>
             {
-                LightAttack();
-                TriggerCameraShake(lungeDistance);
+                AudioManager.instance.PlayOneShot(FMODEvents.instance.playerAttack, transform.position);
+
+                int hits = LightAttack();
+                if (hits > 0)
+                {
+                    // Hit-confirm sandwich: freeze + shake + rumble. The enemy hurt
+                    // SFX and hit-flash come from Health.TakeDamage.
+                    HitStop.Play();
+                    TriggerCameraShake(Mathf.Max(lungeDistance, 3f));
+                    RumblePulse();
+                }
             });
         }
 
 
 
 
-        private void LightAttack()
+        /// <summary>Applies melee damage in front of us. Returns how many targets were hit.</summary>
+        private int LightAttack()
         {
             Vector3 attackPos = transform.position + transform.forward * lightAttackDistance;
             Collider[] hitEnemies = Physics.OverlapSphere(attackPos, lightAttackDistance);
-            AudioManager.instance.PlayOneShot(FMODEvents.instance.playerAttack, transform.position);
 
             int damage = CurrentMeleeDamage();
+            int hits = 0;
             foreach (var hit in hitEnemies)
             {
                 if (hit.CompareTag("Enemy"))
                 {
-                    if(hit.TryGetComponent<Health>(out Health enemyHealth))
+                    if (hit.TryGetComponent<Health>(out Health enemyHealth) && !enemyHealth.isDead)
                     {
                         enemyHealth.TakeDamage(damage, knockbackTime);
+                        SpawnImpactVFX(hit.ClosestPoint(attackPos));
+                        hits++;
                     }
                 }
                 else if (hit.CompareTag("Destructable"))
                 {
                     if (hit.TryGetComponent<IDamageable>(out var damageable))
+                    {
                         damageable.TakeDamage(damage, knockbackTime);
+                        SpawnImpactVFX(hit.ClosestPoint(attackPos));
+                        hits++;
+                    }
                 }
             }
+            return hits;
+        }
+
+        void SpawnImpactVFX(Vector3 position)
+        {
+            if (impactVFX == null) return;
+            var vfx = Instantiate(impactVFX, position + Vector3.up * 0.2f, Quaternion.identity);
+            Destroy(vfx, 2f);
+        }
+
+        void RumblePulse()
+        {
+            var pad = UnityEngine.InputSystem.Gamepad.current;
+            if (pad == null) return;
+            pad.SetMotorSpeeds(0.35f, 0.6f);
+            DOVirtual.DelayedCall(0.12f, () => pad.SetMotorSpeeds(0f, 0f)).SetUpdate(true);
         }
 
         public void BlastAttack()
         {
             if (luminCharges <= 0) return;
             luminCharges--;
+            GameEventsManager.instance?.playerEvents.LuminChargesChanged(luminCharges);
 
             AudioManager.instance.PlayOneShot(FMODEvents.instance.blastAttack, transform.position);
-            blastStrategy?.CastSpell(blastPoint != null ? blastPoint : transform, transform);
+
+            Transform origin = blastPoint != null ? blastPoint : transform;
+
+            if (playerAim != null && playerAim.IsAiming)
+            {
+                // Aim the shot at the reticle point, then restore the muzzle's local
+                // rotation so unaimed quick-fire keeps shooting straight ahead
+                Quaternion savedLocalRotation = origin.localRotation;
+                Vector3 toTarget = playerAim.GetAimPoint() - origin.position;
+                if (toTarget.sqrMagnitude > 0.001f)
+                    origin.rotation = Quaternion.LookRotation(toTarget.normalized);
+
+                blastStrategy?.CastSpell(origin, transform);
+                origin.localRotation = savedLocalRotation;
+            }
+            else
+            {
+                blastStrategy?.CastSpell(origin, transform);
+            }
         }
 
         void IEntity.Attack(Vector3 direction) => lunge(direction);
@@ -295,12 +395,14 @@ namespace Platformer
                 bestCounterTarget.CancelAttack();
 
                 // 3. SNAPPY MOVEMENT: Spin and snap to the enemy position
-                Vector3 dirToTarget = (bestCounterTarget.transform.position - transform.position).normalized;
+                Vector3 dirToTarget = bestCounterTarget.transform.position - transform.position;
                 dirToTarget.y = 0;
+                dirToTarget = dirToTarget.normalized;
                 Vector3 stopPosition = bestCounterTarget.transform.position - (dirToTarget * 1.5f);
+                stopPosition.y = transform.position.y;
 
                 transform.DOLookAt(bestCounterTarget.transform.position, 0.1f, AxisConstraint.Y);
-                transform.DOMove(stopPosition, slideDuration).SetEase(Ease.OutQuad);
+                lungeMoveTween = transform.DOMove(stopPosition, slideDuration).SetEase(Ease.OutQuad);
 
                 // 4. FEEDBACK: Sound and Camera Effects
                 AudioManager.instance.PlayOneShot(FMODEvents.instance.playerAttack, transform.position);
@@ -308,10 +410,11 @@ namespace Platformer
                 if (bestCounterTarget.enemyHealth != null)
                 {
                     // Deal heavy damage and trigger that beautiful Final Blow camera
-                    bestCounterTarget.enemyHealth.TakeDamage(lightAttackDamage * 2, knockbackTime);
+                    bestCounterTarget.enemyHealth.TakeDamage(CurrentMeleeDamage() * 2, knockbackTime);
+                    HitStop.Play(0.09f);
+                    SpawnImpactVFX(bestCounterTarget.transform.position + Vector3.up);
                     TriggerCameraShake(10f);
-
-
+                    RumblePulse();
                 }
             }
         }

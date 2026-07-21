@@ -1,0 +1,168 @@
+/* ════════════════════════════════════════════════════════
+   AbilityTreeUI.uss — Abilities tab: 3 branch tracks,
+   node states (locked / available / unlocked), detail footer.
+   Gold/amber theme matching the rest of the MenuHub.
+   ════════════════════════════════════════════════════════ */
+
+.ability-panel {
+    flex-grow: 1;
+    background-color: rgba(0, 0, 0, 0);
+    flex-direction: column;
+    padding: 32px;
+}
+
+/* Header: title left, skill points right */
+.ability-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.ability-title {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/Ottselesque-Regular.otf?fileID=12800000&guid=b00bfdbd79d843a46b8b3fb62f619d32&type=3#Ottselesque-Regular");
+    font-size: 36px;
+    color: rgb(215, 170, 65);
+    letter-spacing: 2px;
+}
+.ability-points {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    font-size: 18px;
+    color: rgb(215, 170, 65);
+    letter-spacing: 2px;
+}
+.ability-header-underline {
+    height: 1px;
+    background-color: rgba(190, 150, 50, 0.35);
+    margin-bottom: 24px;
+}
+
+/* Three branch tracks side by side */
+.ability-branches {
+    flex-direction: row;
+    flex-grow: 1;
+    justify-content: space-around;
+}
+.ability-branch {
+    flex-direction: column;
+    align-items: center;
+    width: 240px;
+}
+.ability-branch-title {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/Ottselesque-Regular.otf?fileID=12800000&guid=b00bfdbd79d843a46b8b3fb62f619d32&type=3#Ottselesque-Regular");
+    color: rgb(215, 170, 65);
+    font-size: 22px;
+    letter-spacing: 3px;
+    margin-bottom: 4px;
+}
+.ability-branch-underline {
+    width: 100%;
+    height: 1px;
+    background-color: rgba(190, 150, 50, 0.35);
+    margin-bottom: 20px;
+}
+
+/* Node card */
+.ability-node {
+    width: 190px;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    background-color: rgba(30, 24, 50, 0.85);
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: rgba(190, 150, 50, 0.3);
+    transition-property: border-color, background-color;
+    transition-duration: 0.12s;
+}
+.ability-node-icon {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 3px;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+.ability-node-name {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    color: rgb(220, 210, 190);
+    font-size: 12px;
+    flex-grow: 1;
+    white-space: normal;
+}
+.ability-node-cost {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    color: rgb(8, 5, 22);
+    font-size: 11px;
+    background-color: rgb(215, 170, 65);
+    padding: 1px 6px;
+    border-radius: 2px;
+    margin-left: 6px;
+    flex-shrink: 0;
+}
+
+/* Connector between nodes in a track */
+.ability-connector {
+    width: 2px;
+    height: 22px;
+    background-color: rgba(120, 110, 90, 0.4);
+}
+.ability-connector--unlocked {
+    background-color: rgb(215, 170, 65);
+}
+
+/* ── Node states (applied by the controller) ── */
+
+/* Locked: prerequisite not met or no points — dimmed, no interaction feedback */
+.ability-node--locked {
+    opacity: 0.45;
+}
+.ability-node--locked:hover {
+    border-color: rgba(190, 150, 50, 0.3);
+}
+
+/* Available: can afford + prerequisite met — inviting gold border */
+.ability-node--available {
+    border-color: rgb(215, 170, 65);
+}
+.ability-node--available:hover {
+    background-color: rgba(60, 48, 95, 0.95);
+    border-color: rgb(255, 215, 110);
+}
+
+/* Unlocked: filled, cost hidden */
+.ability-node--unlocked {
+    background-color: rgba(60, 48, 95, 0.95);
+    border-color: rgb(190, 150, 50);
+    border-width: 2px;
+}
+.ability-node--unlocked .ability-node-cost {
+    display: none;
+}
+.ability-node--unlocked .ability-node-name {
+    color: rgb(240, 225, 180);
+}
+
+/* Detail footer — filled on hover */
+.ability-footer {
+    flex-direction: column;
+    padding: 14px 18px;
+    margin-top: 16px;
+    background-color: rgba(8, 5, 22, 0.8);
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: rgba(190, 150, 50, 0.35);
+    min-height: 70px;
+}
+.ability-footer-name {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    color: rgb(215, 170, 65);
+    font-size: 15px;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+.ability-footer-desc {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    color: rgb(180, 175, 160);
+    font-size: 13px;
+    white-space: normal;
+}

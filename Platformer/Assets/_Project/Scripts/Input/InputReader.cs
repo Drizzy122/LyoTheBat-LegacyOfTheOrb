@@ -18,7 +18,7 @@ namespace Platformer
         public event UnityAction<Vector2> Look = delegate { };
         public event UnityAction<bool> Sprint = delegate { };
         public event UnityAction<bool> Jump = delegate { };
-        public event UnityAction<bool> Dash = delegate { };
+        public event UnityAction<bool> Dodge = delegate { };
         public event UnityAction<bool> SonarPulse = delegate { };
         public event UnityAction<bool> Wallclimb = delegate { };
         public event UnityAction<bool> Glide = delegate { };
@@ -119,15 +119,15 @@ namespace Platformer
                     break;
             }
         }
-        public void OnDash(InputAction.CallbackContext context)
+        public void OnDodge(InputAction.CallbackContext context)
         {
             switch (context.phase)
             {
                 case InputActionPhase.Started:
-                    Dash.Invoke(true);
+                    Dodge.Invoke(true);
                     break;
                 case InputActionPhase.Canceled:
-                    Dash.Invoke(false);
+                    Dodge.Invoke(false);
                     break;
             }
         }
@@ -180,8 +180,25 @@ namespace Platformer
                     break;
             }
         }
-        public void OnSubmit(InputAction.CallbackContext context) { }
-        
+        // Menu-map actions routed into the global event bus. They live on the
+        // Menu map (always enabled) so submit keeps working while dialogue
+        // disables the Player map. InputEvents stamps the current context.
+        public void OnSubmit(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Started && GameEventsManager.instance != null)
+            {
+                GameEventsManager.instance.inputEvents.SubmitPressed();
+            }
+        }
+
+        public void OnQuestLogToggle(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Started && GameEventsManager.instance != null)
+            {
+                GameEventsManager.instance.inputEvents.QuestLogTogglePressed();
+            }
+        }
+
 
         void OnEnable()
         {

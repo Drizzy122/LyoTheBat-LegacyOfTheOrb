@@ -1165,8 +1165,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f080c9f2efb12d4085f1311d24caaec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueKnotName: killEnemiesStart
-  questInfoForPoint: {fileID: 11400000, guid: dc46214149acf2444a49964e7fd0f2e2, type: 2}
+  quests:
+  - quest: {fileID: 11400000, guid: dc46214149acf2444a49964e7fd0f2e2, type: 2}
+    dialogue: {fileID: 11400000, guid: 9cbf48264cabf5448a7ff694a77ed4cf, type: 2}
   startPoint: 1
   finishPoint: 1
 --- !u!1 &4058218977830083411

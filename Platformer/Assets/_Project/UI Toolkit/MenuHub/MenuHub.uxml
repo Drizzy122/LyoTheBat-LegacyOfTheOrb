@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Template name="AbilityTreeUI" src="project://database/Assets/_Project/UI%20Toolkit/AbilityTree/AbilityTreeUI.uxml?fileID=9197481963319205126&amp;guid=5963d354c01f46540863b22dcc5a5752&amp;type=3#AbilityTreeUI"/>
     <ui:Template name="CharacterUI" src="project://database/Assets/_Project/UI%20Toolkit/Inventory/CharacterUI.uxml?fileID=9197481963319205126&amp;guid=9de00a6c0cb40ca469cf5f4a7e8c6804&amp;type=3#CharacterUI"/>
     <ui:Template name="InventoryUI" src="project://database/Assets/_Project/UI%20Toolkit/Inventory/InventoryUI.uxml?fileID=9197481963319205126&amp;guid=aa5766b19237d15468765576c59a60b2&amp;type=3#InventoryUI"/>
     <ui:Template name="SettingsVisualTree" src="project://database/Assets/_Project/UI%20Toolkit/VisualTrees/SettingsUI/SettingsVisualTree.uxml?fileID=9197481963319205126&amp;guid=2a731d1fdb16de14587eeb9e1c972a5c&amp;type=3#SettingsVisualTree"/>
@@ -6,16 +7,13 @@
     <ui:VisualElement name="menu-hub" class="menu-hub" style="display: flex;">
         <ui:VisualElement name="info-bar" class="info-bar">
             <ui:VisualElement name="player-info" class="player-info">
-                <ui:Label name="player-name" text="Player" class="player-name"/>
+                <ui:Label name="player-name" text="Indigo" class="player-name"/>
                 <ui:Label name="player-level" text="LVL 1" class="player-level"/>
-            </ui:VisualElement>
-            <ui:VisualElement name="currency-strip" class="currency-strip">
-                <ui:Label name="currency-lumin" text="0" class="currency"/>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:TabView name="main-tabs" class="main-tabs">
             <ui:Tab name="tab-Map" label="MAP">
-                <ui:VisualElement name="map-page" class="page" style="background-image: url(&quot;project://database/Assets/_Project/UI%20Toolkit/MiniMapTexture.renderTexture?fileID=8400000&amp;guid=919dcd0fd94b1a843a29b23d1a55e74e&amp;type=2#MiniMapTexture&quot;); height: 920px;">
+                <ui:VisualElement name="map-page" class="page" style="background-image: none; height: 920px;">
                     <ui:Label name="map-placeholder" text="Map (coming soon)" class="page-placeholder"/>
                 </ui:VisualElement>
             </ui:Tab>
@@ -29,6 +27,9 @@
             </ui:Tab>
             <ui:Tab name="tab-Inventory" label="INVENTORY">
                 <ui:Instance template="InventoryUI"/>
+            </ui:Tab>
+            <ui:Tab name="tab-Abilities" label="ABILITIES">
+                <ui:Instance template="AbilityTreeUI"/>
             </ui:Tab>
             <ui:Tab name="tab-Settings" label="SETTINGS">
                 <ui:Instance template="SettingsVisualTree"/>

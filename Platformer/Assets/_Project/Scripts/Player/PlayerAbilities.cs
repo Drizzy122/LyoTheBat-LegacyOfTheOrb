@@ -15,16 +15,16 @@ namespace Platformer
         [SerializeField] private AbilityStrategy activeAbility;
 
         [Header("Cooldowns")]
+        [Tooltip("The one and only ability cooldown, in seconds.")]
         [SerializeField] float sonarPulseCooldown = 0.5f;
 
-        private float nextAbilityTime;
         private CountdownTimer pulseTimer;
 
         void Awake()
         {
             pulseTimer = new CountdownTimer(sonarPulseCooldown);
         }
-        
+
         void OnSonarPulse(bool performed)
         {
             if (performed && !pulseTimer.IsRunning)
@@ -35,15 +35,15 @@ namespace Platformer
             }
         }
 
-        // This is called from your PlayerController or Input system
+        // The pulseTimer above is the single cooldown gate — strategies no
+        // longer carry their own.
         public void ExecuteActiveAbility()
         {
-            if (activeAbility != null && Time.time >= nextAbilityTime)
+            if (activeAbility != null)
             {
                 activeAbility.Execute(this.gameObject);
-                nextAbilityTime = Time.time + activeAbility.cooldownTime; // Automatically handles cooldowns!
             }
-            else if (activeAbility == null)
+            else
             {
                 Debug.LogWarning("No ability equipped!");
             }

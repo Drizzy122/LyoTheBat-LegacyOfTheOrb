@@ -13,7 +13,8 @@ namespace Platformer
         protected static readonly int LocomotionHash = Animator.StringToHash("Locomotion");
         protected static readonly int JumpHash = Animator.StringToHash("Jump");
         protected static readonly int WallclimbHash = Animator.StringToHash("WallClimb");
-        protected static readonly int DashHash = Animator.StringToHash("Dash");
+        // The Dodge state holds the DodgeAnims blend tree (VelX/VelZ directional)
+        protected static readonly int DodgeHash = Animator.StringToHash("Dodge");
         //protected static readonly int AttackHash = Animator.StringToHash("Attack");
         //protected static readonly int BlastAttackHash = Animator.StringToHash("SpinAttack");
         protected static readonly int GlideHash = Animator.StringToHash("Glide");
@@ -26,6 +27,9 @@ namespace Platformer
         // Armed locomotion variants — used when player.combat.hasWeapon is true
         protected static readonly int LocomotionArmedHash = Animator.StringToHash("Locomotion_Armed");
         protected static readonly int SprintArmedHash = Animator.StringToHash("Sprint_Armed");
+
+        // Aim strafe locomotion (2D blend tree driven by VelX/VelZ)
+        protected static readonly int AimLocomotionHash = Animator.StringToHash("AimLocomotion");
 
         protected const float crossFadeDuration = 0.1f;
 
@@ -101,6 +105,26 @@ namespace Platformer
             player.HandleMovement();
         }
     }
+    public class AimState : BaseState
+    {
+        public AimState(PlayerMovement player, Animator animator) : base(player, animator) { }
+
+        public override void OnEnter()
+        {
+            animator.CrossFade(AimLocomotionHash, crossFadeDuration);
+        }
+
+        public override void FixedUpdate()
+        {
+            player.HandleAimMovement();
+        }
+
+        public override void OnExit()
+        {
+            player.ResetAimBlend();
+        }
+    }
+
     public class SwimState : BaseState
     {
         public SwimState(PlayerMovement player, Animator animator) : base(player, animator) { }
@@ -136,16 +160,17 @@ namespace Platformer
             player.wallClimbimg = false;
         }
     }
-    public class DashState : BaseState
+    public class DodgeState : BaseState
     {
-        public DashState(PlayerMovement player, Animator animator) : base(player, animator) { }
+        public DodgeState(PlayerMovement player, Animator animator) : base(player, animator) { }
         public override void OnEnter()
         {
-            animator.CrossFade(DashHash, crossFadeDuration);
+            player.ApplyDodgeBlend();
+            animator.CrossFade(DodgeHash, crossFadeDuration);
         }
         public override void FixedUpdate()
         {
-            player.HandleMovement();
+            player.HandleDodge();
         }
     }
     public class GlideState : BaseState
@@ -190,10 +215,18 @@ namespace Platformer
         }
     }
     public class AttackState : BaseState {
+        bool lungingAtTarget;
+
         public AttackState(PlayerMovement player, Animator animator) : base(player, animator) { }
 
         public override void OnEnter() {
             player.transform.DOKill();
+
+            // When we have a soft-lock target the DOTween lunge owns our position —
+            // stop feeding the rigidbody velocity or the two visibly fight.
+            lungingAtTarget = player.combat.enemyDetection != null
+                              && player.combat.enemyDetection.CurrentTarget() != null;
+            if (lungingAtTarget) player.StopMovement();
 
             string anim = player.commandManager.LightAttackCommand.Advance();
             animator.CrossFade(anim, crossFadeDuration);
@@ -202,7 +235,7 @@ namespace Platformer
 
         public override void FixedUpdate()
         {
-            player.HandleMovement();
+            if (!lungingAtTarget) player.HandleMovement();
         }
     }
     public class BlastAttackState : BaseState

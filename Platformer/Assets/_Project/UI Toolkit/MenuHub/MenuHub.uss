@@ -39,18 +39,9 @@
     margin-top: 2px;
 }
 
-.currency-strip {
-    flex-direction: row;
-    align-items: center;
-}
 
-.currency {
-    color: rgb(215, 170, 65);
-    font-size: 20px;
-    -unity-font-style: bold;
-    margin-left: 16px;
-    letter-spacing: 1px;
-}
+
+
 
 .main-tabs {
     flex-grow: 1;

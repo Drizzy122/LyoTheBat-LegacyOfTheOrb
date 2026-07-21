@@ -69,9 +69,11 @@ namespace Platformer
                 
                 // 2. Filter for ready enemies
                 List<Enemy> readyEnemies = new List<Enemy>();
-                foreach (var enemy in engagedEnemies) 
+                foreach (var enemy in engagedEnemies)
                 {
-                    if (enemy.isWaitingForTurn) 
+                    // Skip enemies whose personal attack timer is still cooling down —
+                    // their Attack() would silently deal zero damage
+                    if (enemy.isWaitingForTurn && !enemy.IsAttackOnCooldown)
                     {
                         // Add them to the pool IF they didn't just attack, OR if they are the only one left
                         if (enemy != lastAttacker || engagedEnemies.Count == 1)
@@ -82,16 +84,23 @@ namespace Platformer
                 }
 
                 // 3. Pick the attacker
-                if (readyEnemies.Count > 0) 
+                if (readyEnemies.Count > 0)
                 {
                     Enemy chosenEnemy = readyEnemies[Random.Range(0, readyEnemies.Count)];
-                    
+
                     lastAttacker = chosenEnemy;
                     chosenEnemy.GiveAttackOrder();
-                    
+
                     // 4. Mix & Jam Secret Sauce: PAUSE the manager until this enemy finishes their attack!
-                    // This assumes your Enemy script sets 'isWaitingForTurn' back to true when they finish retreating.
-                    yield return new WaitUntil(() => chosenEnemy == null || chosenEnemy.isWaitingForTurn || engagedEnemies.Count == 0);
+                    // Timeout guard: if the attacker gets kited, stunned, or stuck, release the
+                    // token after a few seconds instead of freezing the whole fight forever.
+                    float deadline = Time.time + 5f;
+                    yield return new WaitUntil(() => chosenEnemy == null || chosenEnemy.isWaitingForTurn || engagedEnemies.Count == 0 || Time.time > deadline);
+
+                    if (chosenEnemy != null && Time.time > deadline && !chosenEnemy.isWaitingForTurn)
+                    {
+                        chosenEnemy.AbortAttack();
+                    }
                 }
             }
             combatLoop = null; 

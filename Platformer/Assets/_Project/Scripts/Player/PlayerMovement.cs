@@ -25,7 +25,15 @@ namespace Platformer
         [field: SerializeField] [Range(0,1000)] float rotationSpeed = 1000f;
         public bool IsSprinting { get; private set; }
         [field: SerializeField] float smoothTime = 0.2f;
-        
+
+        [field: Header("Aim Settings")]
+        [field: SerializeField] [Range(0, 10)] float aimMoveSpeed = 4f;
+        [field: SerializeField] float aimBlendDamp = 0.1f;
+        PlayerAim playerAim;
+
+        // While aiming, PlayerAim owns the facing (camera yaw) — movement must not rotate us
+        public bool IsAimingActive => playerAim != null && playerAim.IsAiming;
+
         [field: Header("Jump Settings")] 
         [field: SerializeField] float jumpForce = 10f;
         [field: SerializeField] float jumpDuration = 0.5f;
@@ -34,9 +42,11 @@ namespace Platformer
         [field: SerializeField] float gravityMultiplier = 3f;
         [field: SerializeField] int maxFallSpeed = 10;
 
-        [field: Header("Dash Settings")] 
-        [field: SerializeField] float dashForce = 10f;
-        [field: SerializeField] float dashDuration = 1f;
+        [field: Header("Dodge Settings")]
+        [field: SerializeField] float dodgeForce = 12f;
+        [Tooltip("How long the dodge state lasts. The dodge clips are 0.58s — much shorter and the animation gets cut off.")]
+        [field: SerializeField] float dodgeDuration = 0.55f;
+        Vector3 dodgeDirection;
         
         [field: Header("Glide Settings")] 
         [field: SerializeField] float glideMoveSpeed = 2;
@@ -76,7 +86,6 @@ namespace Platformer
         float currentSpeed;
         float velocity;
         float jumpVelocity;
-        float dashVelocity = 1f;
         Vector3 movement;
         Transform mainCam;
         
@@ -84,13 +93,13 @@ namespace Platformer
         [field: SerializeField] float hurtDuration = 0.4f;
         [field: SerializeField] float jumpCooldown = 0f;
         [field: SerializeField] public float glideCoolDown = 0.5f;
-        [field: SerializeField] float dashCooldown = 0.5f;
+        [field: SerializeField] float dodgeCooldown = 0.5f;
 
         [field: Header("Timers")]
         CountdownTimer jumpTimer;
         CountdownTimer jumpCooldownTimer;
-        CountdownTimer dashTimer;
-        CountdownTimer dashCooldownTimer;
+        CountdownTimer dodgeTimer;
+        CountdownTimer dodgeCooldownTimer;
         CountdownTimer glideTimer;
         CountdownTimer hurtTimer;
       
@@ -98,13 +107,16 @@ namespace Platformer
         StateMachine stateMachine;
         
         static readonly int Speed = Animator.StringToHash("Speed");
-        
+        static readonly int VelX = Animator.StringToHash("VelX");
+        static readonly int VelZ = Animator.StringToHash("VelZ");
+
         #endregion
         void Awake()
         {
             mainCam = Camera.main.transform;
             rb.freezeRotation = true;
             glideStamina = GetComponent<GlideStamina>();
+            playerAim = GetComponent<PlayerAim>();
             SetupTimers();
             SetupStateMachine();
         }
@@ -136,7 +148,7 @@ namespace Platformer
             var jumpState = new JumpState(this, animator);
             var doubleJumpState = new DoubleJumpState(this, animator);
             var glideState = new GlideState(this, animator);
-            var dashState = new DashState(this, animator);
+            var dodgeState = new DodgeState(this, animator);
             var attackState = new AttackState(this, animator);
             var spinAttackState = new BlastAttackState(this, animator);
             var deathState = new DeathState(this, animator, playerHealth);
@@ -144,16 +156,46 @@ namespace Platformer
             var wallClimbState = new WallClimbState(this, animator);
             var swimState = new SwimState(this, animator);
             var hurtState = new HurtState(this, animator);
+            var aimState = new AimState(this, animator);
 
-            
+            // Define transitions for aim strafe mode (grounded only)
+            At(locomotionState, aimState, new FuncPredicate(() => IsAimingActive && groundChecker.IsGrounded));
+            At(sprintState, aimState, new FuncPredicate(() => IsAimingActive));
+            At(aimState, locomotionState, new FuncPredicate(() => !IsAimingActive));
+            At(aimState, jumpState, new FuncPredicate(() => jumpTimer.IsRunning || !groundChecker.IsGrounded));
+            At(aimState, dodgeState, new FuncPredicate(() => dodgeTimer.IsRunning));
+            At(aimState, attackState, new FuncPredicate(() => combat.IsAttacking));
+            At(aimState, spinAttackState, new FuncPredicate(() => combat.IsBlastAttacking));
+            At(aimState, swimState, new FuncPredicate(() => InWater));
+
+            // An aim-dodge returns straight to aim (before the dodge→jump fallback
+            // below, so we don't flash through the jump animation)
+            At(dodgeState, aimState, new FuncPredicate(() =>
+                !dodgeTimer.IsRunning && IsAimingActive && groundChecker.IsGrounded));
+
+            // Landing while still holding aim goes straight back into AimState
+            // (the locomotion catch-all skips aiming players, like it does sprinting ones)
+            At(jumpState, aimState, new FuncPredicate(() =>
+                groundChecker.IsGrounded && !jumpTimer.IsRunning && IsAimingActive));
+            At(doubleJumpState, aimState, new FuncPredicate(() =>
+                groundChecker.IsGrounded && !jumpTimer.IsRunning && IsAimingActive));
+
             // Define transitions for sprint
             At(locomotionState, sprintState, new FuncPredicate(() => IsSprinting && movement.sqrMagnitude > 0f));
             At(sprintState, locomotionState, new FuncPredicate(() => !IsSprinting || movement.sqrMagnitude <= 0f));
             At(sprintState, jumpState, new FuncPredicate(() => jumpTimer.IsRunning || !groundChecker.IsGrounded));
-            At(sprintState, dashState, new FuncPredicate(() => dashTimer.IsRunning));
+            At(sprintState, dodgeState, new FuncPredicate(() => dodgeTimer.IsRunning));
             At(sprintState, attackState, new FuncPredicate(() => combat.IsAttacking));
             At(sprintState, spinAttackState, new FuncPredicate(() => combat.IsBlastAttacking));
             At(sprintState, swimState, new FuncPredicate(() => InWater));
+
+            // Landing while still holding sprint goes straight back into SprintState —
+            // the locomotion catch-all intentionally skips sprinting players, so without
+            // these the player would stay stuck in the jump animation after landing.
+            At(jumpState, sprintState, new FuncPredicate(() =>
+                groundChecker.IsGrounded && !jumpTimer.IsRunning && IsSprinting && movement.sqrMagnitude > 0f));
+            At(doubleJumpState, sprintState, new FuncPredicate(() =>
+                groundChecker.IsGrounded && !jumpTimer.IsRunning && IsSprinting && movement.sqrMagnitude > 0f));
 
             // Define transitions for jump
             At(locomotionState, jumpState, new FuncPredicate(() => jumpTimer.IsRunning));
@@ -162,13 +204,13 @@ namespace Platformer
             // Define transitions for double jump
             At(doubleJumpState, glideState, new FuncPredicate(() => glideTimer.IsRunning && !InWater));;
             At(jumpState, doubleJumpState, new FuncPredicate(() => jumpTimer.IsRunning && remainingJumps <= jumpCount - 2));
-            At(doubleJumpState, dashState, new FuncPredicate(() => dashTimer.IsRunning));
+            At(doubleJumpState, dodgeState, new FuncPredicate(() => dodgeTimer.IsRunning));
 
-            // Define transitions for Dash 
-            At(locomotionState, dashState, new FuncPredicate(() => dashTimer.IsRunning));
-            At(glideState, dashState, new FuncPredicate(() => dashTimer.IsRunning));
-            At(jumpState, dashState, new FuncPredicate(() => dashTimer.IsRunning));
-            At(dashState, jumpState, new FuncPredicate(() => !dashTimer.IsRunning));
+            // Define transitions for Dodge
+            At(locomotionState, dodgeState, new FuncPredicate(() => dodgeTimer.IsRunning));
+            At(glideState, dodgeState, new FuncPredicate(() => dodgeTimer.IsRunning));
+            At(jumpState, dodgeState, new FuncPredicate(() => dodgeTimer.IsRunning));
+            At(dodgeState, jumpState, new FuncPredicate(() => !dodgeTimer.IsRunning));
             
             // Define transitions for attack
             At(locomotionState, attackState, new FuncPredicate(() => combat.IsAttacking));
@@ -183,7 +225,7 @@ namespace Platformer
             
             // Define transitions for glide
             At(jumpState, glideState, new FuncPredicate(() => glideTimer.IsRunning && !InWater));
-            At(dashState, glideState, new FuncPredicate(() => glideTimer.IsRunning));
+            At(dodgeState, glideState, new FuncPredicate(() => glideTimer.IsRunning));
             At(glideState, jumpState, new FuncPredicate(() => !glideTimer.IsRunning));
             
             // Define transitions for wall climb
@@ -223,10 +265,11 @@ namespace Platformer
                    && !combat.IsAttacking
                    && !combat.IsBlastAttacking
                    && !jumpTimer.IsRunning
-                   && !dashTimer.IsRunning
+                   && !dodgeTimer.IsRunning
                    && !glideTimer.IsRunning
                    && !interaction.isTeleporting
                    && !hurtTimer.IsRunning
+                   && !IsAimingActive
                    && !(IsSprinting && movement.sqrMagnitude > 0f);
 
         }
@@ -242,17 +285,21 @@ namespace Platformer
             jumpTimer = new CountdownTimer(jumpDuration);
             jumpCooldownTimer = new CountdownTimer(jumpCooldown);
             glideTimer = new CountdownTimer(glideCoolDown);
-            dashTimer = new CountdownTimer(dashDuration);
-            dashCooldownTimer = new CountdownTimer(dashCooldown);
+            dodgeTimer = new CountdownTimer(dodgeDuration);
+            dodgeCooldownTimer = new CountdownTimer(dodgeCooldown);
 
             jumpTimer.OnTimerStart += () => jumpVelocity = jumpForce;
             jumpTimer.OnTimerStop += () => jumpCooldownTimer.Start();
             hurtTimer = new CountdownTimer(0f);
-            dashTimer.OnTimerStart += () => dashVelocity = dashForce;
-            dashTimer.OnTimerStop += () =>
+
+            // The whole (short) dodge is invulnerable — that's what makes it a
+            // dodge and not a dash. HandlePlayerHurt stopping the timer also
+            // cleanly ends the i-frames.
+            dodgeTimer.OnTimerStart += () => playerHealth.SetInvulnerable(true);
+            dodgeTimer.OnTimerStop += () =>
             {
-                dashVelocity = 1f;
-                dashCooldownTimer.Start();
+                playerHealth.SetInvulnerable(false);
+                dodgeCooldownTimer.Start();
             };
         }
         #endregion
@@ -285,7 +332,7 @@ namespace Platformer
             // Glide overrides it so the orb/ring boost system stays in charge while gliding.
             bool canSprint = IsSprinting && !glideTimer.IsRunning;
             float activeSpeed = canSprint ? sprintSpeed : moveSpeed;
-            Vector3 velocity = adjustedDirection * (activeSpeed * dashVelocity);
+            Vector3 velocity = adjustedDirection * activeSpeed;
             rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
         }
         void HandleRotation(Vector3 adjustedDirection)
@@ -294,6 +341,37 @@ namespace Platformer
             var targetRotation = Quaternion.LookRotation(adjustedDirection);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             // transform.LookAt(transform.position + adjustedDirection);
+        }
+
+        /// <summary>Strafe movement for AimState: camera-relative walk with NO body
+        /// rotation (PlayerAim keeps us facing the camera), driving the AimAnims
+        /// blend tree via VelX/VelZ in body-local space.</summary>
+        public void HandleAimMovement()
+        {
+            var adjustedDirection = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * movement;
+
+            if (adjustedDirection.magnitude > ZeroF)
+            {
+                Vector3 velocity = adjustedDirection * aimMoveSpeed;
+                rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
+                SmoothSpeed(adjustedDirection.magnitude);
+            }
+            else
+            {
+                SmoothSpeed(ZeroF);
+                rb.linearVelocity = new Vector3(ZeroF, rb.linearVelocity.y, ZeroF);
+            }
+
+            // Blend positions are authored in body space: +Z walk forward, +X strafe right
+            Vector3 local = transform.InverseTransformDirection(adjustedDirection);
+            animator.SetFloat(VelX, local.x, aimBlendDamp, Time.fixedDeltaTime);
+            animator.SetFloat(VelZ, local.z, aimBlendDamp, Time.fixedDeltaTime);
+        }
+
+        public void ResetAimBlend()
+        {
+            animator.SetFloat(VelX, ZeroF);
+            animator.SetFloat(VelZ, ZeroF);
         }
         void SmoothSpeed(float value)
         {
@@ -365,7 +443,7 @@ namespace Platformer
 
                 // Interrupt all active timers so HurtState gets clean physics
                 jumpTimer.Stop();
-                dashTimer.Stop();
+                dodgeTimer.Stop();
                 combat.CancelActions();
             }
         }
@@ -373,7 +451,9 @@ namespace Platformer
         public bool IsGliding => glideTimer != null && glideTimer.IsRunning;
 
         // True only while actually sprint-moving (grounded + giving input), not just holding the key.
-        public bool IsSprintingActively => IsSprinting && groundChecker.IsGrounded && movement.sqrMagnitude > 0.01f;
+        // Aiming never sprints (AimState caps speed at aimMoveSpeed), so the
+        // wind effect must ignore the held sprint button while aiming.
+        public bool IsSprintingActively => IsSprinting && groundChecker.IsGrounded && movement.sqrMagnitude > 0.01f && !IsAimingActive;
         #endregion
 
         #region WallClimb
@@ -494,19 +574,47 @@ namespace Platformer
         }
         #endregion
 
-        #region Dash
-        
-        void OnDash(bool performed)
+        #region Dodge
+
+        void OnDodge(bool performed)
         {
-            if (performed && !dashTimer.IsRunning && !dashCooldownTimer.IsRunning)
-            {
-                dashTimer.Start();
-                
-            }
-            else if (!performed && dashTimer.IsRunning)
-            {
-                dashTimer.Stop();
-            }
+            // A dodge is committed: it can't be held, steered, or cancelled early
+            if (!performed || dodgeTimer.IsRunning || dodgeCooldownTimer.IsRunning) return;
+            if (InWater || wallClimbimg || playerHealth.isDead) return;
+
+            // Lock in the escape direction: current input (camera-relative),
+            // or straight ahead when standing still.
+            Vector3 inputDir = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * movement;
+            dodgeDirection = inputDir.sqrMagnitude > 0.01f ? inputDir.normalized : transform.forward;
+
+            // Snap to face the dodge — except while aiming, where the dodge is a
+            // strafe and PlayerAim keeps the body squared to the camera.
+            if (!IsAimingActive) transform.rotation = Quaternion.LookRotation(dodgeDirection);
+
+            dodgeTimer.Start();
+        }
+
+        /// <summary>Called by DodgeState.OnEnter — AFTER the previous state's
+        /// OnExit, so AimState's blend reset can't stomp these values. Picks the
+        /// directional dodge clip in body-local space: facing the dodge = forward
+        /// clip; aiming = 8-way strafe dodges.</summary>
+        public void ApplyDodgeBlend()
+        {
+            Vector3 localDodge = transform.InverseTransformDirection(dodgeDirection);
+            animator.SetFloat(VelX, localDodge.x);
+            animator.SetFloat(VelZ, localDodge.z);
+        }
+
+        /// <summary>Called by DodgeState every physics tick: a fixed-direction
+        /// burst that tapers off over the dodge (Progress runs 1 → 0), so the
+        /// travel is front-loaded and the tail of the animation is recovery.</summary>
+        public void HandleDodge()
+        {
+            float burst = dodgeForce * dodgeTimer.Progress;
+            rb.linearVelocity = new Vector3(
+                dodgeDirection.x * burst,
+                rb.linearVelocity.y,
+                dodgeDirection.z * burst);
         }
         #endregion
 
@@ -676,7 +784,7 @@ namespace Platformer
         {
             input.Sprint += OnSprint;
             input.Jump += OnJump;
-            input.Dash += OnDash;
+            input.Dodge += OnDodge;
             input.Wallclimb += OnWallClimb;
             input.Glide += OnGlide;
             playerHealth.OnHit += HandlePlayerHurt;
@@ -687,7 +795,7 @@ namespace Platformer
         {
             input.Jump -= OnJump;
             input.Sprint -= OnSprint;
-            input.Dash -= OnDash;
+            input.Dodge -= OnDodge;
             input.Wallclimb -= OnWallClimb;
             input.Glide -= OnGlide;
             playerHealth.OnHit -= HandlePlayerHurt;

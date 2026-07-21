@@ -3,6 +3,12 @@ using UnityEngine.UIElements;
 
 namespace Platformer
 {
+    /// <summary>
+    /// Screen-space waypoint icon for mission targets. Shows itself whenever it
+    /// has a target to track, walks through the targets array as the player
+    /// reaches each one, and hides after the final target. Show()/Hide() stay
+    /// public for scripted control (e.g. restarting the route from a quest).
+    /// </summary>
     public class MissionWaypoint : MonoBehaviour
     {
         [Header("Targets")]
@@ -43,25 +49,28 @@ namespace Platformer
             waypointContainer = root.Q<VisualElement>("WaypointContainer");
             meterLabel = root.Q<Label>("MeterLabel");
 
-            // Hidden until Show() is called or targets are assigned at runtime
+            // Start hidden; Update reveals it once a target exists and the icon
+            // has been positioned. Visibility (not display) keeps the element
+            // laid out, so it can be placed correctly before it first appears.
             Hide();
         }
 
         // ── Public API ───────────────────────────────────────────────────────
 
-        /// <summary>Show the waypoint and start tracking from the first target.</summary>
+        /// <summary>Restart tracking from the first target.</summary>
         public void Show()
         {
             currentIndex = 0;
-            if (waypointContainer != null)
-                waypointContainer.style.display = DisplayStyle.Flex;
+            SetVisible(true);
         }
 
         /// <summary>Immediately hide the waypoint without changing the target list.</summary>
-        public void Hide()
+        public void Hide() => SetVisible(false);
+
+        private void SetVisible(bool visible)
         {
-            if (waypointContainer != null)
-                waypointContainer.style.display = DisplayStyle.None;
+            if (waypointContainer == null) return;
+            waypointContainer.style.visibility = visible ? Visibility.Visible : Visibility.Hidden;
         }
 
         // ── Update ───────────────────────────────────────────────────────────
@@ -77,14 +86,8 @@ namespace Platformer
                 return;
             }
 
-            // Ensure visible while tracking
-            if (waypointContainer.style.display == DisplayStyle.None) return;
-
-            if (float.IsNaN(waypointContainer.layout.width)) return;
-
-            // Use player position for all world-space checks; fall back to this transform if unassigned
+            // Use player position for distance; fall back to this transform if unassigned
             Vector3 playerPos = player != null ? player.position : transform.position;
-            Vector3 playerFwd = player != null ? player.transform.forward : transform.forward;
 
             float dist = Vector3.Distance(CurrentTarget.position, playerPos);
 
@@ -92,19 +95,21 @@ namespace Platformer
             {
                 // Advance through intermediate targets when close enough
                 if (dist <= reachRadius)
-                    AdvanceToNextTarget();
-            }
-            else
-            {
-                // Final target reached → hide and stop
-                if (dist <= reachRadius)
                 {
-                    Hide();
-                    return;
+                    AdvanceToNextTarget();
+                    dist = Vector3.Distance(CurrentTarget.position, playerPos);
                 }
             }
+            else if (dist <= reachRadius)
+            {
+                // Final target reached → done tracking
+                currentIndex++;
+                Hide();
+                return;
+            }
 
-            if (CurrentTarget == null) { Hide(); return; }
+            // Wait for the container's first layout pass before positioning
+            if (float.IsNaN(waypointContainer.layout.width)) return;
 
             // ── Screen-space projection ───────────────────────────────────────
             float width  = waypointContainer.layout.width;
@@ -117,12 +122,17 @@ namespace Platformer
 
             Vector3 screenPos = Camera.main.WorldToScreenPoint(CurrentTarget.position + offset);
 
+            // Behind the camera the projection mirrors — flip it back and pin
+            // the icon to the screen edge on the target's side.
+            if (screenPos.z < 0f)
+            {
+                screenPos.x = Screen.width  - screenPos.x;
+                screenPos.y = Screen.height - screenPos.y;
+                screenPos.x = screenPos.x < Screen.width / 2f ? minX : maxX;
+            }
+
             // UI Toolkit Y is flipped vs Camera
             screenPos.y = Screen.height - screenPos.y;
-
-            // Target is behind the player → push icon to the edge
-            if (Vector3.Dot(CurrentTarget.position - playerPos, playerFwd) < 0)
-                screenPos.x = screenPos.x < Screen.width / 2f ? maxX : minX;
 
             screenPos.x = Mathf.Clamp(screenPos.x, minX, maxX);
             screenPos.y = Mathf.Clamp(screenPos.y, minY, maxY);
@@ -131,6 +141,9 @@ namespace Platformer
             waypointContainer.style.top  = screenPos.y - (height / 2f);
 
             meterLabel.text = Mathf.RoundToInt(dist) + "m";
+
+            // Positioned and tracking → make sure it's on screen
+            SetVisible(true);
         }
 
         private void AdvanceToNextTarget()

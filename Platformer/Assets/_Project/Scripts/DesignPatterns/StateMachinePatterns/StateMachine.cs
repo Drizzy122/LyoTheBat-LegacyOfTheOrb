@@ -8,7 +8,9 @@ namespace UnityUtils.StateMachine
     {
         StateNode currentNode;
         readonly Dictionary<Type, StateNode> nodes = new();
-        readonly HashSet<Transition> anyTransitions = new();
+        // Lists, not sets: when several predicates are true on the same frame,
+        // the FIRST transition added wins — priority is the order in SetupStateMachine.
+        readonly List<Transition> anyTransitions = new();
         
         public IState CurrentState => currentNode.State;
 
@@ -95,14 +97,14 @@ namespace UnityUtils.StateMachine
             return node;
         }
         
-        class StateNode 
+        class StateNode
         {
             public IState State { get; }
-            public HashSet<Transition> Transitions { get; }
+            public List<Transition> Transitions { get; }
 
             public StateNode(IState state) {
                 State = state;
-                Transitions = new HashSet<Transition>();
+                Transitions = new List<Transition>();
             }
 
             public void AddTransition<T>(IState to, T predicate) {

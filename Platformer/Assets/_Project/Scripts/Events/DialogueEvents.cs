@@ -1,18 +1,17 @@
 using System;
 using System.Collections.Generic;
-using Ink.Runtime;
 
 namespace Platformer
 {
     public class DialogueEvents
     {
-        public event Action<string> onEnterDialogue;
+        public event Action<DialogueConversationSO> onEnterDialogue;
 
-        public void EnterDialogue(string knotName)
+        public void EnterDialogue(DialogueConversationSO conversation)
         {
             if (onEnterDialogue != null)
             {
-                onEnterDialogue(knotName);
+                onEnterDialogue(conversation);
             }
         }
 
@@ -33,9 +32,9 @@ namespace Platformer
                 onDialogueFinished();
             }
         }
-        
-        public event Action<string, List<Choice>> onDisplayDialogue;
-        public void DisplayDialogue(string dialogueLine, List<Choice> dialogueChoices)
+
+        public event Action<string, List<string>> onDisplayDialogue;
+        public void DisplayDialogue(string dialogueLine, List<string> dialogueChoices)
         {
             if (onDisplayDialogue != null)
             {
@@ -49,15 +48,6 @@ namespace Platformer
             if (onUpdateChoiceIndex != null)
             {
                 onUpdateChoiceIndex(choiceIndex);
-            }
-        }
-        
-        public event Action<string, Ink.Runtime.Object> onUpdateInkDialogueVariable;
-        public void UpdateInkDialogueVariable(string name, Ink.Runtime.Object value)
-        {
-            if (onUpdateInkDialogueVariable != null)
-            {
-                onUpdateInkDialogueVariable(name, value);
             }
         }
     }

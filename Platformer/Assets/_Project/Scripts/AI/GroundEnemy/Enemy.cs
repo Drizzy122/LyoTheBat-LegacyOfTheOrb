@@ -32,6 +32,7 @@ namespace Platformer
         [field: Header("Attack")]
         [field: SerializeField] float timeBetweenAttacks = 1f;
         [field: SerializeField] float damage = 10f;
+        [field: SerializeField] float attackHitRange = 2.5f;
 
         public bool hasAttackOrders = false;
         public bool isWaitingForTurn = false;
@@ -42,6 +43,9 @@ namespace Platformer
 
         private Tween attackWarningTween;
         private Tween attackMoveTween;
+        private Tween attackRetreatTween;
+
+        public bool IsAttackOnCooldown => attackTimer.IsRunning;
 
         [field: Header("Timers & StateMachine")]
         List<Timer> timers;
@@ -97,7 +101,7 @@ namespace Platformer
             At(waitState, attackState, new FuncPredicate(() => hasAttackOrders));
             At(attackState, waitState, new FuncPredicate(() => !hasAttackOrders));
 
-            Any(knockbackState, new FuncPredicate(() => knockbackTimer.IsRunning));
+            Any(knockbackState, new FuncPredicate(() => knockbackTimer.IsRunning && !enemyHealth.isDead));
             At(knockbackState, chaseState, new FuncPredicate(() => !knockbackTimer.IsRunning));
 
             Any(dieState, new FuncPredicate(() => enemyHealth.isDead));
@@ -215,7 +219,12 @@ namespace Platformer
             if (attackTimer.IsRunning) return;
             attackTimer.Start();
 
-            if (playerDetector.PlayerHealth != null && !playerDetector.PlayerHealth.IsInvulnerable)
+            if (playerDetector.Player == null || playerDetector.PlayerHealth == null) return;
+
+            // Whiff if the player escaped during the lunge
+            if (Vector3.Distance(transform.position, playerDetector.Player.position) > attackHitRange) return;
+
+            if (!playerDetector.PlayerHealth.IsInvulnerable)
             {
                 playerDetector.PlayerHealth.TakeDamage(damage);
             }
@@ -226,11 +235,13 @@ namespace Platformer
             if (playerDetector.Player != null)
             {
                 isPreparingAttack = true;
-                Vector3 direction = (playerDetector.Player.position - transform.position).normalized;
+                Vector3 direction = playerDetector.Player.position - transform.position;
                 direction.y = 0;
+                direction = direction.normalized;
                 if (direction != Vector3.zero) transform.rotation = Quaternion.LookRotation(direction);
 
                 ShowCounterWarning(true);
+                AudioManager.instance.PlayOneShot(FMODEvents.instance.enemyAttack, transform.position);
                 Controller.enabled = false;
 
                 attackWarningTween = DOVirtual.DelayedCall(0.4f, () =>
@@ -238,14 +249,28 @@ namespace Platformer
                     ShowCounterWarning(false);
                     isPreparingAttack = false;
 
-                    Vector3 stopPosition = playerDetector.Player.position - (direction * 1.5f);
+                    if (playerDetector.Player == null)
+                    {
+                        Controller.enabled = true;
+                        FinishAttack();
+                        return;
+                    }
+
+                    // Re-aim at where the player actually is after the windup
+                    Vector3 lungeDir = playerDetector.Player.position - transform.position;
+                    lungeDir.y = 0;
+                    lungeDir = lungeDir.normalized;
+                    if (lungeDir != Vector3.zero) transform.rotation = Quaternion.LookRotation(lungeDir);
+
+                    Vector3 stopPosition = playerDetector.Player.position - (lungeDir * 1.5f);
+                    stopPosition.y = transform.position.y;
 
                     attackMoveTween = transform.DOMove(stopPosition, 0.3f).SetEase(Ease.OutQuad).OnComplete(() =>
                     {
                         Attack();
 
                         Vector3 retreatPosition = transform.position - (transform.forward * 4f);
-                        transform.DOMove(retreatPosition, 0.4f).SetEase(Ease.OutCubic).SetDelay(0.2f).OnComplete(() =>
+                        attackRetreatTween = transform.DOMove(retreatPosition, 0.4f).SetEase(Ease.OutCubic).SetDelay(0.2f).OnComplete(() =>
                         {
                             Controller.enabled = true;
                             FinishAttack();
@@ -255,15 +280,19 @@ namespace Platformer
             }
         }
 
-        public void CancelAttack()
+        // Tears down the lunge no matter which phase it is in — safe to call redundantly.
+        public void AbortAttack()
         {
-            isPreparingAttack = false;
-            ShowCounterWarning(false);
             attackWarningTween?.Kill();
             attackMoveTween?.Kill();
+            attackRetreatTween?.Kill();
+            isPreparingAttack = false;
+            ShowCounterWarning(false);
             Controller.enabled = true;
             FinishAttack();
         }
+
+        public void CancelAttack() => AbortAttack();
 
         void HandleOnHit(float stunDuration)
         {

@@ -30,11 +30,17 @@ namespace Platformer
                 {
                     currentTarget = info.collider.transform;
                 }
+                else
+                {
+                    // Hit something that isn't targetable — drop the stale target
+                    // instead of silently keeping whatever we locked onto before
+                    currentTarget = null;
+                }
             }
             else
             {
                 // Clear the target if we point away into empty space
-                currentTarget = null; 
+                currentTarget = null;
             }
         }
 

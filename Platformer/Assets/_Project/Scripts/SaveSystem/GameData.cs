@@ -27,6 +27,16 @@ namespace Platformer
         public SerializableDictionary<string, string> equippedSlots; // slot.ToString() → itemId
         // generic world pickups (Health / Item collectables) — keyed by collectable id
         public SerializableDictionary<string, bool> collectablesCollected;
+        // ability tree
+        public int abilitySkillPoints;
+        public int abilityLastSyncedLevel;
+        public List<string> abilitiesUnlocked;
+        // player level & experience
+        public int playerLevel;
+        public int playerExperience;
+        // quests — questId → serialized QuestData (same JsonUtility payload the
+        // old PlayerPrefs path used, so the format is unchanged)
+        public SerializableDictionary<string, string> questData;
         // notifications
         public SerializableDictionary<string, bool> notificationsTriggered;
 
@@ -46,6 +56,15 @@ namespace Platformer
             inventoryItems = new List<InventoryEntry>();
             equippedSlots = new SerializableDictionary<string, string>();
             collectablesCollected = new SerializableDictionary<string, bool>();
+            // ability tree
+            abilitySkillPoints = 0;
+            abilityLastSyncedLevel = 1;
+            abilitiesUnlocked = new List<string>();
+            // player level & experience
+            playerLevel = 1;
+            playerExperience = 0;
+            // quests
+            questData = new SerializableDictionary<string, string>();
             notificationsTriggered = new SerializableDictionary<string, bool>();
         }
 

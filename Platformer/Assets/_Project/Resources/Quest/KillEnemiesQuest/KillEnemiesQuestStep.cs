@@ -2,13 +2,14 @@ namespace Platformer
 {
     public class KillEnemiesQuestStep : QuestStep
     {
-        public int enemiesToKill = 0;
-        public int enemiesKilled = 0;
-        
+        public int enemiesToKill = 5;   // target — set on the quest step prefab
+        private int enemiesKilled = 0;  // progress
+
         private void Start()
         {
             UpdateState();
         }
+
         private void OnEnable()
         {
             GameEventsManager.instance.enemyEvents.onEnemyDeath += EnemyDeath;
@@ -21,13 +22,12 @@ namespace Platformer
 
         private void EnemyDeath()
         {
-            if (enemiesToKill < enemiesKilled)
-            {
-                enemiesToKill++;
-                UpdateState();
-            }
+            if (enemiesKilled >= enemiesToKill) return;
 
-            if (enemiesToKill >= enemiesKilled)
+            enemiesKilled++;
+            UpdateState();
+
+            if (enemiesKilled >= enemiesToKill)
             {
                 FinishQuestStep();
             }
@@ -35,13 +35,14 @@ namespace Platformer
 
         private void UpdateState()
         {
-            string state = enemiesToKill.ToString();
-            string status = "Killed" + enemiesToKill + " / " + enemiesKilled + " enemies.";
-            ChangeState(state,status);
+            string state = enemiesKilled.ToString();
+            string status = $"Defeated {enemiesKilled} / {enemiesToKill} enemies.";
+            ChangeState(state, status);
         }
+
         protected override void SetQuestStepState(string state)
         {
-            this.enemiesToKill = System.Int32.Parse(state);
+            this.enemiesKilled = System.Int32.Parse(state);
             UpdateState();
         }
     }

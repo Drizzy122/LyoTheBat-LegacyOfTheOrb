@@ -23,6 +23,14 @@ namespace Platformer
             }
         }
 
+        /// <summary>Register a runtime-spawned collectable (e.g. XP orbs dropped by
+        /// enemies) so the magnet can pull it. Safe against duplicates.</summary>
+        public void Register(GameObject collectable)
+        {
+            if (collectable != null && !collectables.Contains(collectable))
+                collectables.Add(collectable);
+        }
+
         void Update()
         {
             // We use a for-loop backwards so we can remove items 

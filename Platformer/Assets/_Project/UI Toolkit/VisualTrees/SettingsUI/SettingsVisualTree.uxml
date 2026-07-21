@@ -26,5 +26,6 @@
             </ui:TabView>
         </ui:VisualElement>
         <ui:Button text="← Back" name="BackButton" class="back-btn"/>
+        <ui:Button text="RETURN TO MAIN MENU" name="ReturnToMenuButton" class="back-btn" style="display: none;"/>
     </ui:VisualElement>
 </ui:UXML>

@@ -1,0 +1,106 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="AbilityTreeUI.uss"/>
+    <ui:VisualElement name="ability-panel" class="ability-panel">
+        <ui:VisualElement name="ability-header" class="ability-header">
+            <ui:Label name="ability-title" text="Abilities" class="ability-title"/>
+            <ui:Label name="ability-points" text="SKILL POINTS  0" class="ability-points"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="ability-header-underline" class="ability-header-underline"/>
+
+        <ui:VisualElement name="ability-branches" class="ability-branches">
+
+            <!-- ═══ COMBAT ═══ -->
+            <ui:VisualElement name="branch-Combat" class="ability-branch">
+                <ui:Label name="branch-Combat-title" text="COMBAT" class="ability-branch-title"/>
+                <ui:VisualElement class="ability-branch-underline"/>
+                <ui:VisualElement name="node-Combat-1" class="ability-node">
+                    <ui:VisualElement name="icon" class="ability-node-icon"/>
+                    <ui:Label name="node-name" text="Combat I" class="ability-node-name"/>
+                    <ui:Label name="cost" text="1" class="ability-node-cost"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="connector-Combat-1" class="ability-connector"/>
+                <ui:VisualElement name="node-Combat-2" class="ability-node">
+                    <ui:VisualElement name="icon" class="ability-node-icon"/>
+                    <ui:Label name="node-name" text="Combat II" class="ability-node-name"/>
+                    <ui:Label name="cost" text="1" class="ability-node-cost"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="connector-Combat-2" class="ability-connector"/>
+                <ui:VisualElement name="node-Combat-3" class="ability-node">
+                    <ui:VisualElement name="icon" class="ability-node-icon"/>
+                    <ui:Label name="node-name" text="Combat III" class="ability-node-name"/>
+                    <ui:Label name="cost" text="2" class="ability-node-cost"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="connector-Combat-3" class="ability-connector"/>
+                <ui:VisualElement name="node-Combat-4" class="ability-node">
+                    <ui:VisualElement name="icon" class="ability-node-icon"/>
+                    <ui:Label name="node-name" text="Combat IV" class="ability-node-name"/>
+                    <ui:Label name="cost" text="2" class="ability-node-cost"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- ═══ POWER ═══ -->
+            <ui:VisualElement name="branch-Power" class="ability-branch">
+                <ui:Label name="branch-Power-title" text="POWER" class="ability-branch-title"/>
+                <ui:VisualElement class="ability-branch-underline"/>
+                <ui:VisualElement name="node-Power-1" class="ability-node">
+                    <ui:VisualElement name="icon" class="ability-node-icon"/>
+                    <ui:Label name="node-name" text="Power I" class="ability-node-name"/>
+                    <ui:Label name="cost" text="1" class="ability-node-cost"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="connector-Power-1" class="ability-connector"/>
+                <ui:VisualElement name="node-Power-2" class="ability-node">
+                    <ui:VisualElement name="icon" class="ability-node-icon"/>
+                    <ui:Label name="node-name" text="Power II" class="ability-node-name"/>
+                    <ui:Label name="cost" text="1" class="ability-node-cost"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="connector-Power-2" class="ability-connector"/>
+                <ui:VisualElement name="node-Power-3" class="ability-node">
+                    <ui:VisualElement name="icon" class="ability-node-icon"/>
+                    <ui:Label name="node-name" text="Power III" class="ability-node-name"/>
+                    <ui:Label name="cost" text="2" class="ability-node-cost"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="connector-Power-3" class="ability-connector"/>
+                <ui:VisualElement name="node-Power-4" class="ability-node">
+                    <ui:VisualElement name="icon" class="ability-node-icon"/>
+                    <ui:Label name="node-name" text="Power IV" class="ability-node-name"/>
+                    <ui:Label name="cost" text="3" class="ability-node-cost"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- ═══ DEFENSE ═══ -->
+            <ui:VisualElement name="branch-Defense" class="ability-branch">
+                <ui:Label name="branch-Defense-title" text="DEFENSE" class="ability-branch-title"/>
+                <ui:VisualElement class="ability-branch-underline"/>
+                <ui:VisualElement name="node-Defense-1" class="ability-node">
+                    <ui:VisualElement name="icon" class="ability-node-icon"/>
+                    <ui:Label name="node-name" text="Defense I" class="ability-node-name"/>
+                    <ui:Label name="cost" text="1" class="ability-node-cost"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="connector-Defense-1" class="ability-connector"/>
+                <ui:VisualElement name="node-Defense-2" class="ability-node">
+                    <ui:VisualElement name="icon" class="ability-node-icon"/>
+                    <ui:Label name="node-name" text="Defense II" class="ability-node-name"/>
+                    <ui:Label name="cost" text="1" class="ability-node-cost"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="connector-Defense-2" class="ability-connector"/>
+                <ui:VisualElement name="node-Defense-3" class="ability-node">
+                    <ui:VisualElement name="icon" class="ability-node-icon"/>
+                    <ui:Label name="node-name" text="Defense III" class="ability-node-name"/>
+                    <ui:Label name="cost" text="2" class="ability-node-cost"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="connector-Defense-3" class="ability-connector"/>
+                <ui:VisualElement name="node-Defense-4" class="ability-node">
+                    <ui:VisualElement name="icon" class="ability-node-icon"/>
+                    <ui:Label name="node-name" text="Defense IV" class="ability-node-name"/>
+                    <ui:Label name="cost" text="2" class="ability-node-cost"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Hover detail footer -->
+        <ui:VisualElement name="ability-footer" class="ability-footer">
+            <ui:Label name="ability-footer-name" text="Hover an ability" class="ability-footer-name"/>
+            <ui:Label name="ability-footer-desc" text="Unlock abilities with skill points earned by leveling up." class="ability-footer-desc"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

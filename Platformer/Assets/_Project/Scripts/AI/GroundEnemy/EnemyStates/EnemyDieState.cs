@@ -12,6 +12,7 @@ namespace Platformer
 
         public override void OnEnter()
         {
+            enemy.AbortAttack();
             animator.CrossFade(DieHash, crossFadeDuration);
             enemyHealth.HandleDeath();
             

@@ -3,9 +3,10 @@ using UnityEngine;
 
 namespace Platformer
 {
-    public class QuestManager : MonoBehaviour
+    public class QuestManager : MonoBehaviour, IDataPersistence
     {
         [Header("Config")]
+        [Tooltip("Untick to always start with fresh quests (ignores saved quest data) — handy for testing.")]
         [SerializeField] private bool loadQuestState = true;
         
         // quest start requirements
@@ -159,7 +160,8 @@ namespace Platformer
         {
             // loads all QuestInfoSO Scriptable Objects under the Assets/Resources/Quests folder
             QuestInfoSO[] allQuests = Resources.LoadAll<QuestInfoSO>("Quest");
-            // Create the quest map
+            // Create the quest map with fresh quests — saved progress is applied
+            // afterwards by LoadData (the save system runs before Start).
             Dictionary<string, Quest> idToQuestMap = new Dictionary<string, Quest>();
             foreach (QuestInfoSO questInfo in allQuests)
             {
@@ -167,7 +169,7 @@ namespace Platformer
                 {
                     Debug.LogWarning("Duplicate ID found when creating quest map: " + questInfo.id);
                 }
-                idToQuestMap.Add(questInfo.id, LoadQuest(questInfo));
+                idToQuestMap.Add(questInfo.id, new Quest(questInfo));
             }
             return idToQuestMap;
         }
@@ -180,54 +182,49 @@ namespace Platformer
             }
             return quest;
         }
-        private void OnApplicationQuit()
+        // ── IDataPersistence ──────────────────────────────────────────────────
+        // Runs through DataPersistenceManager like everything else (inventory,
+        // abilities, level) — one save file for the whole game. LoadData fires
+        // after Awake and before Start, so the fresh quest map from Awake gets
+        // saved progress applied just in time for Start's broadcasts.
+
+        public void LoadData(GameData data)
+        {
+            if (!loadQuestState || data.questData == null) return;
+
+            // snapshot the entries so we can replace map values while iterating
+            List<Quest> quests = new List<Quest>(questMap.Values);
+            foreach (Quest quest in quests)
+            {
+                if (!data.questData.TryGetValue(quest.info.id, out string serializedData)) continue;
+                if (string.IsNullOrEmpty(serializedData)) continue;
+
+                try
+                {
+                    QuestData questData = JsonUtility.FromJson<QuestData>(serializedData);
+                    questMap[quest.info.id] = new Quest(quest.info, questData.state,
+                        questData.questStepIndex, questData.questStepStates);
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError("Failed to load quest with id " + quest.info.id + ": " + e);
+                }
+            }
+        }
+
+        public void SaveData(GameData data)
         {
             foreach (Quest quest in questMap.Values)
             {
-                SaveQuest(quest);
-            }
-        }
-        
-        private void SaveQuest(Quest quest)
-        {
-            try 
-            {
-                QuestData questData = quest.GetQuestData();
-                // serialize using JsonUtility, but use whatever you want here (like JSON.NET)
-                string serializedData = JsonUtility.ToJson(questData);
-                // saving to PlayerPrefs is just a quick example for this tutorial video,
-                // you probably don't want to save this info there long-term.
-                // instead, use an actual Save & Load system and write to a file, the cloud, etc..
-                PlayerPrefs.SetString(quest.info.id, serializedData);
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError("Failed to save quest with id " + quest.info.id + ": " + e);
-            }
-        }
-        private Quest LoadQuest(QuestInfoSO questInfo)
-        {
-            Quest quest = null;
-            try 
-            {
-                // load quest from saved data
-                if (PlayerPrefs.HasKey(questInfo.id) && loadQuestState)
+                try
                 {
-                    string serializedData = PlayerPrefs.GetString(questInfo.id);
-                    QuestData questData = JsonUtility.FromJson<QuestData>(serializedData);
-                    quest = new Quest(questInfo, questData.state, questData.questStepIndex, questData.questStepStates);
+                    data.questData[quest.info.id] = JsonUtility.ToJson(quest.GetQuestData());
                 }
-                // otherwise, initialize a new quest
-                else 
+                catch (System.Exception e)
                 {
-                    quest = new Quest(questInfo);
+                    Debug.LogError("Failed to save quest with id " + quest.info.id + ": " + e);
                 }
             }
-            catch (System.Exception e)
-            {
-                Debug.LogError("Failed to load quest with id " + quest.info.id + ": " + e);
-            }
-            return quest;
         }
     }
 }

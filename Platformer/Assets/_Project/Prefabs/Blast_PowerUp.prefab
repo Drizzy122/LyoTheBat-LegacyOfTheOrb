@@ -69,8 +69,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.Collectable
   collectibleType: 1
-  id: 
+  id: f6dae5da-8b38-4d07-85da-de5d458de7f9
   isCollected: 0
+  healthValue: 0
+  itemToGive: {fileID: 0}
+  itemQuantity: 0
+  autoEquipIfSlotEmpty: 0
   visualObject: {fileID: 3029061292198904570}
 --- !u!114 &5080866997099497842
 MonoBehaviour:

@@ -1,0 +1,295 @@
+.hud-text {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+    color: rgb(220, 210, 190);
+}
+
+.hud-health {
+    position: absolute;
+    top: 42px;
+    left: 112px;
+    width: 260px;
+    height: 16px;
+    background-color: rgba(8, 5, 22, 0.75);
+    border-width: 1px;
+    border-color: rgba(190, 150, 50, 0.4);
+    border-radius: 8px;
+    display: flex;
+}
+
+.hud-health-fill {
+    border-radius: 7px;
+    border-width: 0;
+    background-color: rgb(105, 205, 115);
+}
+
+.hud-stamina {
+    position: absolute;
+    top: 64px;
+    left: 112px;
+    width: 200px;
+    height: 9px;
+    background-color: rgba(8, 5, 22, 0.75);
+    border-width: 1px;
+    border-color: rgba(190, 150, 50, 0.35);
+    border-radius: 5px;
+    display: flex;
+}
+
+.hud-stamina-fill {
+    border-radius: 4px;
+    border-width: 0;
+    background-color: rgb(95, 165, 255);
+}
+
+.hud-xp {
+    position: absolute;
+    top: 79px;
+    left: 112px;
+    width: 230px;
+    height: 5px;
+    background-color: rgba(8, 5, 22, 0.75);
+    border-width: 1px;
+    border-color: rgba(190, 150, 50, 0.3);
+    border-radius: 3px;
+    transition-property: opacity;
+    transition-duration: 0.35s;
+}
+
+.hud-xp-fill {
+    width: 0%;
+    height: 100%;
+    background-color: rgb(215, 170, 65);
+    border-radius: 2px;
+}
+
+.hud-charges {
+    position: absolute;
+    top: 90px;
+    left: 112px;
+    width: 160px;
+    height: 5px;
+    background-color: rgba(8, 5, 22, 0.75);
+    border-width: 1px;
+    border-color: rgba(190, 150, 50, 0.3);
+    border-radius: 3px;
+}
+
+.hud-charges-fill {
+    width: 0%;
+    height: 100%;
+    background-color: rgb(150, 90, 255);
+    border-radius: 2px;
+}
+
+.hud-charges-count {
+    position: absolute;
+    top: 83px;
+    left: 280px;
+    font-size: 14px;
+    color: rgb(180, 130, 255);
+}
+
+.hud-quest-box {
+    top: 248px;
+    width: 563px;
+    height: 241px;
+    background-color: rgba(0, 0, 0, 0);
+    transition-timing-function: ease-in-bounce;
+}
+
+.hud-quest-deco {
+    position: absolute;
+    top: 57px;
+    left: 15px;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 1px;
+    border-color: rgb(255, 255, 255);
+}
+
+.hud-quest-title {
+    font-size: 27px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: upper-center;
+    width: 565px;
+    height: 39px;
+    top: -31px;
+    right: 4px;
+    background-color: rgba(0, 58, 255, 0.27);
+    border-color: rgb(255, 255, 255);
+    border-bottom-width: 4px;
+}
+
+.hud-quest-status {
+    font-size: 22px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: upper-left;
+    width: 516px;
+    height: 183px;
+    left: 38px;
+    white-space: normal;
+}
+
+.hud-waypoint {
+    position: absolute;
+    top: 268px;
+    left: 1319px;
+    width: 68px;
+    height: 62px;
+    background-image: url("project://database/Assets/_Project/Art/Modern%20GDR%20-%20Free%20icons%20pack/00_Atlas/BrightIcons.png?fileID=37255795&guid=132358e9bf26b60458b731bf001e31db&type=3#ToggleOn_Bright");
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-image-tint-color: rgb(215, 170, 65);
+}
+
+.hud-waypoint-meter {
+    font-size: 18px;
+    -unity-text-align: upper-center;
+    top: 59px;
+    color: rgb(240, 232, 210);
+    -unity-text-outline-color: rgb(0, 0, 0);
+    -unity-text-outline-width: 1px;
+}
+
+.hud-dialogue {
+    position: absolute;
+    top: 920px;
+    left: 500px;
+    width: 875px;
+    height: 111px;
+    padding: 12px 20px;
+    background-color: rgba(8, 5, 22, 0.88);
+    border-width: 1px;
+    border-color: rgba(190, 150, 50, 0.5);
+    border-left-width: 3px;
+    border-left-color: rgba(190, 150, 50, 0.8);
+    border-radius: 4px;
+    display: none;
+}
+
+.hud-dialogue-text {
+    font-size: 20px;
+    color: rgb(225, 218, 200);
+    -unity-text-align: middle-center;
+    flex-grow: 1;
+    white-space: pre-wrap;
+}
+
+.hud-choices {
+    position: absolute;
+    top: 480px;
+    left: 1316px;
+    width: 572px;
+    padding: 10px;
+    background-color: rgba(8, 5, 22, 0.88);
+    border-width: 1px;
+    border-color: rgba(190, 150, 50, 0.5);
+    border-radius: 4px;
+    display: none;
+}
+
+.hud-notification {
+    position: absolute;
+    top: 900px;
+    left: 510px;
+    width: 900px;
+    min-height: 96px;
+    background-color: rgba(8, 5, 22, 0.9);
+    border-width: 1px;
+    border-color: rgba(190, 150, 50, 0.4);
+    border-left-width: 4px;
+    border-left-color: rgb(215, 170, 65);
+    border-radius: 4px;
+    flex-direction: row;
+    align-items: center;
+}
+
+.hud-notification-icon {
+    position: absolute;
+    top: 16px;
+    left: 18px;
+    width: 64px;
+    height: 64px;
+}
+
+.hud-notification-text {
+    position: absolute;
+    top: 0;
+    left: 100px;
+    width: 780px;
+    height: 96px;
+    font-size: 24px;
+    color: rgb(235, 228, 210);
+    -unity-text-align: middle-left;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    -unity-text-outline-width: 1px;
+    white-space: normal;
+}
+
+.hud-combo {
+    position: absolute;
+    top: 112px;
+    left: 36px;
+    flex-direction: column;
+    align-items: center;
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MyFont.ttf?fileID=12800000&guid=6384753b77039dc43a7bf85678bfc68d&type=3#MyFont");
+}
+
+
+
+
+
+.hud-target-marker {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    border-width: 2px;
+    border-color: rgb(215, 170, 65);
+    background-color: rgba(0, 0, 0, 0);
+    rotate: 45deg;
+    display: none;
+}
+
+.hud-target-marker-dot {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 6px;
+    height: 6px;
+    background-color: rgb(215, 170, 65);
+    border-radius: 3px;
+}
+
+/* ---- HUD popups (quest banner, level-up toast) ---- */
+/* Classes are added by HUDPopup at runtime; base carries the pop-in transition. */
+.hud-popup {
+    transition-property: opacity, scale, translate;
+    transition-duration: 0.35s, 0.5s, 0.5s;
+    transition-timing-function: ease-out, ease-out-back, ease-out-back;
+}
+
+/* Pose before the pop-in plays (and once a close finishes). */
+.hud-popup--hidden {
+    opacity: 0;
+    scale: 0.7;
+    translate: 0 -45px;
+}
+
+/* Exit: quick zoom-past fade. Keep duration <= CloseAnimMs in HUDPopup.cs. */
+.hud-popup--closing {
+    opacity: 0;
+    scale: 1.12;
+    translate: 0 -18px;
+    transition-duration: 0.32s;
+    transition-timing-function: ease-in-cubic;
+}
+
+
+
+
+
+
+
+
+
+

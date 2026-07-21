@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8082542197938007056
 Transform:
   m_ObjectHideFlags: 0
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 486167295746059761}
   serializedVersion: 2
   m_LocalRotation: {x: -0.0000010542565, y: -0.00000044703458, z: -0.70710546, w: 0.7071081}
-  m_LocalPosition: {x: 0, y: 0.245, z: -0.001}
+  m_LocalPosition: {x: -0, y: 0.858, z: -0.001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4848,6 +4848,7 @@ GameObject:
   - component: {fileID: 4353652568026005473}
   - component: {fileID: 4724623989996105910}
   - component: {fileID: 8050176261647138849}
+  - component: {fileID: 95417672209911356}
   m_Layer: 0
   m_Name: Sword
   m_TagString: Untagged
@@ -4909,6 +4910,26 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2.18, z: 1}
   m_Center: {x: 0, y: 0.86, z: 0}
+--- !u!114 &95417672209911356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3200333243213644461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e09cef87b83477b8f31403ed76bb686, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.Collectable
+  collectibleType: 4
+  id: 0896d698-1265-48da-8506-da9a5da0e3b5
+  isCollected: 0
+  healthValue: 0
+  itemToGive: {fileID: 11400000, guid: 4362075eea9c99044b71e70c8b4f1a18, type: 2}
+  itemQuantity: 1
+  autoEquipIfSlotEmpty: 1
+  visualObject: {fileID: 5355461700772959495}
 --- !u!1 &5355461700772959495
 GameObject:
   m_ObjectHideFlags: 0
@@ -5016,7 +5037,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6757374245978589881
 Transform:
   m_ObjectHideFlags: 0
@@ -5026,7 +5047,7 @@ Transform:
   m_GameObject: {fileID: 7360965657429729723}
   serializedVersion: 2
   m_LocalRotation: {x: -0.00000078976115, y: -0.707106, z: -0.0000007078048, w: 0.7071076}
-  m_LocalPosition: {x: 0, y: 0.48, z: 0}
+  m_LocalPosition: {x: -0.023, y: 1.038, z: 0.014}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

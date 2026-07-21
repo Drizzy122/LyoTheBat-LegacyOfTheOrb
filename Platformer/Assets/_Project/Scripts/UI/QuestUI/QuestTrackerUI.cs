@@ -3,6 +3,12 @@ using UnityEngine.UIElements;
 
 namespace Platformer
 {
+    /// <summary>
+    /// Quest popup banner. The MissionBoxContainer pops in whenever quest info
+    /// changes (started, step advanced, ready to turn in), stays on screen for
+    /// displayDuration seconds, then closes with an exit animation.
+    /// The animation itself lives in HUD.uss (.hud-popup classes) via HUDPopup.
+    /// </summary>
     public class QuestTrackerUI : MonoBehaviour
     {
         [Header("UI Toolkit")] [SerializeField]
@@ -14,22 +20,24 @@ namespace Platformer
         [SerializeField] private string questTitleName = "QuestTitle";
         [SerializeField] private string questStatusName = "QuestStatus";
 
-        private VisualElement rootContainer;
+        [Header("Popup")]
+        [Tooltip("Seconds the box stays fully visible before closing itself.")]
+        [SerializeField] private float displayDuration = 5f;
+
         private Label questTitleLabel;
         private Label questStatusLabel;
+        private HUDPopup popup;
 
         // Keep track of the currently displayed quest
         private Quest trackedQuest;
+        private QuestState lastTrackedState;
 
         private void Awake()
         {
             var root = uiDocument.rootVisualElement;
-            rootContainer = root.Q<VisualElement>(rootContainerName);
             questTitleLabel = root.Q<Label>(questTitleName);
             questStatusLabel = root.Q<Label>(questStatusName);
-
-            // 1. Hide the mission box when the game starts
-            rootContainer.style.display = DisplayStyle.None;
+            popup = new HUDPopup(root.Q<VisualElement>(rootContainerName), displayDuration);
         }
 
         private void OnEnable()
@@ -40,42 +48,59 @@ namespace Platformer
 
         private void OnDisable()
         {
+            if (GameEventsManager.instance == null) return;
             GameEventsManager.instance.questEvents.onQuestStateChange -= QuestStateChange;
             GameEventsManager.instance.questEvents.onQuestStepStateChange -= QuestStepStateChange;
         }
 
         private void QuestStateChange(Quest quest)
         {
-            // 2. If a quest is active or ready to turn in, track it and show the UI
             if (quest.state == QuestState.IN_PROGRESS || quest.state == QuestState.CAN_FINISH)
             {
+                // QuestManager re-broadcasts the current state on every step
+                // update (each kill/collect), so only pop on real transitions:
+                // quest started, or quest became ready to turn in.
+                bool newQuest = trackedQuest == null || !trackedQuest.info.id.Equals(quest.info.id);
+                bool stateChanged = newQuest || quest.state != lastTrackedState;
+
                 trackedQuest = quest;
-                UpdateTrackerUI();
+                lastTrackedState = quest.state;
+
+                if (stateChanged) ShowPopup();
+                else RefreshTextIfVisible();
             }
-            // 3. If the quest we are tracking finishes, hide the UI
+            // The tracked quest finishing closes the banner right away
             else if (quest.state == QuestState.FINISHED && trackedQuest != null &&
                      quest.info.id == trackedQuest.info.id)
             {
-                rootContainer.style.display = DisplayStyle.None;
                 trackedQuest = null;
+                popup.Close();
             }
         }
 
         private void QuestStepStateChange(string questId, int stepIndex, QuestStepState questStepState)
         {
-            // 4. If the step advances on the quest we are currently tracking, update the text
+            // Step progress (e.g. another enemy killed) shouldn't re-pop the
+            // banner mid-combat — just keep its text fresh if it's on screen.
             if (trackedQuest != null && trackedQuest.info.id == questId)
             {
-                UpdateTrackerUI();
+                RefreshTextIfVisible();
             }
         }
 
-        private void UpdateTrackerUI()
+        private void ShowPopup()
         {
-            // Make the box visible
-            rootContainer.style.display = DisplayStyle.Flex;
+            RefreshText();
+            popup.Show();
+        }
 
-            // Update the text using the data from the Quest object
+        private void RefreshTextIfVisible()
+        {
+            if (popup != null && popup.IsVisible) RefreshText();
+        }
+
+        private void RefreshText()
+        {
             questTitleLabel.text = trackedQuest.info.displayName;
             questStatusLabel.text = trackedQuest.GetFullStatusText();
         }

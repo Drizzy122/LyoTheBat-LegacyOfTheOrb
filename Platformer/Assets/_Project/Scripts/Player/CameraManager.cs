@@ -9,9 +9,21 @@ namespace Platformer
     {
         public static CameraManager instance { get; private set; }
         
-        [Header("References")] 
+        [Header("References")]
         [SerializeField, Anywhere] CinemachineInputAxisController axisController;
-        [SerializeField, Anywhere] InputReader inputReader; 
+        [SerializeField, Anywhere] InputReader inputReader;
+
+        public InputReader InputReader => inputReader;
+
+        /// <summary>
+        /// Freezes/unfreezes camera orbit. Cinemachine reads the Look action
+        /// directly, so disabling this component alone doesn't stop the camera —
+        /// the axis controller itself must be switched off (used by dialogue).
+        /// </summary>
+        public void SetLookInputEnabled(bool value)
+        {
+            if (axisController != null) axisController.enabled = value;
+        }
         
         [Header("Settings")]
         [SerializeField, Range(0.1f, 10f)] float horizontalSpeed = 1f;
